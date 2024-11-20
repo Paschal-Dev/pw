@@ -1,7 +1,6 @@
 import {
   Box,
   Grid,
-  // IconButton,
   Typography,
   useMediaQuery,
 } from "@mui/material";

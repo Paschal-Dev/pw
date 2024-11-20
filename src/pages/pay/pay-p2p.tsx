@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { theme } from "../../assets/themes/theme";
 import VideoThumb from "../../components/pay/video-thumb";
-// import avatar from "../../assets/images/avatar.png";
 import Vendors from "../../components/pay/vendors";
 import { Vendor } from "../../data/pay/vendors-data";
 import { Icon } from "@iconify/react";

@@ -9,7 +9,6 @@ import React, { useState } from "react";
 import VideoThumb from "../../components/pay/video-thumb";
 import { theme } from "../../assets/themes/theme";
 import menu from "../../assets/images/menu.svg";
-// import { Icon } from "@iconify/react/dist/iconify.js";
 import { PageProps } from "../../utils/myUtils";
 import EscrowConfirmDetails from "../../components/pay/escrow-confirm-details";
 import EscrowStatus from "../../components/pay/escrow-status";
@@ -17,7 +16,6 @@ import EscrowConfirm from "../../components/pay/escrow-confirm";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import loader from "../../assets/images/loader.gif";
-// import MobileEscrowStatus from "../../components/pay/mobile-escrow-status";
 
 export default function EscrowPage({
   setCurrentPage,

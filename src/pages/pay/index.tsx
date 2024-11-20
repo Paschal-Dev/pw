@@ -195,54 +195,6 @@ export default function Pay(): React.JSX.Element {
           }, 5000);
         
         }
-        
-
-        // eslint-disable-next-line prefer-const
-        // let intervalId: number | undefined;
-        // const checkPaymentStatusAndRun = async (sendOtpPayload: any) => {
-        //   try {
-        //     const resp = await APIService.sendOTP(sendOtpPayload);
-        //     console.log(
-        //       "API RESPONSE FROM PAGE_RELOAD SEND OTP =>>> ",
-        //       resp.data
-        //     );
-
-        //     if (resp.data?.escrow_status === 1) {
-        //       // Do nothing, let the interval continue
-        //     } else {
-        //       const formData = new FormData();
-        //       formData.append("call_type", "get_key");
-        //       const response1 = await APIService.getToken(formData);
-        //       console.log(
-        //         "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
-        //         response1.data
-        //       );
-
-              
-              
-        //       const p2pPayload = {
-        //         call_type: "p2p_vendors",
-        //         ip: "192.168.0.0",
-        //         pay_id: payId,
-        //       };
-        //       const respo2 = await APIService.p2pVendors(p2pPayload);
-        //       console.log(
-        //         "API RESPONSE FROM P2P VENDORS FETCH =>>> ",
-        //         respo2.data
-        //       );
-        //       dispatch(setP2PVendorsDetails(respo2.data));
-        //       clearInterval(intervalId);
-        //       setCurrentPage("pay");
-        //       dispatch(setButtonClicked(false));
-        //     }
-        //   } catch (error) {
-        //     console.log("ERROR ::::::: ", error);
-        //   }
-        // };
-        // intervalId = setInterval(
-        //   () => checkPaymentStatusAndRun(sendOtpPayload),
-        //   5000
-        // );
       }
     }
   }, []);
