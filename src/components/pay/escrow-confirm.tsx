@@ -74,32 +74,6 @@ export default function EscrowConfirm({
         clearInterval(checkWindowClosed);
 
         dispatch(setShouldRedirectEscrow(true));
-
-        // send-otp request
-        // const sendOtpPayload = {
-        //   call_type: "pay",
-        //   ip: "192.168.0.0",
-        //   lang: "en",
-        //   pay_id: payId,
-        // };
-
-        // setInterval(async () => {
-        //   try {
-        //     const resp = await APIService.sendOTP(sendOtpPayload);
-        //     console.log("API RESPONSE FROM SEND OTP", resp.data);
-
-        //     if (resp.data?.pay?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-        //       dispatch(setP2PEscrowDetails(resp.data));
-        //       setCurrentPage("p2p-payment");
-        //     }
-
-
-        //   } catch (error) {
-        //     console.log("ERROR :::: ", error);
-        //   }
-        // }, 5000);
-
-
         setCurrentPage("p2p-payment")
 
       }
