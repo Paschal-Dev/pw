@@ -1,6 +1,6 @@
 {
   "name": "peerwallet",
-  "homepage": "https://pw-git-main-paschal-devs-projects.vercel.app/pay/",
+  "homepage": "https://pw-git-main-paschal-devs-projects.vercel.app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
