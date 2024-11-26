@@ -115,7 +115,7 @@ export default function Pay(): React.JSX.Element {
           } catch (error) {
             console.log("ERROR ::::::: ", error);
           }
-        }, 3000);
+        }, 300000);
 
       } else {
         console.log("TRY HERE ::");
@@ -192,7 +192,7 @@ export default function Pay(): React.JSX.Element {
             } catch (error) {
               console.log("ERROR :::: ", error);
             }
-          }, 5000);
+          }, 10000);
         
         }
       }

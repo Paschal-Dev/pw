@@ -242,7 +242,7 @@ const Otp: React.FC<OtpProps> = ({
         call_type: "encode_key",
         token: response1.data?.data?.token,
         key: response1.data?.data?.key,
-        timestamp: Math.floor(new Date().getTime() / 1000),
+        timestamp: Math.floor(Date.now() / 1000),
       };
 
       const response2 = await APIService.encodeKey(payload);
@@ -307,7 +307,7 @@ const Otp: React.FC<OtpProps> = ({
         call_type: "encode_key",
         token: response1.data?.data?.token,
         key: response1.data?.data?.key,
-        timestamp: Math.floor(new Date().getTime() / 1000),
+        timestamp: Math.floor(Date.now() / 1000),
       };
 
       const response2 = await APIService.encodeKey(payload);

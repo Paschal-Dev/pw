@@ -6,4 +6,5 @@ export interface Vendor {
   currency: string;
   exchange_rate: number;
   id: number;
+  checkout_link: string;
 }

@@ -13,7 +13,7 @@ const getHeaderKey = async () => {
 
   const payload: any = { call_type: "encode_key", token, key };
 
-  payload.timestamp = Math.floor(new Date().getTime() / 1000);
+  payload.timestamp = Math.floor(Date.now() / 1000);
 
   const response2 = await APIService.encodeKey(payload);
   console.log("API RESPONSE FROM ENCODE KEY =>>>", response2.data);

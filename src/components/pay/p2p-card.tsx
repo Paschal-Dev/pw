@@ -38,7 +38,8 @@ interface P2pCardProps extends PageProps {
   otpVerified: boolean;
 }
 
-const P2pCard: React.FC<P2pCardProps> = ({ setCurrentPage }) => {
+// eslint-disable-next-line no-empty-pattern
+const P2pCard: React.FC<P2pCardProps> = ({ }) => {
   const [open, setOpen] = React.useState(false);
   const { isOTPVerified } = useSelector((state: RootState) => state.pay);
   const handleClose = () => setOpen(false);
@@ -113,7 +114,7 @@ const P2pCard: React.FC<P2pCardProps> = ({ setCurrentPage }) => {
           call_type: "encode_key",
           token: response1.data?.data?.token,
           key: response1.data?.data?.key,
-          timestamp: Math.floor(new Date().getTime() / 1000),
+          timestamp: Math.floor(Date.now() / 1000),
         };
         const response3 = await APIService.encodeKey(payload);
         console.log(
@@ -141,7 +142,9 @@ const P2pCard: React.FC<P2pCardProps> = ({ setCurrentPage }) => {
                 respo.data
               );
               dispatch(setP2PVendorsDetails(respo.data));
-              setCurrentPage("p2p");
+              // console.log("The Link", respo.data.p2p.map((item: { checkout_link: unknown; }) => item.checkout_link))
+              window.location.href = respo.data.p2p[0].checkout_link;
+              // setCurrentPage("p2p");
             })
             .catch((error: unknown) => {
               console.log("ERROR ::::::: ", error);

@@ -50,7 +50,7 @@ const Vendors: React.FC<Props> = ({ item, setCurrentPage }) => {
         call_type: "encode_key",
         token: response1.data?.data?.token,
         key: response1.data?.data?.key,
-        timestamp: Math.floor(new Date().getTime() / 1000),
+        timestamp: Math.floor(Date.now() / 1000),
       };
 
       const response3 = await APIService.encodeKey(payload);
