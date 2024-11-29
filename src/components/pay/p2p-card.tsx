@@ -27,7 +27,7 @@ import close from "../../assets/images/close-icon.svg";
 import { PageProps } from "../../utils/myUtils";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../redux/store";
-import { setHeaderKey } from "../../redux/reducers/auth";
+// import { setHeaderKey } from "../../redux/reducers/auth";
 import APIService from "../../services/api-service";
 import { useDispatch, useSelector } from "react-redux";
 import { setButtonBackdrop, setButtonClicked, setP2PVendorsDetails } from "../../redux/reducers/pay";
@@ -102,27 +102,27 @@ const P2pCard: React.FC<P2pCardProps> = ({ }) => {
       dispatch(setButtonBackdrop(true));
 
       try {
-        const formData = new FormData();
-        formData.append("call_type", "get_key");
-        const response1 = await APIService.getToken(formData);
-        console.log(
-          "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
-          response1.data
-        );
+        // const formData = new FormData();
+        // formData.append("call_type", "get_key");
+        // const response1 = await APIService.getToken(formData);
+        // console.log(
+        //   "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
+        //   response1.data
+        // );
 
-        const payload = {
-          call_type: "encode_key",
-          token: response1.data?.data?.token,
-          key: response1.data?.data?.key,
-          timestamp: Math.floor(Date.now() / 1000),
-        };
-        const response3 = await APIService.encodeKey(payload);
-        console.log(
-          "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
-          response3.data
-        );
-        dispatch(setHeaderKey(response3.data?.data?.header_key));
-        localStorage.setItem("headerKey", response3.data?.data?.header_key);
+        // const payload = {
+        //   call_type: "encode_key",
+        //   token: response1.data?.data?.token,
+        //   key: response1.data?.data?.key,
+        //   timestamp: Math.floor(Date.now() / 1000),
+        // };
+        // const response3 = await APIService.encodeKey(payload);
+        // console.log(
+        //   "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
+        //   response3.data
+        // );
+        // dispatch(setHeaderKey(response3.data?.data?.header_key));
+        // localStorage.setItem("headerKey", response3.data?.data?.header_key);
         const p2pPayload = {
           call_type: "p2p_vendors",
           ip: "192.168.0.0",

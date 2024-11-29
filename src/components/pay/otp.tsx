@@ -9,7 +9,7 @@ import VideoThumb from "./video-thumb";
 import NoticeIcon from "../../assets/images/notice_icon.svg";
 import { useDispatch, useSelector } from "react-redux";
 // import { RootState } from "@reduxjs/toolkit/query";
-import { setHeaderKey } from "../../redux/reducers/auth";
+// import { setHeaderKey } from "../../redux/reducers/auth";
 import APIService from "../../services/api-service";
 import { RootState } from "../../redux/store";
 import { setOTPVerified } from "../../redux/reducers/pay";
@@ -227,43 +227,69 @@ const Otp: React.FC<OtpProps> = ({
 
   const handleButtonClick = React.useCallback(async () => {
     // e.preventDefault();
+    const enteredPin = otpValues.join("");
 
+    const verifyOtpPayload = {
+      call_type: "verify_pay_otp",
+      ip: "192.168.0.0",
+      lang: "en",
+      pay_id: payId,
+      otp: enteredPin,
+    };
     try {
-      const formData = new FormData();
-      formData.append("call_type", "get_key");
+      // const formData = new FormData();
+      // formData.append("call_type", "get_key");
 
-      const response1 = await APIService.getToken(formData);
-      console.log(
-        "API RESPONSE FROM VERIFY OTP GET TOKEN =>>> ",
-        response1.data
-      );
+      // const response1 = await APIService.getToken(formData);
+      // console.log(
+      //   "API RESPONSE FROM VERIFY OTP GET TOKEN =>>> ",
+      //   response1.data
+      // );
 
-      const payload = {
-        call_type: "encode_key",
-        token: response1.data?.data?.token,
-        key: response1.data?.data?.key,
-        timestamp: Math.floor(Date.now() / 1000),
-      };
+      // const payload = {
+      //   call_type: "encode_key",
+      //   token: response1.data?.data?.token,
+      //   key: response1.data?.data?.key,
+      //   timestamp: Math.floor(Date.now() / 1000),
+      // };
 
-      const response2 = await APIService.encodeKey(payload);
-      console.log(
-        "API RESPONSE FROM VERIFY OTP ENCODE KEY =>>> ",
-        response2.data
-      );
+      // const response2 = await APIService.encodeKey(payload);
+      // console.log(
+      //   "API RESPONSE FROM VERIFY OTP ENCODE KEY =>>> ",
+      //   response2.data
+      // );
 
-      dispatch(setHeaderKey(response2.data?.data?.header_key));
-      localStorage.setItem("headerKey", response2.data?.data?.header_key);
+      // dispatch(setHeaderKey(response2.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response2.data?.data?.header_key);
 
-      const enteredPin = otpValues.join("");
+      // const enteredPin = otpValues.join("");
 
-      const formData2 = new FormData();
-      formData2.append("call_type", "verify_pay_otp");
-      formData2.append("ip", "192.168.0.0");
-      formData2.append("lang", "en");
-      formData2.append("pay_id", payId);
-      formData2.append("otp", enteredPin);
 
-      const res = await APIService.verifyOTP(formData2);
+      // // const formData2 = new FormData();
+      // // formData2.append("call_type", "verify_pay_otp");
+      // // formData2.append("ip", "192.168.0.0");
+      // // formData2.append("lang", "en");
+      // // formData2.append("pay_id", payId);
+      // // formData2.append("otp", enteredPin);
+
+      // const verifyOtpPayload = {
+      //   call_type: "verify_pay_otp",
+      //   ip: "192.168.0.0",
+      //   lang: "en",
+      //   pay_id: payId,
+      //   otp: enteredPin,
+      // };
+
+      // const formData2 = new FormData();
+      // Object.entries(verifyOtpPayload).forEach(([key, value]) => {
+      //   formData2.append(key, value);
+      // });
+
+      // Call the API with the FormData
+      const res = await APIService.verifyOTP(verifyOtpPayload);
+
+      // Log the FormData and API response
+      console.log("Pay Load =>>> ", verifyOtpPayload); // Logs FormData in a readable format
       console.log("API RESPONSE FROM VERIFY OTP =>>> ", res.data);
 
       if (res.data && res.data.status === "success") {
@@ -294,30 +320,30 @@ const Otp: React.FC<OtpProps> = ({
     setResendDisabled(true); // Disable resend button
 
     try {
-      const formData = new FormData();
-      formData.append("call_type", "get_key");
+      // const formData = new FormData();
+      // formData.append("call_type", "get_key");
 
-      const response1 = await APIService.getToken(formData);
-      console.log(
-        "API RESPONSE FROM RESEND OTP GET TOKEN =>>> ",
-        response1.data
-      );
+      // const response1 = await APIService.getToken(formData);
+      // console.log(
+      //   "API RESPONSE FROM RESEND OTP GET TOKEN =>>> ",
+      //   response1.data
+      // );
 
-      const payload = {
-        call_type: "encode_key",
-        token: response1.data?.data?.token,
-        key: response1.data?.data?.key,
-        timestamp: Math.floor(Date.now() / 1000),
-      };
+      // const payload = {
+      //   call_type: "encode_key",
+      //   token: response1.data?.data?.token,
+      //   key: response1.data?.data?.key,
+      //   timestamp: Math.floor(Date.now() / 1000),
+      // };
 
-      const response2 = await APIService.encodeKey(payload);
-      console.log(
-        "API RESPONSE FROM RESEND OTP ENCODE KEY =>>> ",
-        response2.data
-      );
+      // const response2 = await APIService.encodeKey(payload);
+      // console.log(
+      //   "API RESPONSE FROM RESEND OTP ENCODE KEY =>>> ",
+      //   response2.data
+      // );
 
-      dispatch(setHeaderKey(response2.data?.data?.header_key));
-      localStorage.setItem("headerKey", response2.data?.data?.header_key);
+      // dispatch(setHeaderKey(response2.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response2.data?.data?.header_key);
 
       // resend-otp request
       const resendOtpPayload = {

@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { setHeaderKey } from "../../redux/reducers/auth";
+// import { setHeaderKey } from "../../redux/reducers/auth";
 import { useTranslation } from "react-i18next";
 import APIService from "../../services/api-service";
 import danger from "../../assets/images/danger.svg";
@@ -59,30 +59,30 @@ const EscrowStatus: React.FC<Props> = ({ setCurrentPage }) => {
     dispatch(setConfirmButtonBackdrop(true));
 
     try {
-      const formData = new FormData();
-      formData.append("call_type", "get_key");
+      // const formData = new FormData();
+      // formData.append("call_type", "get_key");
 
-      const response1 = await APIService.getToken(formData);
-      console.log(
-        "API RESPONSE FROM CANCEL ESCROW GET TOKEN =>>> ",
-        response1.data
-      );
+      // const response1 = await APIService.getToken(formData);
+      // console.log(
+      //   "API RESPONSE FROM CANCEL ESCROW GET TOKEN =>>> ",
+      //   response1.data
+      // );
 
-      const payload = {
-        call_type: "encode_key",
-        token: response1.data?.data?.token,
-        key: response1.data?.data?.key,
-        timestamp: Math.floor(Date.now() / 1000),
-      };
+      // const payload = {
+      //   call_type: "encode_key",
+      //   token: response1.data?.data?.token,
+      //   key: response1.data?.data?.key,
+      //   timestamp: Math.floor(Date.now() / 1000),
+      // };
 
-      const response3 = await APIService.encodeKey(payload);
-      console.log(
-        "API RESPONSE FROM CANCEL ESCROW ENCODE KEY =>>> ",
-        response3.data
-      );
+      // const response3 = await APIService.encodeKey(payload);
+      // console.log(
+      //   "API RESPONSE FROM CANCEL ESCROW ENCODE KEY =>>> ",
+      //   response3.data
+      // );
 
-      dispatch(setHeaderKey(response3.data?.data?.header_key));
-      localStorage.setItem("headerKey", response3.data?.data?.header_key);
+      // dispatch(setHeaderKey(response3.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
 
       const cancelPayload = {
         call_type: "cancel_escrow",
@@ -114,27 +114,27 @@ const EscrowStatus: React.FC<Props> = ({ setCurrentPage }) => {
           if (resp.data?.escrow_status === 1) {
             // Do nothing, let the interval continue
           } else {
-            const formData = new FormData();
-            formData.append("call_type", "get_key");
-            const response1 = await APIService.getToken(formData);
-            console.log(
-              "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
-              response1.data
-            );
+            // const formData = new FormData();
+            // formData.append("call_type", "get_key");
+            // const response1 = await APIService.getToken(formData);
+            // console.log(
+            //   "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
+            //   response1.data
+            // );
 
-            const payload = {
-              call_type: "encode_key",
-              token: response1.data?.data?.token,
-              key: response1.data?.data?.key,
-              timestamp: Math.floor(Date.now() / 1000),
-            };
-            const response3 = await APIService.encodeKey(payload);
-            console.log(
-              "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
-              response3.data
-            );
-            dispatch(setHeaderKey(response3.data?.data?.header_key));
-            localStorage.setItem("headerKey", response3.data?.data?.header_key);
+            // const payload = {
+            //   call_type: "encode_key",
+            //   token: response1.data?.data?.token,
+            //   key: response1.data?.data?.key,
+            //   timestamp: Math.floor(Date.now() / 1000),
+            // };
+            // const response3 = await APIService.encodeKey(payload);
+            // console.log(
+            //   "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
+            //   response3.data
+            // );
+            // dispatch(setHeaderKey(response3.data?.data?.header_key));
+            // localStorage.setItem("headerKey", response3.data?.data?.header_key);
             const p2pPayload = {
               call_type: "p2p_vendors",
               ip: "192.168.0.0",

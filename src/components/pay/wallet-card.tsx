@@ -24,7 +24,7 @@ import { PageProps } from "../../utils/myUtils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useTranslation } from "react-i18next";
-import { setHeaderKey } from "../../redux/reducers/auth";
+// import { setHeaderKey } from "../../redux/reducers/auth";
 import APIService from "../../services/api-service";
 import {
   setButtonBackdrop,
@@ -101,30 +101,30 @@ const WalletCard: React.FC<WalletCardProps> = ({ setCurrentPage }) => {
       dispatch(setButtonBackdrop(true));
 
       try {
-        const formData = new FormData();
-        formData.append("call_type", "get_key");
+        // const formData = new FormData();
+        // formData.append("call_type", "get_key");
 
-        const response1 = await APIService.getToken(formData);
-        console.log(
-          "API RESPONSE FROM WALLET PAY GET TOKEN =>>> ",
-          response1.data
-        );
+        // const response1 = await APIService.getToken(formData);
+        // console.log(
+        //   "API RESPONSE FROM WALLET PAY GET TOKEN =>>> ",
+        //   response1.data
+        // );
 
-        const payload = {
-          call_type: "encode_key",
-          token: response1.data?.data?.token,
-          key: response1.data?.data?.key,
-          timestamp: Math.floor(Date.now() / 1000),
-        };
+        // const payload = {
+        //   call_type: "encode_key",
+        //   token: response1.data?.data?.token,
+        //   key: response1.data?.data?.key,
+        //   timestamp: Math.floor(Date.now() / 1000),
+        // };
 
-        const response2 = await APIService.encodeKey(payload);
-        console.log(
-          "API RESPONSE FROM WALLET PAY ENCODE KEY =>>> ",
-          response2.data
-        );
+        // const response2 = await APIService.encodeKey(payload);
+        // console.log(
+        //   "API RESPONSE FROM WALLET PAY ENCODE KEY =>>> ",
+        //   response2.data
+        // );
 
-        dispatch(setHeaderKey(response2.data?.data?.header_key));
-        localStorage.setItem("headerKey", response2.data?.data?.header_key);
+        // dispatch(setHeaderKey(response2.data?.data?.header_key));
+        // localStorage.setItem("headerKey", response2.data?.data?.header_key);
 
         // send-otp request
         const sendOtpPayload = {

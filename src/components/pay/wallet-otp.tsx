@@ -9,7 +9,7 @@ import VideoThumb from "./video-thumb";
 import NoticeIcon from "../../assets/images/notice_icon.svg";
 import { useDispatch, useSelector } from "react-redux";
 // import { RootState } from "@reduxjs/toolkit/query";
-import { setHeaderKey } from "../../redux/reducers/auth";
+// import { setHeaderKey } from "../../redux/reducers/auth";
 import APIService from "../../services/api-service";
 import { RootState } from "../../redux/store";
 import { setWalletPaymentDetails } from "../../redux/reducers/pay";
@@ -197,21 +197,23 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType, setCurrentPage }) => {
   const getHash = React.useCallback(() => {
     const interval = setInterval(async function () {
       console.log(interval);
+
+      
       try {
-        const formData = new FormData();
-        formData.append("call_type", "get_key");
-        const response1 = await APIService.getToken(formData);
+        // const formData = new FormData();
+        // formData.append("call_type", "get_key");
+        // const response1 = await APIService.getToken(formData);
   
-        const payload = {
-          call_type: "encode_key",
-          token: response1.data?.data?.token,
-          key: response1.data?.data?.key,
-          timestamp: Math.floor(Date.now() / 1000),
-        };
-        const response3 = await APIService.encodeKey(payload);
+        // const payload = {
+        //   call_type: "encode_key",
+        //   token: response1.data?.data?.token,
+        //   key: response1.data?.data?.key,
+        //   timestamp: Math.floor(Date.now() / 1000),
+        // };
+        // const response3 = await APIService.encodeKey(payload);
   
-        dispatch(setHeaderKey(response3.data?.data?.header_key));
-        localStorage.setItem("headerKey", response3.data?.data?.header_key);
+        // dispatch(setHeaderKey(response3.data?.data?.header_key));
+        // localStorage.setItem("headerKey", response3.data?.data?.header_key);
         // const enteredPin = otpValues.join("");
         const formData2 = new FormData();
         formData2.append("call_type", "wallet_pay_validate");
@@ -227,40 +229,49 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType, setCurrentPage }) => {
       }
       }, 30000);
     
-  },[dispatch, payId]);
+  },[payId]);
 
   const handleButtonClick = React.useCallback(async () => {
     // e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("call_type", "get_key");
-      const response1 = await APIService.getToken(formData);
-      console.log(
-        "API RESPONSE FROM VERIFY OTP GET TOKEN =>>> ",
-        response1.data
-      );
+    const enteredPin = otpValues.join("");
 
-      const payload = {
-        call_type: "encode_key",
-        token: response1.data?.data?.token,
-        key: response1.data?.data?.key,
-        timestamp: Math.floor(Date.now() / 1000),
-      };
-      const response3 = await APIService.encodeKey(payload);
-      console.log(
-        "API RESPONSE FROM VERIFY OTP ENCODE KEY =>>> ",
-        response3.data
-      );
-      dispatch(setHeaderKey(response3.data?.data?.header_key));
-      localStorage.setItem("headerKey", response3.data?.data?.header_key);
-      const enteredPin = otpValues.join("");
-      const formData2 = new FormData();
-      formData2.append("call_type", "wallet_pay_validate");
-      formData2.append("ip", "192.168.0.0");
-      formData2.append("lang", "en");
-      formData2.append("pay_id", payId);
-      formData2.append("otp", enteredPin);
-      const res = await APIService.walletPayValidate(formData2);
+    const verifyWalletOtpPayload = {
+      call_type: "wallet_pay_validate",
+      ip: "192.168.0.0",
+      lang: "en",
+      pay_id: payId,
+      otp: enteredPin,
+    }
+    try {
+      // const formData = new FormData();
+      // formData.append("call_type", "get_key");
+      // const response1 = await APIService.getToken(formData);
+      // console.log(
+      //   "API RESPONSE FROM VERIFY OTP GET TOKEN =>>> ",
+      //   response1.data
+      // );
+
+      // const payload = {
+      //   call_type: "encode_key",
+      //   token: response1.data?.data?.token,
+      //   key: response1.data?.data?.key,
+      //   timestamp: Math.floor(Date.now() / 1000),
+      // };
+      // const response3 = await APIService.encodeKey(payload);
+      // console.log(
+      //   "API RESPONSE FROM VERIFY OTP ENCODE KEY =>>> ",
+      //   response3.data
+      // );
+      // dispatch(setHeaderKey(response3.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
+      // const enteredPin = otpValues.join("");
+      // const formData2 = new FormData();
+      // formData2.append("call_type", "wallet_pay_validate");
+      // formData2.append("ip", "192.168.0.0");
+      // formData2.append("lang", "en");
+      // formData2.append("pay_id", payId);
+      // formData2.append("otp", enteredPin);
+      const res = await APIService.walletPayValidate(verifyWalletOtpPayload);
       console.log("API RESPONSE FROM VERIFY WALLET OTP =>>> ", res.data);
       if (res.data && res.data.status === "success") {
         // OTP verification successful
@@ -297,26 +308,26 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType, setCurrentPage }) => {
     setCountdown(120); // Reset countdown
     setResendDisabled(true); // Disable resend button
     try { 
-      const formData = new FormData();
-      formData.append("call_type", "get_key");
-      const response1 = await APIService.getToken(formData);
-      console.log(
-        "API RESPONSE FROM WALLET RESEND OTP GET TOKEN =>>> ",
-        response1.data
-      );
-      const payload = {
-        call_type: "encode_key",
-        token: response1.data?.data?.token,
-        key: response1.data?.data?.key,
-        timestamp: Math.floor(Date.now() / 1000),
-      };
-      const response3 = await APIService.encodeKey(payload);
-      console.log(
-        "API RESPONSE FROM WALLET RESEND OTP ENCODE KEY =>>> ",
-        response3.data
-      );
-      dispatch(setHeaderKey(response3.data?.data?.header_key));
-      localStorage.setItem("headerKey", response3.data?.data?.header_key);
+      // const formData = new FormData();
+      // formData.append("call_type", "get_key");
+      // const response1 = await APIService.getToken(formData);
+      // console.log(
+      //   "API RESPONSE FROM WALLET RESEND OTP GET TOKEN =>>> ",
+      //   response1.data
+      // );
+      // const payload = {
+      //   call_type: "encode_key",
+      //   token: response1.data?.data?.token,
+      //   key: response1.data?.data?.key,
+      //   timestamp: Math.floor(Date.now() / 1000),
+      // };
+      // const response3 = await APIService.encodeKey(payload);
+      // console.log(
+      //   "API RESPONSE FROM WALLET RESEND OTP ENCODE KEY =>>> ",
+      //   response3.data
+      // );
+      // dispatch(setHeaderKey(response3.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
       // resend-otp request
       const walletResendOtpPayload = {
         call_type: "resend_wallet_otp",

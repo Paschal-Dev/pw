@@ -5,7 +5,7 @@ import APIService from "../../services/api-service";
 import { Vendor } from "../../data/pay/vendors-data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { setHeaderKey } from "../../redux/reducers/auth";
+// import { setHeaderKey } from "../../redux/reducers/auth";
 import { setP2PEscrowDetails } from "../../redux/reducers/pay";
 import loader from "../../assets/images/loader.gif";
 
@@ -38,28 +38,28 @@ const Vendors: React.FC<Props> = ({ item, setCurrentPage }) => {
     if (isClicked) return;
     setIsClicked(true);
     try {
-      const formData = new FormData();
-      formData.append("call_type", "get_key");
-      const response1 = await APIService.getToken(formData);
-      console.log(
-        "API RESPONSE FROM P2P VENDORS ESCROW GET TOKEN =>>> ",
-        response1.data
-      );
+      // const formData = new FormData();
+      // formData.append("call_type", "get_key");
+      // const response1 = await APIService.getToken(formData);
+      // console.log(
+      //   "API RESPONSE FROM P2P VENDORS ESCROW GET TOKEN =>>> ",
+      //   response1.data
+      // );
 
-      const payload = {
-        call_type: "encode_key",
-        token: response1.data?.data?.token,
-        key: response1.data?.data?.key,
-        timestamp: Math.floor(Date.now() / 1000),
-      };
+      // const payload = {
+      //   call_type: "encode_key",
+      //   token: response1.data?.data?.token,
+      //   key: response1.data?.data?.key,
+      //   timestamp: Math.floor(Date.now() / 1000),
+      // };
 
-      const response3 = await APIService.encodeKey(payload);
-      console.log(
-        "API RESPONSE FROM P2P VENDORS ESCROW ENCODE KEY =>>> ",
-        response3.data
-      );
-      dispatch(setHeaderKey(response3.data?.data?.header_key));
-      localStorage.setItem("headerKey", response3.data?.data?.header_key);
+      // const response3 = await APIService.encodeKey(payload);
+      // console.log(
+      //   "API RESPONSE FROM P2P VENDORS ESCROW ENCODE KEY =>>> ",
+      //   response3.data
+      // );
+      // dispatch(setHeaderKey(response3.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
       const p2pEscrowPayload = {
         call_type: "p2p_vendors_escrow",
         ip: "192.168.0.0",
