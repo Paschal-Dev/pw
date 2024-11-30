@@ -39,7 +39,7 @@ interface P2pCardProps extends PageProps {
 }
 
 // eslint-disable-next-line no-empty-pattern
-const P2pCard: React.FC<P2pCardProps> = ({ }) => {
+const P2pCard: React.FC<P2pCardProps> = ({ setCurrentPage }) => {
   const [open, setOpen] = React.useState(false);
   const { isOTPVerified } = useSelector((state: RootState) => state.pay);
   const handleClose = () => setOpen(false);
@@ -52,7 +52,7 @@ const P2pCard: React.FC<P2pCardProps> = ({ }) => {
   const [isSuccessAlertShown] = useState(false);
   const { paymentDetails } = useSelector((state: RootState) => state.pay);
   const [deviceType] = React.useState("mobile");
-  
+
   // React.useEffect(() => {
   //   if (mobile) {
   //     setDeviceType("mobile");
@@ -143,8 +143,10 @@ const P2pCard: React.FC<P2pCardProps> = ({ }) => {
               );
               dispatch(setP2PVendorsDetails(respo.data));
               // console.log("The Link", respo.data.p2p.map((item: { checkout_link: unknown; }) => item.checkout_link))
-              window.location.href = respo.data.p2p[0].checkout_link;
-              // setCurrentPage("p2p");
+              setCurrentPage("p2p");
+              setTimeout(() => {
+                window.location.href = respo.data.p2p[0].checkout_link; // Redirect after 5 seconds
+              }, 5000);
             })
             .catch((error: unknown) => {
               console.log("ERROR ::::::: ", error);
