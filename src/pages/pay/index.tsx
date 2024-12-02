@@ -136,7 +136,7 @@ export default function Pay(): React.JSX.Element {
 
 
         if (!shouldRedirectEscrow) {
-          setTimeout(async () => {
+          setInterval(async () => {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
