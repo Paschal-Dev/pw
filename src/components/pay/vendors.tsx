@@ -9,12 +9,14 @@ import { RootState } from "../../redux/store";
 import { setP2PEscrowDetails } from "../../redux/reducers/pay";
 import loader from "../../assets/images/loader.gif";
 
+// import { PageProps } from "../../utils/myUtils";
+
 interface Props {
   item: Vendor;
   setCurrentPage: (page: string) => void; // Add setCurrentPage prop type
 }
 
-const Vendors: React.FC<Props> = ({ item, }) => {
+const Vendors: React.FC<Props> = ({ item, setCurrentPage}) => {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -66,14 +68,19 @@ const Vendors: React.FC<Props> = ({ item, }) => {
       };
       const respo = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
       dispatch(setP2PEscrowDetails(respo.data));
-      window.location.href = item.checkout_link;
+      // setTimeout(() => {
+      // window.location.href = item.checkout_link;
+      setCurrentPage("escrow-page");
 
       console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
 
     } catch (error) {
       console.error("Error Getting Escrow:", error);
     }
- console.log(item.id);
+
+
+
+    console.log(item.id);
   };
 
   return (

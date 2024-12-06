@@ -832,7 +832,7 @@ const EscrowConfirmDetails: React.FC<Props> = ({ setCurrentPage }) => {
               textAlign="center"
               justifyContent={"end"}
             >
-              VOUCHER
+              P2P
             </Typography>
           </Box>
         </Box>

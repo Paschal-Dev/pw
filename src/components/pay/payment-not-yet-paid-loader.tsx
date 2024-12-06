@@ -35,7 +35,7 @@ export default function NotYetPaidLoader(): React.JSX.Element {
         "0px 1.3486182689666748px 5.394473075866699px  0px  rgba(0, 0, 0, 0.15)"
       }
       alignItems={"center"}
-      width={200}
+      width={400}
       p={6}
       borderRadius={3}
       display={"flex"}

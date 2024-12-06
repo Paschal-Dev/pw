@@ -195,7 +195,7 @@ export default function EscrowConfirm({
               textAlign={"center"}
             >
               <span dangerouslySetInnerHTML={{ __html: currency_sign }} />
-              {`${p2pEscrowDetails?.data?.amount} ${p2pEscrowDetails?.data?.currency}`}
+              {`${p2pEscrowDetails?.pay?.total_send_amount} ${p2pEscrowDetails?.data?.currency}`}
             </Typography>
           </Box>
           <img src={p2pEscrowDetails?.vendor?.logo} alt="" width='80%' />

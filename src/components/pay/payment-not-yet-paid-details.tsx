@@ -8,9 +8,9 @@ export default function NotYetPaidDetails() {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { walletPaymentDetails } = useSelector((state: RootState) => state.pay);
-  const currency_sign = walletPaymentDetails?.data?.currency_sign;
-  const shouldDisplayBox = walletPaymentDetails?.pay?.payment_status === 0;
+  const { walletPaymentDetails, p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+  const currency_sign = p2pEscrowDetails || walletPaymentDetails?.data?.currency_sign;
+  const shouldDisplayBox = walletPaymentDetails?.pay?.payment_status === 0 || p2pEscrowDetails?.pay?.payment_status === 0;
   // Function to format Unix timestamp to a human-readable date string with time
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp * 1000); // Convert timestamp to milliseconds
