@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axiosInstance, { axiosInstanceWithoutKey } from '../utils/axios';
+import axiosInstance from '../utils/axios';
 import encryptPayload from '../utils/encrypt-payload';
 
 export default class APIService {
-  static getToken = (payload: unknown) =>
-    axiosInstanceWithoutKey.post('/get-token-key.php', encryptPayload(payload));
-  static encodeKey = (payload: any) =>
-    axiosInstanceWithoutKey.post('/encode-key.php', encryptPayload(payload));
+  // static getToken = (payload: unknown) =>
+  //   axiosInstanceWithoutKey.post('/get-token-key.php', encryptPayload(payload));
+  // static encodeKey = (payload: any) =>
+  //   axiosInstanceWithoutKey.post('/encode-key.php', encryptPayload(payload));
   static sendOTP = (payload: any) =>
     axiosInstance.post('/pay/', encryptPayload(payload));
   static resendOTP = (payload: any) =>

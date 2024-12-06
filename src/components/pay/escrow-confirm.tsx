@@ -18,7 +18,7 @@ export default function EscrowConfirm({
   setCurrentPage,
 }: // apiResponse
   PageProps): React.JSX.Element {
-  const { p2pEscrowDetails} = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
   // const { payId } = useSelector((state: RootState) => state.pay);
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const dispatch = useDispatch();
@@ -74,6 +74,8 @@ export default function EscrowConfirm({
         clearInterval(checkWindowClosed);
 
         dispatch(setShouldRedirectEscrow(true));
+        console.log("Payment Window Closed =>>> ");
+
         setCurrentPage("p2p-payment")
 
       }
