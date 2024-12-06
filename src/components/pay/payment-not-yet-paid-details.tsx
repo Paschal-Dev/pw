@@ -93,7 +93,7 @@ export default function NotYetPaidDetails() {
             textAlign="center"
             justifyContent={"end"}
           >
-            {walletPaymentDetails?.data?.order_name}
+            {p2pEscrowDetails || walletPaymentDetails?.data?.order_name}
           </Typography>
         </Box>
         <Box
@@ -123,7 +123,7 @@ export default function NotYetPaidDetails() {
             textAlign="center"
             justifyContent={"end"}
           >
-            {walletPaymentDetails?.pay?.payment_method}
+            {p2pEscrowDetails || walletPaymentDetails?.pay?.payment_method}
           </Typography>
         </Box>
         <Box
@@ -154,7 +154,7 @@ export default function NotYetPaidDetails() {
             justifyContent={"end"}
           >
             <span dangerouslySetInnerHTML={{ __html: currency_sign }} />
-            {walletPaymentDetails?.data?.amount}
+            {p2pEscrowDetails || walletPaymentDetails?.data?.amount}
           </Typography>
         </Box>
         <Box
@@ -184,7 +184,7 @@ export default function NotYetPaidDetails() {
             textAlign="center"
             justifyContent={"end"}
           >
-            {walletPaymentDetails?.others?.pwat_value}
+            {p2pEscrowDetails || walletPaymentDetails?.others?.pwat_value}
           </Typography>
         </Box>
         <Box
@@ -214,7 +214,7 @@ export default function NotYetPaidDetails() {
             textAlign="center"
             justifyContent={"end"}
           >
-            {walletPaymentDetails?.others?.pwat_rate}
+            {p2pEscrowDetails || walletPaymentDetails?.others?.pwat_rate}
           </Typography>
         </Box>
         <Box
@@ -244,7 +244,7 @@ export default function NotYetPaidDetails() {
             textAlign="center"
             justifyContent={"end"}
           >
-            {walletPaymentDetails?.pay?.mode}
+            {p2pEscrowDetails || walletPaymentDetails?.pay?.mode}
           </Typography>
         </Box>
         <Box
@@ -274,8 +274,8 @@ export default function NotYetPaidDetails() {
             textAlign="center"
             justifyContent={"end"}
           >
-            {walletPaymentDetails?.pay?.date_processed &&
-              formatDate(walletPaymentDetails.pay.date_processed)}
+            {p2pEscrowDetails || walletPaymentDetails?.pay?.date_processed &&
+              formatDate(p2pEscrowDetails || walletPaymentDetails.pay.date_processed)}
           </Typography>
         </Box>
         <Box
