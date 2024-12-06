@@ -9,8 +9,6 @@ import { RootState } from "../../redux/store";
 import { setP2PEscrowDetails } from "../../redux/reducers/pay";
 import loader from "../../assets/images/loader.gif";
 
-// import { PageProps } from "../../utils/myUtils";
-
 interface Props {
   item: Vendor;
   setCurrentPage: (page: string) => void; // Add setCurrentPage prop type
@@ -68,20 +66,14 @@ const Vendors: React.FC<Props> = ({ item, }) => {
       };
       const respo = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
       dispatch(setP2PEscrowDetails(respo.data));
-      // setTimeout(() => {
-      window.location.href = item.checkout_link; // Redirect after 5 seconds
-      // }, 5000);
-      // setCurrentPage("escrow-page");
+      window.location.href = item.checkout_link;
 
       console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
 
     } catch (error) {
       console.error("Error Getting Escrow:", error);
     }
-
-
-
-    console.log(item.id);
+ console.log(item.id);
   };
 
   return (

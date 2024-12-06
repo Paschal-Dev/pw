@@ -142,11 +142,7 @@ const P2pCard: React.FC<P2pCardProps> = ({ setCurrentPage }) => {
                 respo.data
               );
               dispatch(setP2PVendorsDetails(respo.data));
-              // console.log("The Link", respo.data.p2p.map((item: { checkout_link: unknown; }) => item.checkout_link))
               setCurrentPage("p2p");
-              // setTimeout(() => {
-              //   window.location.href = respo.data.p2p[0].checkout_link; // Redirect after 5 seconds
-              // }, 5000);
             })
             .catch((error: unknown) => {
               console.log("ERROR ::::::: ", error);
@@ -156,8 +152,6 @@ const P2pCard: React.FC<P2pCardProps> = ({ setCurrentPage }) => {
         console.error("Error Getting Vendors:", error);
       }
       dispatch(setButtonBackdrop(false));
-
-      // dispatch(setButtonClicked(true));
     }
   };
   const handleCancel = () => {

@@ -11,8 +11,6 @@ import emptyRating from "../../assets/images/empty-rating.svg";
 import { t } from "i18next";
 import { PageProps } from "../../utils/myUtils";
 import { setShouldRedirectEscrow } from "../../redux/reducers/pay";
-// import APIService from "../../services/api-service";
-// import { setP2PEscrowDetails } from "../../redux/reducers/pay";
 
 export default function EscrowConfirm({
   setCurrentPage,
@@ -64,7 +62,7 @@ export default function EscrowConfirm({
     const top = (window.innerHeight - height) / 2;
 
     const paymentWindow = window.open(
-      "https://peerwallet.com",
+      `${p2pEscrowDetails?.data?.vendor?.payment_link}`,
       "PaymentWindow",
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
     );
