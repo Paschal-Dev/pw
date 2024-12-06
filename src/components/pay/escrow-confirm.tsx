@@ -62,7 +62,7 @@ export default function EscrowConfirm({
     const top = (window.innerHeight - height) / 2;
 
     const paymentWindow = window.open(
-      `${p2pEscrowDetails?.data?.vendor?.payment_link}`,
+      `${p2pEscrowDetails?.vendor?.payment_link}`,
       "PaymentWindow",
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
     );
