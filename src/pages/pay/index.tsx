@@ -167,7 +167,7 @@ export default function Pay(): React.JSX.Element {
                       console.log("PAYMENT STATUS RESPONSE :: :: ", resp.data);
           
                       if (resp.data?.pay?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                        dispatch(setWalletPaymentDetails(resp.data));
+                        dispatch(setP2PEscrowDetails(resp.data));dispatch(setWalletPaymentDetails(resp.data));
                         setCurrentPage("wallet-payment");
                       }
           
