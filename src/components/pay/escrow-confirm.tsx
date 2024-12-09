@@ -71,10 +71,10 @@ export default function EscrowConfirm({
 
         clearInterval(checkWindowClosed);
 
+        setCurrentPage("p2p-payment")
         dispatch(setShouldRedirectEscrow(true));
         console.log("Payment Window Closed =>>> ");
 
-        setCurrentPage("p2p-payment")
 
       }
     }, 500);

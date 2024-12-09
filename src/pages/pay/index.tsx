@@ -140,11 +140,11 @@ export default function Pay(): React.JSX.Element {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
-
+          
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
                 dispatch(setOTPVerified(true));
               }
-
+          
               // Check if error_code is 400
               if (resp.data?.error_code === 400) {
                 setErrorPage(true);
@@ -168,22 +168,20 @@ export default function Pay(): React.JSX.Element {
                 APIService.sendOTP(body)
                   .then((resp) => {
                     console.log("PAYMENT STATUS RESPONSE :: :: ", resp.data);
-
+        
                     if (resp.data?.pay?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
                       dispatch(setWalletPaymentDetails(resp.data));
                       setCurrentPage("wallet-payment");
                     }
-
+        
                     if (resp.data?.escrow_status === 1) {
-
+                      dispatch(setButtonClicked(true));
+        
+                      dispatch(setP2PEscrowDetails(resp.data));
                       setCurrentPage("escrow-page");
                       if (resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
                         dispatch(setP2PEscrowDetails(resp.data));
                         setCurrentPage("p2p-payment");
-                      } else {
-                        dispatch(setButtonClicked(true));
-
-                        dispatch(setP2PEscrowDetails(resp.data));
                       }
                     }
                   })
@@ -197,7 +195,7 @@ export default function Pay(): React.JSX.Element {
               console.log("ERROR :::: ", error);
             }
           }, 10000);
-
+        
         }
       }
     }
