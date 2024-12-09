@@ -69,53 +69,53 @@ export default function Pay(): React.JSX.Element {
         console.log("Pay ID", payId);
 
         // send-otp request
-        // const sendOtpPayload = {
-        //   call_type: "pay",
-        //   ip: "192.168.0.0",
-        //   lang: "en",
-        //   pay_id: payId,
-        // };
+        const sendOtpPayload = {
+          call_type: "pay",
+          ip: "192.168.0.0",
+          lang: "en",
+          pay_id: payId,
+        };
 
-        // setTimeout(async () => {
-        //   try {
-        //     const resp = await APIService.sendOTP(sendOtpPayload);
+        setTimeout(async () => {
+          try {
+            const resp = await APIService.sendOTP(sendOtpPayload);
 
-        //     // console.log("API RESPONSE FROM SEND OTP =>>> ", resp.data);
-        //     console.log("DATA ::: 1 ", resp.data);
+            // console.log("API RESPONSE FROM SEND OTP =>>> ", resp.data);
+            console.log("DATA ::: 1 ", resp.data);
 
-        //     // Check if error_code is 400
-        //     if (resp.data?.error_code === 400) {
-        //       setErrorPage(true);
-        //       setErrorResponse(resp.data);
-        //     } else {
-        //       // Otherwise, set the API response data and dispatch payment details
-        //       setApiResponse(resp.data);
-        //       dispatch(setPaymentDetails(resp.data));
+            // Check if error_code is 400
+            if (resp.data?.error_code === 400) {
+              setErrorPage(true);
+              setErrorResponse(resp.data);
+            } else {
+              // Otherwise, set the API response data and dispatch payment details
+              setApiResponse(resp.data);
+              dispatch(setPaymentDetails(resp.data));
 
-        //       if (
-        //         resp.data?.otp_modal === 0 ||
-        //         resp.data?.otp_modal === false
-        //       ) {
-        //         const body = {
-        //           call_type: "wallet_pay",
-        //           pay_id: payId,
-        //         };
-        //         APIService.walletPay(body)
-        //           .then((resp) => {
-        //             console.log("WALLET OTP RESPONSE :: :: ", resp.data);
-        //           })
-        //           .catch((error) => {
-        //             console.log(error);
-        //           });
-        //         dispatch(setOTPVerified(true));
-        //       } else {
-        //         dispatch(setOTPVerified(false));
-        //       }
-        //     }
-        //   } catch (error) {
-        //     console.log("ERROR ::::::: ", error);
-        //   }
-        // }, 3000);
+              if (
+                resp.data?.otp_modal === 0 ||
+                resp.data?.otp_modal === false
+              ) {
+                const body = {
+                  call_type: "wallet_pay",
+                  pay_id: payId,
+                };
+                APIService.walletPay(body)
+                  .then((resp) => {
+                    console.log("WALLET OTP RESPONSE :: :: ", resp.data);
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+                dispatch(setOTPVerified(true));
+              } else {
+                dispatch(setOTPVerified(false));
+              }
+            }
+          } catch (error) {
+            console.log("ERROR ::::::: ", error);
+          }
+        }, 3000);
 
       } else {
         console.log("TRY HERE ::");
@@ -136,7 +136,7 @@ export default function Pay(): React.JSX.Element {
 
 
         if (!shouldRedirectEscrow) {
-          setInterval(async () => {
+          setTimeout(async () => {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
@@ -167,7 +167,8 @@ export default function Pay(): React.JSX.Element {
                       console.log("PAYMENT STATUS RESPONSE :: :: ", resp.data);
           
                       if (resp.data?.pay?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                        dispatch(setP2PEscrowDetails(resp.data));dispatch(setWalletPaymentDetails(resp.data));
+                        dispatch(setP2PEscrowDetails(resp.data));
+                        dispatch(setWalletPaymentDetails(resp.data));
                         setCurrentPage("wallet-payment");
                       }
           
