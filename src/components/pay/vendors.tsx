@@ -16,7 +16,7 @@ interface Props {
   setCurrentPage: (page: string) => void; // Add setCurrentPage prop type
 }
 
-const Vendors: React.FC<Props> = ({ item, }) => {
+const Vendors: React.FC<Props> = ({ item, setCurrentPage}) => {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -69,9 +69,9 @@ const Vendors: React.FC<Props> = ({ item, }) => {
       const respo = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
       dispatch(setP2PEscrowDetails(respo.data));
       // setTimeout(() => {
-      window.location.href = item.checkout_link; // Redirect after 5 seconds
+      // window.location.href = item.checkout_link; // Redirect after 5 seconds
       // }, 5000);
-      // setCurrentPage("escrow-page");
+      setCurrentPage("escrow-page");
 
       console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
 
