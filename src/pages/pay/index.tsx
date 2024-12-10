@@ -159,48 +159,45 @@ export default function Pay(): React.JSX.Element {
 
               if (resp.data?.otp_modal === 0 || !resp.data?.otp_modal) {
                 dispatch(setOTPVerified(true));
-                // setTimeout(async () => {
-                  const body = {
-                    call_type: "pay",
-                    ip: "192.168.0.0",
-                    lang: "en",
-                    pay_id: payId,
-                  };
-                  APIService.sendOTP(body)
-                    .then(async (resp) => {
-                      console.log("PAYMENT STATUS RESPONSE :: :: ", resp.data);
+                // setInterval(async () => {
+                const body = {
+                  call_type: "pay",
+                  ip: "192.168.0.0",
+                  lang: "en",
+                  pay_id: payId,
+                };
+                APIService.sendOTP(body)
+                  .then((resp) => {
+                    console.log("PAYMENT STATUS RESPONSE :: :: ", resp.data);
 
-                      if (resp.data?.pay?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                        dispatch(setWalletPaymentDetails(resp.data));
-                        setCurrentPage("wallet-payment");
-                      }
+                    if (resp.data?.pay?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
+                      dispatch(setWalletPaymentDetails(resp.data));
+                      setCurrentPage("wallet-payment");
+                    }
 
-                      if (resp.data?.escrow_status === 1) {
-                        dispatch(setButtonClicked(true));
+                    if (resp.data?.escrow_status === 1) {
+                      dispatch(setButtonClicked(true));
 
-                        dispatch(setP2PEscrowDetails(resp.data));
-                        // const p2pPayload = {
-                        //   call_type: "p2p_vendors",
-                        //   ip: "192.168.0.0",
-                        //   pay_id: payId,
-                        // };
-                        // const respo2 = await APIService.p2pVendors(p2pPayload);
-
-                        window.location.href = resp?.data?.p2p.checkout_link;
-
-                        // setCurrentPage("escrow-page");
-                        
-                        setTimeout(() => {
-                          if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                            dispatch(setP2PEscrowDetails(resp.data));
-                            setCurrentPage("p2p-payment");
-                          }
-                        }, 60000);
-                      }
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
+                      dispatch(setP2PEscrowDetails(resp.data));
+                      // const p2pPayload = {
+                      //   call_type: "p2p_vendors",
+                      //   ip: "192.168.0.0",
+                      //   pay_id: payId,
+                      // };
+                      // const respo2 = APIService.p2pVendors(p2pPayload);
+                      window.location.href = resp?.data?.vendor.checkout_link;
+                      // setCurrentPage("escrow-page");
+                      setTimeout(() => {
+                        if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
+                          dispatch(setP2PEscrowDetails(resp.data));
+                          setCurrentPage("p2p-payment");
+                        }
+                      }, 60000);
+                    }
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
                 // }, 10000);
               } else {
                 dispatch(setOTPVerified(false));
