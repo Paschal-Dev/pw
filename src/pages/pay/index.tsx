@@ -176,6 +176,9 @@ export default function Pay(): React.JSX.Element {
                     }
 
                     if (resp?.data?.data?.checkout_link) {
+                      dispatch(setButtonClicked(true));
+
+                      dispatch(setP2PEscrowDetails(resp.data));
                       setCurrentPage("escrow-page");
                       return;
                     }
