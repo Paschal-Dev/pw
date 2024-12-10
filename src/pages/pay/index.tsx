@@ -142,14 +142,17 @@ export default function Pay(): React.JSX.Element {
               console.log("API RESPONSE FROM SEND OTP", resp.data);
 
               if (resp?.data?.data?.checkout_link) {
+                const checkoutLink = resp.data.data.checkout_link;
+                console.log("Redirecting to Checkout Link:", checkoutLink);
+        
+                // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
-
-                // Use SPA routing instead of a full reload
-                const checkoutLink = resp.data.data.checkout_link;
-                window.location.assign(checkoutLink);
-
-                // Optionally set the page state or render the escrow component
+        
+                // Redirect to checkoutLink without causing a reload
+                window.history.pushState({}, "Escrow Page", checkoutLink);
+        
+                // Set current page after redirect
                 setCurrentPage("escrow-page");
                 return;
               } else {
@@ -193,12 +196,10 @@ export default function Pay(): React.JSX.Element {
                     if (resp?.data?.data?.checkout_link) {
                       dispatch(setButtonClicked(true));
                       dispatch(setP2PEscrowDetails(resp.data));
-
-                      // Use SPA routing instead of a full reload
+        
+                      // Update URL and set the page
                       const checkoutLink = resp.data.data.checkout_link;
                       window.history.pushState({}, "Escrow Page", checkoutLink);
-
-                      // Optionally set the page state or render the escrow component
                       setCurrentPage("escrow-page");
                       return;
                     }
