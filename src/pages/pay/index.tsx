@@ -140,101 +140,94 @@ export default function Pay(): React.JSX.Element {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
-        
-              // Check for checkout link
+
               if (resp?.data?.data?.checkout_link) {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
-        
+
                 // Dispatch actions and redirect
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
                 window.location.assign(checkoutLink);
                 return; // Stop further execution after redirect
               }
-        
-              // Check if OTP is verified
+
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
                 dispatch(setOTPVerified(true));
               }
-        
-              // Handle error codes
+
+              // Check if error_code is 400
               if (resp.data?.error_code === 400) {
                 setErrorPage(true);
                 setErrorResponse(resp.data);
-                return; // Stop further execution on error
+              } else {
+                // Otherwise, set the API response data and dispatch payment details
+                setApiResponse(resp.data);
+                dispatch(setPaymentDetails(resp.data));
               }
-        
-              // Dispatch payment details
-              setApiResponse(resp.data);
-              dispatch(setPaymentDetails(resp.data));
-        
-              // Handle cases where OTP modal is not required
+
+              // new checks
+
               if (resp.data?.otp_modal === 0 || !resp.data?.otp_modal) {
                 dispatch(setOTPVerified(true));
-        
-                // Check payment status periodically
+                // setInterval(async () => {
                 const body = {
                   call_type: "pay",
                   ip: "192.168.0.0",
                   lang: "en",
                   pay_id: payId,
                 };
-        
                 APIService.sendOTP(body)
-                  .then((statusResp) => {
-                    console.log("PAYMENT STATUS RESPONSE", statusResp.data);
-        
-                    // Handle wallet payment
-                    if (
-                      [0, 1, 2, 3, 5].includes(statusResp.data?.pay?.payment_status) ||
-                      [0, 1, 2, 3, 5].includes(statusResp.data?.data?.payment_status)
-                    ) {
-                      dispatch(setWalletPaymentDetails(statusResp.data));
+                  .then((resp) => {
+                    console.log("PAYMENT STATUS RESPONSE :: :: ", resp.data);
+
+                    if (resp.data?.pay?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
+                      dispatch(setWalletPaymentDetails(resp.data));
                       setCurrentPage("wallet-payment");
                     }
-        
-                    // Handle escrow cases
-                    if (statusResp.data?.data?.checkout_link) {
-                      const checkoutLink = statusResp.data.data.checkout_link;
+
+                    if (resp?.data?.data?.checkout_link) {
+                      const checkoutLink = resp.data.data.checkout_link;
                       console.log("Redirecting to Escrow Page:", checkoutLink);
-        
+
                       // Dispatch and redirect
                       dispatch(setButtonClicked(true));
-                      dispatch(setP2PEscrowDetails(statusResp.data));
+                      dispatch(setP2PEscrowDetails(resp.data));
                       window.history.pushState({}, "Escrow Page", checkoutLink);
                       setCurrentPage("escrow-page");
                       return;
                     }
-        
-                    // Handle other escrow statuses
-                    if (statusResp.data?.escrow_status === 1) {
+
+
+                    if (resp.data?.escrow_status === 1) {
                       dispatch(setButtonClicked(true));
-                      dispatch(setP2PEscrowDetails(statusResp.data));
-        
-                      // Periodically check payment status
+
+                      dispatch(setP2PEscrowDetails(resp.data));
+
+                      // Redirect to the checkout link
+
+
                       setTimeout(() => {
-                        if (
-                          [0, 1, 2, 3, 5].includes(statusResp.data?.data?.payment_status)
-                        ) {
-                          dispatch(setP2PEscrowDetails(statusResp.data));
+                        if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
+                          dispatch(setP2PEscrowDetails(resp.data));
                           setCurrentPage("p2p-payment");
                         }
                       }, 60000);
                     }
                   })
                   .catch((error) => {
-                    console.error("Error in periodic payment status check:", error);
+                    console.log(error);
                   });
+                // }, 10000);
               } else {
                 dispatch(setOTPVerified(false));
               }
             } catch (error) {
-              console.error("Error during sendOTP:", error);
+              console.log("ERROR :::: ", error);
             }
           }, 10000);
+
         }
-        
       }
     }
   }, []);
