@@ -182,7 +182,8 @@ export default function Pay(): React.JSX.Element {
 
                       window.location.href = resp.data.data.checkout_link; // Redirect to the checkout link
                       if (resp?.data?.data?.checkout_link) {
-                        setCurrentPage("escrow-page"); // Set the current page before redirection
+                        setCurrentPage("escrow-page");
+                        return;
                       }
 
                       // window.location.href = resp?.data?.data?.checkout_link;
