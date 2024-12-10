@@ -185,7 +185,7 @@ export default function Pay(): React.JSX.Element {
                           dispatch(setP2PEscrowDetails(resp.data));
                           setCurrentPage("p2p-payment");
                         }
-                      }, 5000);
+                      }, 60000);
                     }
                   })
                   .catch((error) => {
