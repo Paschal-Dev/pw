@@ -193,24 +193,24 @@ export default function Pay(): React.JSX.Element {
                       setCurrentPage("wallet-payment");
                     }
 
-                    
-                    
+                    if (resp?.data?.data?.checkout_link) {
+                      dispatch(setButtonClicked(true));
+                      dispatch(setP2PEscrowDetails(resp.data));
+        
+                      // Update URL and set the page
+                      const checkoutLink = resp.data.data.checkout_link;
+                      window.history.pushState({}, "Escrow Page", checkoutLink);
+                      setCurrentPage("escrow-page");
+                      return;
+                    }
+
+
                     if (resp.data?.escrow_status === 1) {
                       dispatch(setButtonClicked(true));
-                      
+
                       dispatch(setP2PEscrowDetails(resp.data));
-                      
+
                       // Redirect to the checkout link
-                      if (resp?.data?.data?.checkout_link) {
-                        dispatch(setButtonClicked(true));
-                        dispatch(setP2PEscrowDetails(resp.data));
-          
-                        // Update URL and set the page
-                        const checkoutLink = resp.data.data.checkout_link;
-                        window.history.pushState({}, "Escrow Page", checkoutLink);
-                        setCurrentPage("escrow-page");
-                        return;
-                      }
 
 
                       setTimeout(() => {
