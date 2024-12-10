@@ -140,98 +140,101 @@ export default function Pay(): React.JSX.Element {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
-
+        
+              // Check for checkout link
               if (resp?.data?.data?.checkout_link) {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
-
+        
                 // Dispatch actions and redirect
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
-
-                // Redirect to checkoutLink
                 window.location.assign(checkoutLink);
-              } else {
-                console.log("No checkout link found in response.");
+                return; // Stop further execution after redirect
               }
-
+        
+              // Check if OTP is verified
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
                 dispatch(setOTPVerified(true));
               }
-
-              // Check if error_code is 400
+        
+              // Handle error codes
               if (resp.data?.error_code === 400) {
                 setErrorPage(true);
                 setErrorResponse(resp.data);
-              } else {
-                // Otherwise, set the API response data and dispatch payment details
-                setApiResponse(resp.data);
-                dispatch(setPaymentDetails(resp.data));
+                return; // Stop further execution on error
               }
-
-              // new checks
-
+        
+              // Dispatch payment details
+              setApiResponse(resp.data);
+              dispatch(setPaymentDetails(resp.data));
+        
+              // Handle cases where OTP modal is not required
               if (resp.data?.otp_modal === 0 || !resp.data?.otp_modal) {
                 dispatch(setOTPVerified(true));
-                // setInterval(async () => {
+        
+                // Check payment status periodically
                 const body = {
                   call_type: "pay",
                   ip: "192.168.0.0",
                   lang: "en",
                   pay_id: payId,
                 };
+        
                 APIService.sendOTP(body)
-                  .then((resp) => {
-                    console.log("PAYMENT STATUS RESPONSE :: :: ", resp.data);
-
-                    if (resp.data?.pay?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                      dispatch(setWalletPaymentDetails(resp.data));
+                  .then((statusResp) => {
+                    console.log("PAYMENT STATUS RESPONSE", statusResp.data);
+        
+                    // Handle wallet payment
+                    if (
+                      [0, 1, 2, 3, 5].includes(statusResp.data?.pay?.payment_status) ||
+                      [0, 1, 2, 3, 5].includes(statusResp.data?.data?.payment_status)
+                    ) {
+                      dispatch(setWalletPaymentDetails(statusResp.data));
                       setCurrentPage("wallet-payment");
                     }
-
-                    if (resp?.data?.data?.checkout_link) {
+        
+                    // Handle escrow cases
+                    if (statusResp.data?.data?.checkout_link) {
+                      const checkoutLink = statusResp.data.data.checkout_link;
+                      console.log("Redirecting to Escrow Page:", checkoutLink);
+        
+                      // Dispatch and redirect
                       dispatch(setButtonClicked(true));
-                      dispatch(setP2PEscrowDetails(resp.data));
-
-                      // Use SPA routing instead of a full reload
-                      const checkoutLink = resp.data.data.checkout_link;
+                      dispatch(setP2PEscrowDetails(statusResp.data));
                       window.history.pushState({}, "Escrow Page", checkoutLink);
-
-                      // Optionally set the page state or render the escrow component
                       setCurrentPage("escrow-page");
                       return;
                     }
-
-
-                    if (resp.data?.escrow_status === 1) {
+        
+                    // Handle other escrow statuses
+                    if (statusResp.data?.escrow_status === 1) {
                       dispatch(setButtonClicked(true));
-
-                      dispatch(setP2PEscrowDetails(resp.data));
-
-                      // Redirect to the checkout link
-
-
+                      dispatch(setP2PEscrowDetails(statusResp.data));
+        
+                      // Periodically check payment status
                       setTimeout(() => {
-                        if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                          dispatch(setP2PEscrowDetails(resp.data));
+                        if (
+                          [0, 1, 2, 3, 5].includes(statusResp.data?.data?.payment_status)
+                        ) {
+                          dispatch(setP2PEscrowDetails(statusResp.data));
                           setCurrentPage("p2p-payment");
                         }
                       }, 60000);
                     }
                   })
                   .catch((error) => {
-                    console.log(error);
+                    console.error("Error in periodic payment status check:", error);
                   });
-                // }, 10000);
               } else {
                 dispatch(setOTPVerified(false));
               }
             } catch (error) {
-              console.log("ERROR :::: ", error);
+              console.error("Error during sendOTP:", error);
             }
           }, 10000);
-
         }
+        
       }
     }
   }, []);
