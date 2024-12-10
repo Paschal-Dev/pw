@@ -141,19 +141,20 @@ export default function Pay(): React.JSX.Element {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
 
-              // if (resp?.data?.data?.checkout_link) {
-              //   const checkoutLink = resp.data.data.checkout_link;
-              //   console.log("Redirecting to Checkout Link:", checkoutLink);
+              if (resp?.data?.data?.checkout_link) {
+                dispatch(setButtonClicked(true));
+                dispatch(setP2PEscrowDetails(resp.data));
 
-              //   // Dispatch actions and redirect
-              //   dispatch(setButtonClicked(true));
-              //   dispatch(setP2PEscrowDetails(resp.data));
+                // Use SPA routing instead of a full reload
+                const checkoutLink = resp.data.data.checkout_link;
+                window.history.pushState({}, "Escrow Page", checkoutLink);
 
-              //   // Redirect to checkoutLink
-              //   window.location.assign(checkoutLink);
-              // } else {
-              //   console.log("No checkout link found in response.");
-              // }
+                // Optionally set the page state or render the escrow component
+                setCurrentPage("escrow-page");
+                return;
+              } else {
+                console.log("No checkout link found in response.");
+              }
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
                 dispatch(setOTPVerified(true));
