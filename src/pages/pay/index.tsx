@@ -175,24 +175,22 @@ export default function Pay(): React.JSX.Element {
                       setCurrentPage("wallet-payment");
                     }
 
-                  
+                    if (resp?.data?.data?.checkout_link) {
+                      dispatch(setButtonClicked(true));
+
+                      dispatch(setP2PEscrowDetails(resp.data));
+                      window.location.href = resp.data.data.checkout_link;
+                      setCurrentPage("escrow-page");
+                      return;
+                    }
 
                     if (resp.data?.escrow_status === 1) {
                       dispatch(setButtonClicked(true));
 
                       dispatch(setP2PEscrowDetails(resp.data));
 
-                      // Redirect to the checkout link
-                      if (resp?.data?.data?.checkout_link) {
-                        dispatch(setButtonClicked(true));
-                        
-                        dispatch(setP2PEscrowDetails(resp.data));
-                        window.location.href = resp.data.data.checkout_link;
-                        // setCurrentPage("escrow-page");
-                        return;
-                      }else{
-                        setCurrentPage("pay/v");
-                      }
+                       // Redirect to the checkout link
+                      
 
                       // window.location.href = resp?.data?.data?.checkout_link;
 
