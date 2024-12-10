@@ -147,7 +147,7 @@ export default function Pay(): React.JSX.Element {
 
                 // Use SPA routing instead of a full reload
                 const checkoutLink = resp.data.data.checkout_link;
-                window.history.pushState({}, "Escrow Page", checkoutLink);
+                window.location.href = checkoutLink;
 
                 // Optionally set the page state or render the escrow component
                 setCurrentPage("escrow-page");
