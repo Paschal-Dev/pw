@@ -179,14 +179,14 @@ export default function Pay(): React.JSX.Element {
                       dispatch(setButtonClicked(true));
 
                       dispatch(setP2PEscrowDetails(resp.data));
-                      // const p2pPayload = {
-                      //   call_type: "p2p_vendors",
-                      //   ip: "192.168.0.0",
-                      //   pay_id: payId,
-                      // };
-                      // const respo2 = APIService.p2pVendors(p2pPayload);
-                      window.location.href = resp?.data?.data?.checkout_link;
-                      // setCurrentPage("escrow-page");
+
+                      window.location.href = resp.data.data.checkout_link; // Redirect to the checkout link
+                      if (resp?.data?.data?.checkout_link) {
+                        setCurrentPage("escrow-page"); // Set the current page before redirection
+                      }
+
+                      // window.location.href = resp?.data?.data?.checkout_link;
+
                       setTimeout(() => {
                         if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
                           dispatch(setP2PEscrowDetails(resp.data));
