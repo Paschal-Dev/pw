@@ -33,6 +33,8 @@ export default function Pay(): React.JSX.Element {
   const [apiResponse, setApiResponse] = useState(null);
   const [errorResponse, setErrorResponse] = useState(null);
   const [errorPage, setErrorPage] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setHasRedirected] = useState(false);
   const { paymentDetails, shouldRedirectEscrow } = useSelector((state: RootState) => state.pay);
 
 
@@ -133,7 +135,7 @@ export default function Pay(): React.JSX.Element {
           lang: "en",
           pay_id: payId,
         };
-
+        
 
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
@@ -148,6 +150,7 @@ export default function Pay(): React.JSX.Element {
                 // Dispatch actions and redirect
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
+                setHasRedirected(true);
                 window.location.assign(checkoutLink);
                 return; // Stop further execution after redirect
               }
@@ -193,6 +196,7 @@ export default function Pay(): React.JSX.Element {
                       // Dispatch and redirect
                       dispatch(setButtonClicked(true));
                       dispatch(setP2PEscrowDetails(resp.data));
+                      setHasRedirected(true);
                       window.history.pushState({}, "Escrow Page", checkoutLink);
                       setCurrentPage("escrow-page");
                       return;
