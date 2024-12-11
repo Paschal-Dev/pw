@@ -138,41 +138,36 @@ export default function Pay(): React.JSX.Element {
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
             try {
-
-              // Fetch the API data
-              const resp = await APIService.sendOTP(sendOtpPayload);
-              console.log("API RESPONSE FROM SEND OTP", resp.data);
-
               const currentUrl = window.location.href;
 
               // Check if already redirected
               if (sessionStorage.getItem("hasRedirected") === "true") {
                 console.log("Already redirected. Skipping further redirection.");
-        
+
                 // If we are at the checkout link, set the page state
                 if (currentUrl.includes("checkoutLink")) {
-                  dispatch(setButtonClicked(true));
-                  dispatch(setP2PEscrowDetails(resp.data));
                   setCurrentPage("escrow-page");
+                } else {
+                  console.log("Not on the checkout link. No further action needed.");
                 }
-                return;
+                return; // Stop further execution
               }
 
-
+              // API call
+              const resp = await APIService.sendOTP(sendOtpPayload);
+              console.log("API RESPONSE FROM SEND OTP", resp.data);
 
               if (resp?.data?.data?.checkout_link) {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
-        
+
                 // Mark as redirected
                 sessionStorage.setItem("hasRedirected", "true");
-        
+
                 // Redirect to the checkout link
                 window.location.assign(checkoutLink);
                 return;
               }
-
-
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
                 dispatch(setOTPVerified(true));
@@ -214,10 +209,10 @@ export default function Pay(): React.JSX.Element {
 
                       // Update URL and set the page
                       const checkoutLink = resp.data.data.checkout_link;
-                      console.log("Redirecting to Checkout Link:", checkoutLink);
-
-                      // Set session storage flag and redirect
+                      // Mark as redirected
                       sessionStorage.setItem("hasRedirected", "true");
+
+                      // Redirect to the checkout link
                       window.location.assign(checkoutLink);
                       return;
                     }
