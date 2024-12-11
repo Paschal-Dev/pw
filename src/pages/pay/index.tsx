@@ -145,13 +145,18 @@ export default function Pay(): React.JSX.Element {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
 
+
+
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
 
                 // Redirect to checkoutLink without causing a reload
                 // Redirect to checkoutLink
-                window.location.assign(checkoutLink);
+
+                const queryString = new URLSearchParams(location.href);
+                if (!queryString.get('external')) window.location.assign(`${checkoutLink}?external=true`);
+
                 setCurrentPage("escrow-page");
                 return;
               } else {
