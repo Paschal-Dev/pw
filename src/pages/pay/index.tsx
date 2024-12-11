@@ -64,7 +64,7 @@ export default function Pay(): React.JSX.Element {
 
         console.log("PP :: ", currentPath);
 
-        const payId = url.search.split("v=")[1];
+        const payId = `${url.searchParams.get('v')}`;
         dispatch(setPayId(payId));
         console.log("Pay ID", payId);
 
