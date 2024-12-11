@@ -138,37 +138,25 @@ export default function Pay(): React.JSX.Element {
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
             try {
-              // API call
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
-              const currentUrl = window.location.href;
-
-              // Check if already redirected
-              if (sessionStorage.getItem("hasRedirected") === "true") {
-                console.log("Already redirected. Skipping further redirection.");
-
-                // If we are at the checkout link, set the page state
-                if (currentUrl.includes("checkoutLink")) {
-                  dispatch(setButtonClicked(true));
-                  dispatch(setP2PEscrowDetails(resp.data));
-                  setCurrentPage("escrow-page");
-                } else {
-                  console.log("Not on the checkout link. No further action needed.");
-                }
-                return; // Stop further execution
-              }
-
 
               if (resp?.data?.data?.checkout_link) {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
 
-                // Mark as redirected
-                sessionStorage.setItem("hasRedirected", "true");
+                // Dispatch actions
+                dispatch(setButtonClicked(true));
+                dispatch(setP2PEscrowDetails(resp.data));
 
-                // Redirect to the checkout link
-                window.location.assign(checkoutLink);
+                // Redirect to checkoutLink without causing a reload
+                window.history.pushState({}, "Escrow Page", checkoutLink);
+
+                // Set current page after redirect
+                setCurrentPage("escrow-page");
                 return;
+              } else {
+                console.log("No checkout link found in response.");
               }
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
@@ -211,14 +199,10 @@ export default function Pay(): React.JSX.Element {
 
                       // Update URL and set the page
                       const checkoutLink = resp.data.data.checkout_link;
-                      // Mark as redirected
-                      sessionStorage.setItem("hasRedirected", "true");
-
-                      // Redirect to the checkout link
-                      window.location.assign(checkoutLink);
+                      window.history.pushState({}, "Escrow Page", checkoutLink);
+                      setCurrentPage("escrow-page");
                       return;
                     }
-
 
                     if (resp.data?.escrow_status === 1) {
                       dispatch(setButtonClicked(true));
@@ -227,6 +211,8 @@ export default function Pay(): React.JSX.Element {
 
                       // Redirect to the checkout link
 
+
+                      // window.location.href = resp?.data?.data?.checkout_link;
 
                       setTimeout(() => {
                         if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
