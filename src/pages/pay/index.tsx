@@ -139,21 +139,10 @@ export default function Pay(): React.JSX.Element {
           setTimeout(async () => {
             try {
 
-
               // Fetch the API data
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
-
-              if (resp?.data?.data?.checkout_link) {
-                const checkoutLink = resp.data.data.checkout_link;
-                console.log("Redirecting to Checkout Link:", checkoutLink);
-
-                // Set session storage flag and redirect
-                sessionStorage.setItem("hasRedirected", "true");
-                window.location.assign(checkoutLink);
-                return;
-              }
-
+              
               const currentUrl = window.location.href;
 
               // Check if already on the checkout page
@@ -166,6 +155,20 @@ export default function Pay(): React.JSX.Element {
                 }
                 return;
               }
+
+
+
+              if (resp?.data?.data?.checkout_link) {
+                const checkoutLink = resp.data.data.checkout_link;
+                console.log("Redirecting to Checkout Link:", checkoutLink);
+
+                // Set session storage flag and redirect
+                sessionStorage.setItem("hasRedirected", "true");
+                window.location.assign(checkoutLink);
+                return;
+              }
+
+
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
                 dispatch(setOTPVerified(true));
