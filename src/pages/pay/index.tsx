@@ -146,6 +146,8 @@ export default function Pay(): React.JSX.Element {
 
                 // If we are at the checkout link, set the page state
                 if (currentUrl.includes("checkoutLink")) {
+                  dispatch(setButtonClicked(true));
+                  dispatch(setP2PEscrowDetails(resp.data));
                   setCurrentPage("escrow-page");
                 } else {
                   console.log("Not on the checkout link. No further action needed.");
