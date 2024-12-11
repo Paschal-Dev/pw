@@ -122,7 +122,7 @@ export default function Pay(): React.JSX.Element {
         console.log("TRY HERE ::");
         console.log("FSsf :: ", url.search);
 
-      
+
         dispatch(setPayId(payId));
 
         console.log("Pay ID", payId);
@@ -156,7 +156,14 @@ export default function Pay(): React.JSX.Element {
                 // Redirect to checkoutLink
 
                 const queryString = new URLSearchParams(window.location.search);
-                if (!queryString.get('external')) window.location.assign(`${checkoutLink}`);
+                if (!queryString.get('external')) {
+                  window.location.assign(`${checkoutLink}&external=true`);
+                } else {
+                  // Remove `external=true` from the URL in the address bar
+                  queryString.delete('external');
+                  const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
+                  window.history.replaceState({}, document.title, newUrl);
+                }
 
                 setCurrentPage("escrow-page");
                 return;
