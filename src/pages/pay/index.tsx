@@ -138,13 +138,32 @@ export default function Pay(): React.JSX.Element {
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
             try {
+
+
+              // const resp = await APIService.sendOTP(sendOtpPayload);
+              // console.log("API RESPONSE FROM SEND OTP", resp.data);
+
+              // Ensure the flag is only checked in the context of a redirect
+              const currentUrl = window.location.href;
+
+              // Avoid endless loops by checking the current URL
+              const isCheckoutPage = currentUrl.includes("checkoutLink"); // Replace "checkoutLink" with a unique part of the URL
+
+              if (isCheckoutPage) {
+                console.log("Already on checkout page. Skipping redirect logic.");
+                setCurrentPage("escrow-page"); // Set the escrow page state once on the checkout page
+                return;
+              }
+
+              // Check if we already redirected during the session
               const hasRedirected = sessionStorage.getItem("hasRedirected");
 
               if (hasRedirected) {
                 console.log("Redirection already completed. Skipping.");
                 return; // Avoid endless redirection
               }
-              
+
+              // Fetch API data
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
 
@@ -152,14 +171,10 @@ export default function Pay(): React.JSX.Element {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
 
-                // Dispatch actions
-                dispatch(setButtonClicked(true));
-                dispatch(setP2PEscrowDetails(resp.data));
-
-                // Set a flag to indicate redirection has occurred
+                // Mark as redirected
                 sessionStorage.setItem("hasRedirected", "true");
 
-                // Redirect to checkoutLink
+                // Redirect to the checkout link
                 window.location.assign(checkoutLink);
                 return;
               } else {
