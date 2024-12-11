@@ -156,7 +156,7 @@ export default function Pay(): React.JSX.Element {
                 // Redirect to checkoutLink
 
                 const queryString = new URLSearchParams(window.location.search);
-                if (!queryString.get('external')) window.location.assign(`${checkoutLink}&external=true`);
+                if (!queryString.get('external')) window.location.assign(`${checkoutLink}`);
 
                 setCurrentPage("escrow-page");
                 return;
