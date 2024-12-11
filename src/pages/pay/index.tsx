@@ -154,8 +154,8 @@ export default function Pay(): React.JSX.Element {
                 // Redirect to checkoutLink without causing a reload
                 // Redirect to checkoutLink
 
-                const queryString = new URLSearchParams(location.href);
-                if (!queryString.get('external')) window.location.assign(`${checkoutLink}?external=true`);
+                const queryString = new URLSearchParams(window.location.search);
+                if (!queryString.get('external')) window.location.assign(`${checkoutLink}&external=true`);
 
                 setCurrentPage("escrow-page");
                 return;
