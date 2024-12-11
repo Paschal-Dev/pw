@@ -138,16 +138,7 @@ export default function Pay(): React.JSX.Element {
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
             try {
-              const currentUrl = window.location.href;
 
-              // Check if already on the checkout page
-              if (sessionStorage.getItem("hasRedirected")) {
-                console.log("Already redirected. Skipping further action.");
-                if (currentUrl.includes("checkoutLink")) {
-                  setCurrentPage("escrow-page");
-                }
-                return;
-              }
 
               // Fetch the API data
               const resp = await APIService.sendOTP(sendOtpPayload);
@@ -160,6 +151,19 @@ export default function Pay(): React.JSX.Element {
                 // Set session storage flag and redirect
                 sessionStorage.setItem("hasRedirected", "true");
                 window.location.assign(checkoutLink);
+                return;
+              }
+
+              const currentUrl = window.location.href;
+
+              // Check if already on the checkout page
+              if (sessionStorage.getItem("hasRedirected")) {
+                console.log("Already redirected. Skipping further action.");
+                if (currentUrl.includes("checkoutLink")) {
+                  dispatch(setButtonClicked(true));
+                  dispatch(setP2PEscrowDetails(resp.data));
+                  setCurrentPage("escrow-page");
+                }
                 return;
               }
 
