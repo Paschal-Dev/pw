@@ -138,6 +138,9 @@ export default function Pay(): React.JSX.Element {
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
             try {
+              // API call
+              const resp = await APIService.sendOTP(sendOtpPayload);
+              console.log("API RESPONSE FROM SEND OTP", resp.data);
               const currentUrl = window.location.href;
 
               // Check if already redirected
@@ -155,9 +158,6 @@ export default function Pay(): React.JSX.Element {
                 return; // Stop further execution
               }
 
-              // API call
-              const resp = await APIService.sendOTP(sendOtpPayload);
-              console.log("API RESPONSE FROM SEND OTP", resp.data);
 
               if (resp?.data?.data?.checkout_link) {
                 const checkoutLink = resp.data.data.checkout_link;
