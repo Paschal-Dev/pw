@@ -138,22 +138,29 @@ export default function Pay(): React.JSX.Element {
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
             try {
+              const hasRedirected = sessionStorage.getItem("hasRedirected");
+
+              if (hasRedirected) {
+                console.log("Redirection already completed. Skipping.");
+                return; // Avoid endless redirection
+              }
+              
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
 
               if (resp?.data?.data?.checkout_link) {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
-        
+
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
-        
-                // Redirect to checkoutLink without causing a reload
+
+                // Set a flag to indicate redirection has occurred
+                sessionStorage.setItem("hasRedirected", "true");
+
+                // Redirect to checkoutLink
                 window.location.assign(checkoutLink);
-        
-                // Set current page after redirect
-                setCurrentPage("escrow-page");
                 return;
               } else {
                 console.log("No checkout link found in response.");
@@ -196,11 +203,14 @@ export default function Pay(): React.JSX.Element {
                     if (resp?.data?.data?.checkout_link) {
                       dispatch(setButtonClicked(true));
                       dispatch(setP2PEscrowDetails(resp.data));
-        
+
                       // Update URL and set the page
                       const checkoutLink = resp.data.data.checkout_link;
+                      // Set a flag to indicate redirection has occurred
+                      sessionStorage.setItem("hasRedirected", "true");
+
+                      // Redirect to checkoutLink
                       window.location.assign(checkoutLink);
-                      setCurrentPage("escrow-page");
                       return;
                     }
 
