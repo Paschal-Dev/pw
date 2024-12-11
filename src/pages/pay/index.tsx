@@ -150,9 +150,8 @@ export default function Pay(): React.JSX.Element {
                 dispatch(setP2PEscrowDetails(resp.data));
 
                 // Redirect to checkoutLink without causing a reload
-                window.history.pushState({}, "Escrow Page", checkoutLink);
-
-                // Set current page after redirect
+                // Redirect to checkoutLink
+                // window.location.assign(checkoutLink);
                 setCurrentPage("escrow-page");
                 return;
               } else {
