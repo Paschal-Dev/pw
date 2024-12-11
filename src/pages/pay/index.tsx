@@ -142,12 +142,14 @@ export default function Pay(): React.JSX.Element {
               // Fetch the API data
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
-              
+
               const currentUrl = window.location.href;
 
-              // Check if already on the checkout page
-              if (sessionStorage.getItem("hasRedirected")) {
-                console.log("Already redirected. Skipping further action.");
+              // Check if already redirected
+              if (sessionStorage.getItem("hasRedirected") === "true") {
+                console.log("Already redirected. Skipping further redirection.");
+        
+                // If we are at the checkout link, set the page state
                 if (currentUrl.includes("checkoutLink")) {
                   dispatch(setButtonClicked(true));
                   dispatch(setP2PEscrowDetails(resp.data));
@@ -161,9 +163,11 @@ export default function Pay(): React.JSX.Element {
               if (resp?.data?.data?.checkout_link) {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
-
-                // Set session storage flag and redirect
+        
+                // Mark as redirected
                 sessionStorage.setItem("hasRedirected", "true");
+        
+                // Redirect to the checkout link
                 window.location.assign(checkoutLink);
                 return;
               }
