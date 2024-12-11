@@ -151,7 +151,7 @@ export default function Pay(): React.JSX.Element {
 
                 // Redirect to checkoutLink without causing a reload
                 // Redirect to checkoutLink
-                window.location.replace(`${checkoutLink}`);
+                window.location.assign(checkoutLink);
                 setCurrentPage("escrow-page");
                 return;
               } else {
