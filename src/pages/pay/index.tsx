@@ -55,6 +55,8 @@ export default function Pay(): React.JSX.Element {
 
       const newUrl = `${url}`;
 
+      const payId = `${url.searchParams.get('v')}`;
+
       if (newUrl.split("=")[1].length === 0) {
         if (currentPath.includes("v")) {
           console.log("CKJSK :: ", newUrl);
@@ -64,7 +66,6 @@ export default function Pay(): React.JSX.Element {
 
         console.log("PP :: ", currentPath);
 
-        const payId = `${url.searchParams.get('v')}`;
         dispatch(setPayId(payId));
         console.log("Pay ID", payId);
 
@@ -121,7 +122,7 @@ export default function Pay(): React.JSX.Element {
         console.log("TRY HERE ::");
         console.log("FSsf :: ", url.search);
 
-        const payId = url.search.split("v=")[1];
+      
         dispatch(setPayId(payId));
 
         console.log("Pay ID", payId);
