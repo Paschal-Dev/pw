@@ -146,13 +146,10 @@ export default function Pay(): React.JSX.Element {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
 
-
-
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
 
-                // Redirect to checkoutLink without causing a reload
                 // Redirect to checkoutLink
 
                 const queryString = new URLSearchParams(window.location.search);
@@ -205,7 +202,18 @@ export default function Pay(): React.JSX.Element {
                       setCurrentPage("wallet-payment");
                     }
 
-                    if (resp?.data?.data?.checkout_link) {
+                    // if (resp?.data?.data?.checkout_link) {
+                    //   dispatch(setButtonClicked(true));
+                    //   dispatch(setP2PEscrowDetails(resp.data));
+
+                    //   // Update URL and set the page
+                    //   const checkoutLink = resp.data.data.checkout_link;
+                    //   window.history.pushState({}, "Escrow Page", checkoutLink);
+                    //   setCurrentPage("escrow-page");
+                    //   return;
+                    // }
+
+                    if (resp.data?.escrow_status === 1 && resp?.data?.data?.checkout_link) {
                       dispatch(setButtonClicked(true));
                       dispatch(setP2PEscrowDetails(resp.data));
 
@@ -214,24 +222,13 @@ export default function Pay(): React.JSX.Element {
                       window.history.pushState({}, "Escrow Page", checkoutLink);
                       setCurrentPage("escrow-page");
                       return;
-                    }
 
-                    if (resp.data?.escrow_status === 1) {
-                      dispatch(setButtonClicked(true));
-
-                      dispatch(setP2PEscrowDetails(resp.data));
-
-                      // Redirect to the checkout link
-
-
-                      // window.location.href = resp?.data?.data?.checkout_link;
-
-                      setTimeout(() => {
-                        if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                          dispatch(setP2PEscrowDetails(resp.data));
-                          setCurrentPage("p2p-payment");
-                        }
-                      }, 60000);
+                      // setTimeout(() => {
+                      //   if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
+                      //     dispatch(setP2PEscrowDetails(resp.data));
+                      //     setCurrentPage("p2p-payment");
+                      //   }
+                      // }, 60000);
                     }
                   })
                   .catch((error) => {

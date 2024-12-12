@@ -53,7 +53,7 @@ PageProps): React.JSX.Element {
               display={"flex"}
               flexDirection={"column"}
               justifyContent={"space-between"}
-              gap={deviceType === "mobile" ? 2 : 4}
+              gap={deviceType === "mobile" ? 2 : 2}
               mr={deviceType === "mobile" ? 0 : 4}
             >
               {deviceType !== "mobile" && deviceType !== "tablet" && (
