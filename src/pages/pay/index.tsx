@@ -145,28 +145,30 @@ export default function Pay(): React.JSX.Element {
               if (resp?.data?.data?.checkout_link) {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
-
+            
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
-
+            
                 // Redirect to checkoutLink
-
                 const queryString = new URLSearchParams(window.location.search);
                 if (!queryString.get('external')) {
-                  window.location.assign(`${checkoutLink}&external=true`);
+                    // Update the browser's history and URL without reloading
+                    const newUrl = `${checkoutLink}&external=true`;
+                    window.history.pushState({}, document.title, newUrl);
                 } else {
-                  // Remove `external=true` from the URL in the address bar
-                  queryString.delete('external');
-                  const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
-                  window.history.replaceState({}, document.title, newUrl);
+                    // Remove `external=true` from the URL in the address bar
+                    queryString.delete('external');
+                    const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
+                    window.history.replaceState({}, document.title, newUrl);
                 }
-
+            
                 setCurrentPage("escrow-page");
                 return;
-              } else {
+            } else {
                 console.log("No checkout link found in response.");
-              }
+            }
+            
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
                 dispatch(setOTPVerified(true));
