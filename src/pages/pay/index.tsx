@@ -150,14 +150,13 @@ export default function Pay(): React.JSX.Element {
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
             
-                // Redirect to checkoutLink
-                const queryString = new URLSearchParams(window.location.search);
+                // Check and append `external=true` if not present
+                const queryString = new URLSearchParams(new URL(checkoutLink).search);
                 if (!queryString.get('external')) {
-                    // Update the browser's history and URL without reloading
-                    const newUrl = `${checkoutLink}&external=true`;
-                    window.history.pushState({}, document.title, newUrl);
+                    const newUrl = `${checkoutLink}${checkoutLink.includes('?') ? '&' : '?'}external=true`;
+                    window.location.href = newUrl; // Immediate navigation to the new URL
                 } else {
-                    // Remove `external=true` from the URL in the address bar
+                    // Stay on the current page and modify the URL in the address bar
                     queryString.delete('external');
                     const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
                     window.history.replaceState({}, document.title, newUrl);
@@ -168,6 +167,7 @@ export default function Pay(): React.JSX.Element {
             } else {
                 console.log("No checkout link found in response.");
             }
+            
             
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
