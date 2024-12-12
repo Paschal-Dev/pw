@@ -213,7 +213,7 @@ export default function Pay(): React.JSX.Element {
                     //   return;
                     // }
 
-                    if (resp.data?.escrow_status === 1 && resp?.data?.data?.checkout_link) {
+                    if (resp.data?.escrow_status === 1) {
                       dispatch(setButtonClicked(true));
                       dispatch(setP2PEscrowDetails(resp.data));
 
