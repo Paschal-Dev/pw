@@ -122,7 +122,7 @@ export default function Pay(): React.JSX.Element {
         console.log("TRY HERE ::");
         console.log("FSsf :: ", url.search);
 
-
+      
         dispatch(setPayId(payId));
 
         console.log("Pay ID", payId);
@@ -143,38 +143,33 @@ export default function Pay(): React.JSX.Element {
               console.log("API RESPONSE FROM SEND OTP", resp.data);
 
               if (resp?.data?.data?.checkout_link) {
-                let checkoutLink = resp.data.data.checkout_link;
+                const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
 
-                // Ensure the URL is absolute by prepending the current protocol if needed
-                if (checkoutLink.startsWith("//")) {
-                  checkoutLink = `${window.location.protocol}${checkoutLink}`;
-                }
+
 
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
 
-                // Check and append `external=true` if not present
-                const queryString = new URLSearchParams(new URL(checkoutLink).search);
-                if (!queryString.get('external')) {
-                  const newUrl = `${checkoutLink}${checkoutLink.includes('?') ? '&' : '?'}external=true`;
-                  window.location.href = newUrl; // Immediate navigation to the new URL
-                } else {
-                  // Stay on the current page and modify the URL in the address bar
+                // Redirect to checkoutLink without causing a reload
+                // Redirect to checkoutLink
+
+                const queryString = new URLSearchParams(window.location.search);
+                if (!queryString.get('external')){
+                 window.location.assign(`${checkoutLink}&external=true`);
+                }else {
+                  // Remove `external=true` from the URL in the address bar
                   queryString.delete('external');
                   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
                   window.history.replaceState({}, document.title, newUrl);
-                }
+              }
 
                 setCurrentPage("escrow-page");
                 return;
               } else {
                 console.log("No checkout link found in response.");
               }
-
-
-
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
                 dispatch(setOTPVerified(true));
