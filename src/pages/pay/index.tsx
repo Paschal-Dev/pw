@@ -145,59 +145,59 @@ export default function Pay(): React.JSX.Element {
               console.log("API RESPONSE FROM SEND OTP", resp.data);
 
 
-              // if (resp?.data?.data?.checkout_link) {
-              //   const checkoutLink = resp.data.data.checkout_link;
-              //   console.log("Redirecting to Checkout Link:", checkoutLink);
+              if (resp?.data?.data?.checkout_link) {
+                const checkoutLink = resp.data.data.checkout_link;
+                console.log("Redirecting to Checkout Link:", checkoutLink);
 
 
 
-              //   // Redirect to checkoutLink without causing a reload
-              //   // Redirect to checkoutLink
+                // Redirect to checkoutLink without causing a reload
+                // Redirect to checkoutLink
 
-              //   // const queryString = new URLSearchParams(window.location.search);
-              //   // if (!queryString.get('external')) {
-              //   //   window.location.assign(`${checkoutLink}&external=true`);
-              //   // } else {
-              //   //   // Remove `external=true` from the URL in the address bar
-              //   //   queryString.delete('external');
-              //   //   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
-              //   //   window.history.replaceState({}, document.title, newUrl);
-              //   // }
+                // const queryString = new URLSearchParams(window.location.search);
+                // if (!queryString.get('external')) {
+                //   window.location.assign(`${checkoutLink}&external=true`);
+                // } else {
+                //   // Remove `external=true` from the URL in the address bar
+                //   queryString.delete('external');
+                //   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
+                //   window.history.replaceState({}, document.title, newUrl);
+                // }
 
-              //   if (!sessionStorage.getItem('externalRedirected')) {
-              //     // Store a flag to prevent infinite redirects
-              //     sessionStorage.setItem('externalRedirected', 'true');
-              //     window.location.assign(`${checkoutLink}`);
-              //   } else {
-              //     // Clear the flag and continue
-              //     sessionStorage.removeItem('externalRedirected');
-              //     const queryString = new URLSearchParams(window.location.search);
-              //     queryString.delete('external');
-              //     const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
-              //     window.history.replaceState({}, document.title, newUrl);
-              //   }
+                if (!sessionStorage.getItem('externalRedirected')) {
+                  // Store a flag to prevent infinite redirects
+                  sessionStorage.setItem('externalRedirected', 'true');
+                  window.location.assign(`${checkoutLink}`);
+                } else {
+                  // Clear the flag and continue
+                  sessionStorage.removeItem('externalRedirected');
+                  const queryString = new URLSearchParams(window.location.search);
+                  queryString.delete('external');
+                  const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
+                  window.history.replaceState({}, document.title, newUrl);
+                }
                 
 
-              //   // Dispatch actions
-              //   dispatch(setButtonClicked(true));
-              //   dispatch(setP2PEscrowDetails(resp.data));
-
-              //   setCurrentPage("escrow-page");
-              //   return;
-              // } else {
-              //   console.log("No checkout link found in response.");
-              // }
-
-              if (resp?.data?.data?.checkout_link) {
+                // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
 
-                // Update URL and set the page
-                const checkoutLink = resp.data.data.checkout_link;
-                window.history.pushState({}, "Escrow Page", checkoutLink);
                 setCurrentPage("escrow-page");
                 return;
+              } else {
+                console.log("No checkout link found in response.");
               }
+
+              // if (resp?.data?.data?.checkout_link) {
+              //   dispatch(setButtonClicked(true));
+              //   dispatch(setP2PEscrowDetails(resp.data));
+
+              //   // Update URL and set the page
+              //   const checkoutLink = resp.data.data.checkout_link;
+              //   window.history.pushState({}, "Escrow Page", checkoutLink);
+              //   setCurrentPage("escrow-page");
+              //   return;
+              // }
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
                 dispatch(setOTPVerified(true));
