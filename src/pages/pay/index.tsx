@@ -253,7 +253,7 @@ export default function Pay(): React.JSX.Element {
   }, []);
 
   const renderActivePage = () => {
-    if(apiResponse){
+    // if(apiResponse){
       switch (currentPage) {
         case "pay/v":
           return (
@@ -291,7 +291,7 @@ export default function Pay(): React.JSX.Element {
             />
           );
       }
-    }
+    // }
   };
 
   return (
