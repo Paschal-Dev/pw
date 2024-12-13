@@ -136,17 +136,18 @@ export default function Pay(): React.JSX.Element {
         };
 
 
+        // if ()
+
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
 
+
               if (resp?.data?.data?.checkout_link) {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
-
-
 
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
@@ -252,42 +253,44 @@ export default function Pay(): React.JSX.Element {
   }, []);
 
   const renderActivePage = () => {
-    switch (currentPage) {
-      case "pay/v":
-        return (
-          <PayDashboard
-            setCurrentPage={setCurrentPage}
-            apiResponse={apiResponse}
-          />
-        );
-      case "p2p":
-        return (
-          <PayP2P setCurrentPage={setCurrentPage} apiResponse={undefined} />
-        );
-      case "p2p-payment":
-        return (
-          <P2PPayment />
-        );
-      case "escrow-page":
-        return (
-          <EscrowPage setCurrentPage={setCurrentPage} apiResponse={undefined} />
-        );
-      case "wallet-confirm":
-        return (
-          <WalletConfirm
-            setCurrentPage={setCurrentPage}
-            apiResponse={apiResponse}
-          />
-        );
-      case "wallet-payment":
-        return <WalletPayment />;
-      default:
-        return (
-          <PayDashboard
-            setCurrentPage={setCurrentPage}
-            apiResponse={apiResponse}
-          />
-        );
+    if(apiResponse){
+      switch (currentPage) {
+        case "pay/v":
+          return (
+            <PayDashboard
+              setCurrentPage={setCurrentPage}
+              apiResponse={apiResponse}
+            />
+          );
+        case "p2p":
+          return (
+            <PayP2P setCurrentPage={setCurrentPage} apiResponse={undefined} />
+          );
+        case "p2p-payment":
+          return (
+            <P2PPayment />
+          );
+        case "escrow-page":
+          return (
+            <EscrowPage setCurrentPage={setCurrentPage} apiResponse={undefined} />
+          );
+        case "wallet-confirm":
+          return (
+            <WalletConfirm
+              setCurrentPage={setCurrentPage}
+              apiResponse={apiResponse}
+            />
+          );
+        case "wallet-payment":
+          return <WalletPayment />;
+        default:
+          return (
+            <PayDashboard
+              setCurrentPage={setCurrentPage}
+              apiResponse={apiResponse}
+            />
+          );
+      }
     }
   };
 
