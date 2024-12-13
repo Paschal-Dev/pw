@@ -272,7 +272,7 @@ export default function Pay(): React.JSX.Element {
           );
         case "escrow-page":
           return (
-            <EscrowPage setCurrentPage={setCurrentPage} apiResponse={undefined} />
+            <EscrowPage setCurrentPage={setCurrentPage} apiResponse={apiResponse} />
           );
         case "wallet-confirm":
           return (
