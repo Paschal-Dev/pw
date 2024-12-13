@@ -164,10 +164,23 @@ export default function Pay(): React.JSX.Element {
                 //   window.history.replaceState({}, document.title, newUrl);
                 // }
 
+                // if (!sessionStorage.getItem('externalRedirected')) {
+                //   // Store a flag to prevent infinite redirects
+                //   sessionStorage.setItem('externalRedirected', 'true');
+                //   window.location.assign(`${checkoutLink}`);
+                // } else {
+                //   // Clear the flag and continue
+                //   sessionStorage.removeItem('externalRedirected');
+                //   const queryString = new URLSearchParams(window.location.search);
+                //   queryString.delete('external');
+                //   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
+                //   window.history.replaceState({}, document.title, newUrl);
+                // }
+
                 if (!sessionStorage.getItem('externalRedirected')) {
                   // Store a flag to prevent infinite redirects
                   sessionStorage.setItem('externalRedirected', 'true');
-                  window.location.assign(`${checkoutLink}`);
+                  window.location.assign(`${checkoutLink}&external=true`);
                 } else {
                   // Clear the flag and continue
                   sessionStorage.removeItem('externalRedirected');
@@ -176,6 +189,7 @@ export default function Pay(): React.JSX.Element {
                   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
                   window.history.replaceState({}, document.title, newUrl);
                 }
+                
                 
 
                 // Dispatch actions
