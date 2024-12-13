@@ -122,7 +122,7 @@ export default function Pay(): React.JSX.Element {
         console.log("TRY HERE ::");
         console.log("FSsf :: ", url.search);
 
-      
+
         dispatch(setPayId(payId));
 
         console.log("Pay ID", payId);
@@ -145,31 +145,58 @@ export default function Pay(): React.JSX.Element {
               console.log("API RESPONSE FROM SEND OTP", resp.data);
 
 
-              if (resp?.data?.data?.checkout_link) {
-                const checkoutLink = resp.data.data.checkout_link;
-                console.log("Redirecting to Checkout Link:", checkoutLink);
+              // if (resp?.data?.data?.checkout_link) {
+              //   const checkoutLink = resp.data.data.checkout_link;
+              //   console.log("Redirecting to Checkout Link:", checkoutLink);
 
-                // Dispatch actions
+
+
+              //   // Redirect to checkoutLink without causing a reload
+              //   // Redirect to checkoutLink
+
+              //   // const queryString = new URLSearchParams(window.location.search);
+              //   // if (!queryString.get('external')) {
+              //   //   window.location.assign(`${checkoutLink}&external=true`);
+              //   // } else {
+              //   //   // Remove `external=true` from the URL in the address bar
+              //   //   queryString.delete('external');
+              //   //   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
+              //   //   window.history.replaceState({}, document.title, newUrl);
+              //   // }
+
+              //   if (!sessionStorage.getItem('externalRedirected')) {
+              //     // Store a flag to prevent infinite redirects
+              //     sessionStorage.setItem('externalRedirected', 'true');
+              //     window.location.assign(`${checkoutLink}`);
+              //   } else {
+              //     // Clear the flag and continue
+              //     sessionStorage.removeItem('externalRedirected');
+              //     const queryString = new URLSearchParams(window.location.search);
+              //     queryString.delete('external');
+              //     const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
+              //     window.history.replaceState({}, document.title, newUrl);
+              //   }
+                
+
+              //   // Dispatch actions
+              //   dispatch(setButtonClicked(true));
+              //   dispatch(setP2PEscrowDetails(resp.data));
+
+              //   setCurrentPage("escrow-page");
+              //   return;
+              // } else {
+              //   console.log("No checkout link found in response.");
+              // }
+
+              if (resp?.data?.data?.checkout_link) {
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
 
-                // Redirect to checkoutLink without causing a reload
-                // Redirect to checkoutLink
-
-                const queryString = new URLSearchParams(window.location.search);
-                if (!queryString.get('external')){
-                 window.location.assign(`${checkoutLink}&external=true`);
-                }else {
-                  // Remove `external=true` from the URL in the address bar
-                  queryString.delete('external');
-                  const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
-                  window.history.replaceState({}, document.title, newUrl);
-              }
-
+                // Update URL and set the page
+                const checkoutLink = resp.data.data.checkout_link;
+                window.history.pushState({}, "Escrow Page", checkoutLink);
                 setCurrentPage("escrow-page");
                 return;
-              } else {
-                console.log("No checkout link found in response.");
               }
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
@@ -206,16 +233,16 @@ export default function Pay(): React.JSX.Element {
                       setCurrentPage("wallet-payment");
                     }
 
-                    if (resp?.data?.data?.checkout_link) {
-                      dispatch(setButtonClicked(true));
-                      dispatch(setP2PEscrowDetails(resp.data));
+                    // if (resp?.data?.data?.checkout_link) {
+                    //   dispatch(setButtonClicked(true));
+                    //   dispatch(setP2PEscrowDetails(resp.data));
 
-                      // Update URL and set the page
-                      const checkoutLink = resp.data.data.checkout_link;
-                      window.history.pushState({}, "Escrow Page", checkoutLink);
-                      setCurrentPage("escrow-page");
-                      return;
-                    }
+                    //   // Update URL and set the page
+                    //   const checkoutLink = resp.data.data.checkout_link;
+                    //   window.history.pushState({}, "Escrow Page", checkoutLink);
+                    //   setCurrentPage("escrow-page");
+                    //   return;
+                    // }
 
                     if (resp.data?.escrow_status === 1) {
                       dispatch(setButtonClicked(true));
@@ -245,7 +272,7 @@ export default function Pay(): React.JSX.Element {
             } catch (error) {
               console.log("ERROR :::: ", error);
             }
-          }, 10000);
+          }, 1000);
 
         }
       }
@@ -254,43 +281,43 @@ export default function Pay(): React.JSX.Element {
 
   const renderActivePage = () => {
     // if(apiResponse){
-      switch (currentPage) {
-        case "pay/v":
-          return (
-            <PayDashboard
-              setCurrentPage={setCurrentPage}
-              apiResponse={apiResponse}
-            />
-          );
-        case "p2p":
-          return (
-            <PayP2P setCurrentPage={setCurrentPage} apiResponse={undefined} />
-          );
-        case "p2p-payment":
-          return (
-            <P2PPayment />
-          );
-        case "escrow-page":
-          return (
-            <EscrowPage setCurrentPage={setCurrentPage} apiResponse={apiResponse} />
-          );
-        case "wallet-confirm":
-          return (
-            <WalletConfirm
-              setCurrentPage={setCurrentPage}
-              apiResponse={apiResponse}
-            />
-          );
-        case "wallet-payment":
-          return <WalletPayment />;
-        default:
-          return (
-            <PayDashboard
-              setCurrentPage={setCurrentPage}
-              apiResponse={apiResponse}
-            />
-          );
-      }
+    switch (currentPage) {
+      case "pay/v":
+        return (
+          <PayDashboard
+            setCurrentPage={setCurrentPage}
+            apiResponse={apiResponse}
+          />
+        );
+      case "p2p":
+        return (
+          <PayP2P setCurrentPage={setCurrentPage} apiResponse={undefined} />
+        );
+      case "p2p-payment":
+        return (
+          <P2PPayment />
+        );
+      case "escrow-page":
+        return (
+          <EscrowPage setCurrentPage={setCurrentPage} apiResponse={apiResponse} />
+        );
+      case "wallet-confirm":
+        return (
+          <WalletConfirm
+            setCurrentPage={setCurrentPage}
+            apiResponse={apiResponse}
+          />
+        );
+      case "wallet-payment":
+        return <WalletPayment />;
+      default:
+        return (
+          <PayDashboard
+            setCurrentPage={setCurrentPage}
+            apiResponse={apiResponse}
+          />
+        );
+    }
     // }
   };
 
