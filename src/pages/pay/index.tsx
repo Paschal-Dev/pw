@@ -42,7 +42,6 @@ export default function Pay(): React.JSX.Element {
   let count: number = 0;
 
   useEffect(() => {
-    alert("HI")
     count = count + 1;
     const currentPath = window.location.pathname;
 
