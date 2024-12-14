@@ -14,13 +14,10 @@ import APIService from "../../services/api-service";
 import danger from "../../assets/images/danger.svg";
 import close from "../../assets/images/close-icon.svg";
 import { theme } from "../../assets/themes/theme";
-import { setConfirmButtonBackdrop, setP2PVendorsDetails } from "../../redux/reducers/pay";
+import { setConfirmButtonBackdrop, setCurrentPage, setP2PVendorsDetails } from "../../redux/reducers/pay";
 
-interface Props {
-  setCurrentPage: (page: string) => void;
-}
 
-const EscrowStatus: React.FC<Props> = ({ setCurrentPage }) => {
+export default function EscrowStatus(){
   const [deviceType, setDeviceType] = useState("mobile");
   const [open, setOpen] = useState(false);
 
@@ -148,7 +145,7 @@ const EscrowStatus: React.FC<Props> = ({ setCurrentPage }) => {
             dispatch(setP2PVendorsDetails(respo2.data));
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
-            setCurrentPage("p2p");
+            dispatch(setCurrentPage("p2p"));
           }
         } catch (error) {
           console.log("ERROR ::::::: ", error);
@@ -475,6 +472,4 @@ const EscrowStatus: React.FC<Props> = ({ setCurrentPage }) => {
       </Box>
     </Box>
   );
-};
-
-export default EscrowStatus;
+}

@@ -9,13 +9,10 @@ import { RootState } from "../../redux/store";
 import rating from "../../assets/images/rating.png";
 import emptyRating from "../../assets/images/empty-rating.svg";
 import { t } from "i18next";
-import { PageProps } from "../../utils/myUtils";
-import { setShouldRedirectEscrow } from "../../redux/reducers/pay";
+// import { PageProps } from "../../utils/myUtils";
+import { setCurrentPage, setShouldRedirectEscrow } from "../../redux/reducers/pay";
 
-export default function EscrowConfirm({
-  setCurrentPage,
-}: // apiResponse
-  PageProps): React.JSX.Element {
+export default function EscrowConfirm(): React.JSX.Element{
   const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
   // const { payId } = useSelector((state: RootState) => state.pay);
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
@@ -72,7 +69,7 @@ export default function EscrowConfirm({
         clearInterval(checkWindowClosed);
         
         setTimeout(() => {
-          setCurrentPage("p2p-payment")
+          dispatch(setCurrentPage("p2p-payment"));
         }, 2000);
 
         console.log("Payment Window Closed =>>> ");

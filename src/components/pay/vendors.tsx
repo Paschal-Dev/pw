@@ -13,7 +13,6 @@ import loader from "../../assets/images/loader.gif";
 
 interface Props {
   item: Vendor;
-  setCurrentPage: (page: string) => void; // Add setCurrentPage prop type
 }
 
 const Vendors: React.FC<Props> = ({ item, }) => {

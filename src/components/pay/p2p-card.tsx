@@ -24,27 +24,27 @@ import {
 import { theme } from "../../assets/themes/theme";
 import danger from "../../assets/images/danger.svg";
 import close from "../../assets/images/close-icon.svg";
-import { PageProps } from "../../utils/myUtils";
+// import { PageProps } from "../../utils/myUtils";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../redux/store";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import APIService from "../../services/api-service";
 import { useDispatch, useSelector } from "react-redux";
-import { setButtonBackdrop, setButtonClicked, setP2PVendorsDetails } from "../../redux/reducers/pay";
+import { setButtonBackdrop, setButtonClicked, setCurrentPage, setP2PVendorsDetails } from "../../redux/reducers/pay";
 
 
 
-interface P2pCardProps extends PageProps {
+interface P2pCardProps{
   otpVerified: boolean;
 }
 
 // eslint-disable-next-line no-empty-pattern
-const P2pCard: React.FC<P2pCardProps> = ({ setCurrentPage }) => {
+const P2pCard: React.FC<P2pCardProps> = () => {
   const [open, setOpen] = React.useState(false);
   const { isOTPVerified } = useSelector((state: RootState) => state.pay);
   const handleClose = () => setOpen(false);
   const { t } = useTranslation();
-  const { isButtonClicked } = useSelector((state: RootState) => state.button);
+  const { isButtonClicked} = useSelector((state: RootState) => state.button);
   const dispatch = useDispatch();
   const { payId: payId } = useSelector((state: RootState) => state.pay);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -142,7 +142,7 @@ const P2pCard: React.FC<P2pCardProps> = ({ setCurrentPage }) => {
                 respo.data
               );
               dispatch(setP2PVendorsDetails(respo.data));
-              setCurrentPage("p2p");
+              dispatch(setCurrentPage("p2p"));
             })
             .catch((error: unknown) => {
               console.log("ERROR ::::::: ", error);

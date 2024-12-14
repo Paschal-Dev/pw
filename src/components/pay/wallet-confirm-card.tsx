@@ -20,12 +20,10 @@ import WalletOtp from "./wallet-otp";
 
 interface MediaProps {
   deviceType: string;
-  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function WalletConfirmCard({
   deviceType,
-  setCurrentPage,
 }: MediaProps): React.JSX.Element {
   const { t } = useTranslation();
   const { walletSendPaymentDetails } = useSelector(
@@ -260,10 +258,8 @@ export default function WalletConfirmCard({
           aria-describedby="modal-modal-description"
         >
           <WalletOtp
-            setCurrentPage={setCurrentPage}
             // onOtpVerification={handleOtpVerification}
             deviceType={deviceType}
-            apiResponse={undefined} // apiResponse={apiResponse}
           />
         </Modal>
       </Card>

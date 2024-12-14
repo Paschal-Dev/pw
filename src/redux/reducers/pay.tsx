@@ -5,7 +5,9 @@ interface PayI {
     payId: string;
     isOTPVerified: boolean;
     paymentDetails: any;
+    apiResponse: any;
     walletPaymentDetails: any;
+    currentPage: string;
     walletSendPaymentDetails: any;
     p2pVendorsDetails: any;
     p2pEscrowDetails: any;
@@ -19,7 +21,9 @@ const initialState: PayI = {
     payId: "",
     isOTPVerified: false,
     paymentDetails: null,
+    apiResponse: null,
     walletPaymentDetails: null,
+    currentPage: "pay/v",
     p2pVendorsDetails: null,
     walletSendPaymentDetails: undefined,
     p2pEscrowDetails: null,
@@ -39,8 +43,14 @@ const paySlice = createSlice({
         setPaymentDetails: (state, action: PayloadAction<any>) => {
             state.paymentDetails = action.payload
         },
+        setApiResponse: (state, action: PayloadAction<any>) => {
+            state.apiResponse = action.payload
+        },
         setWalletPaymentDetails: (state, action: PayloadAction<any>) => {
             state.walletPaymentDetails = action.payload
+        },
+        setCurrentPage: (state, action: PayloadAction<string>) => {
+            state.currentPage = action.payload
         },
         setWalletSendPaymentDetails: (state, action: PayloadAction<any>) => {
             state.walletSendPaymentDetails = action.payload
@@ -70,6 +80,6 @@ const paySlice = createSlice({
     }
 })
 
-export const { setPayId, setPaymentDetails, setWalletPaymentDetails, setOTPVerified, setWalletSendPaymentDetails, setP2PVendorsDetails, setP2PEscrowDetails, setButtonClicked, setButtonBackdrop, setConfirmButtonBackdrop, setShouldRedirectEscrow } = paySlice.actions
+export const { setPayId, setPaymentDetails, setWalletPaymentDetails, setOTPVerified, setWalletSendPaymentDetails, setP2PVendorsDetails, setP2PEscrowDetails, setButtonClicked, setButtonBackdrop, setConfirmButtonBackdrop, setShouldRedirectEscrow, setCurrentPage, setApiResponse } = paySlice.actions
 
 export default paySlice.reducer

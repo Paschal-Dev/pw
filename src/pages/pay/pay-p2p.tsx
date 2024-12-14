@@ -12,15 +12,12 @@ import VideoThumb from "../../components/pay/video-thumb";
 import Vendors from "../../components/pay/vendors";
 import { Vendor } from "../../data/pay/vendors-data";
 import { Icon } from "@iconify/react";
-import { PageProps } from "../../utils/myUtils";
+// import { PageProps } from "../../utils/myUtils";
 import Gif from "../../components/pay/gif";
 import { RootState } from "../../redux/store";
 import { useSelector, useDispatch } from "react-redux";
-import { setButtonClicked} from "../../redux/reducers/pay";
-export default function PayP2P({
-  setCurrentPage,
-}: // apiResponse
-PageProps): React.JSX.Element {
+import { setButtonClicked, setCurrentPage} from "../../redux/reducers/pay";
+export default function PayP2P(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -32,7 +29,7 @@ PageProps): React.JSX.Element {
 
   const backButtonClicked = () => {
     dispatch(setButtonClicked(false));
-    setCurrentPage("pay")
+    dispatch(setCurrentPage("pay"));
   }
 
   React.useEffect(() => {

@@ -27,16 +27,18 @@ import chinese from "../../../assets/images/flag_chinese.png";
 import korean from "../../../assets/images/flag_korean.png";
 import arabic from "../../../assets/images/flag_arabic.png";
 import bengali from "../../../assets/images/flag_bengali.jpeg";
-import { PageProps } from "../../../utils/myUtils";
-export default function Topbar({
-  setCurrentPage,
-}:PageProps): React.JSX.Element {
+import { setCurrentPage } from "../../../redux/reducers/pay";
+import { useDispatch } from "react-redux";
+// import { PageProps } from "../../../utils/myUtils";
+export default function Topbar(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const [language, setLanguage] = React.useState(
     localStorage.getItem("language") ?? "en"
   );
+  const dispatch = useDispatch();
+
   const { i18n } = useTranslation();
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value);
@@ -69,7 +71,7 @@ export default function Topbar({
             justifyContent: "space-between",
           }}
         >
-            <img  src={Logo} onClick={() => setCurrentPage("pay/v")} style={{cursor: 'pointer'}}/>
+            <img  src={Logo} onClick={() => dispatch(setCurrentPage("pay/v"))} style={{cursor: 'pointer'}}/>
           <FormControl
             variant="standard"
             size="small"

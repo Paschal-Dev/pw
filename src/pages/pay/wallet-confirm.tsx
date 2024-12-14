@@ -13,18 +13,15 @@ import menu from "../../assets/images/menu.svg";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import WalletConfirmCard from "../../components/pay/wallet-confirm-card";
 import WalletConfirmDetails from "../../components/pay/wallet-confirm-details";
-import { PageProps } from "../../utils/myUtils";
+// import { PageProps } from "../../utils/myUtils";
 import { RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import WalletOtp from "../../components/pay/wallet-otp";
-import { setButtonClicked} from "../../redux/reducers/pay";
+import { setButtonClicked, setCurrentPage} from "../../redux/reducers/pay";
 
 import { useTranslation } from "react-i18next";
 
-export default function WalletConfirm({
-  setCurrentPage,
-}: // apiResponse
-PageProps): React.JSX.Element {
+export default function WalletConfirm(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
   const { paymentDetails } = useSelector((state: RootState) => state.pay);
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -39,7 +36,7 @@ PageProps): React.JSX.Element {
 
   const backButtonClicked = () => {
     dispatch(setButtonClicked(false));
-    setCurrentPage("pay")
+    dispatch(setCurrentPage("pay"));
   }
 
   React.useEffect(() => {
@@ -65,10 +62,8 @@ PageProps): React.JSX.Element {
           >
             {deviceType !== "mobile" && deviceType !== "tablet" && (
               <WalletOtp
-                setCurrentPage={setCurrentPage}
                 // onOtpVerification={handleOtpVerification}
                 deviceType={deviceType}
-                apiResponse={undefined} // apiResponse={apiResponse}
               />
             )}
             {deviceType !== "mobile" && deviceType !== "tablet" && (
@@ -130,7 +125,6 @@ PageProps): React.JSX.Element {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={5} lg={5} md={5} display={"flex"}>
                 <WalletConfirmCard
-                  setCurrentPage={setCurrentPage}
                   deviceType={deviceType}
                 />
               </Grid>

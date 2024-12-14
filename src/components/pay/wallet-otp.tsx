@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import APIService from "../../services/api-service";
 import { RootState } from "../../redux/store";
-import { setWalletPaymentDetails } from "../../redux/reducers/pay";
+import { setCurrentPage, setWalletPaymentDetails } from "../../redux/reducers/pay";
 // import OtpInputs from "./otp-inputs";
 
 interface WalletOtpInputProps {
@@ -127,11 +127,10 @@ const WalletOtpInput = React.forwardRef<HTMLInputElement, WalletOtpInputProps>(
 
 interface OtpProps extends MediaProps {
   // onOtpVerification: (isVerified: boolean) => void;
-  apiResponse: any;
-  setCurrentPage: any;
+  // apiResponse: any;
 }
 
-const WalletOtp: React.FC<OtpProps> = ({ deviceType, setCurrentPage }) => {
+const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
   const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<
@@ -282,7 +281,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType, setCurrentPage }) => {
         setShowVideoThumb(true); // Show video thumbnail
         dispatch(setWalletPaymentDetails(res.data));
 
-        setCurrentPage("wallet-payment");
+        dispatch(setCurrentPage("wallet-payment"));
         getHash();
       } else {
         // Incorrect OTP or other error
@@ -301,7 +300,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType, setCurrentPage }) => {
       // onOtpVerification(false);
       setShowVideoThumb(false);
     }
-  }, [dispatch, getHash, otpValues, payId, setCurrentPage]);
+  }, [dispatch, getHash, otpValues, payId]);
 
 
   const handleResendClick = async () => {

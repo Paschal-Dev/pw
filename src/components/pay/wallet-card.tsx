@@ -20,7 +20,7 @@ import React, { useEffect, useState } from "react";
 import { theme } from "../../assets/themes/theme";
 import danger from "../../assets/images/danger.svg";
 import close from "../../assets/images/close-icon.svg";
-import { PageProps } from "../../utils/myUtils";
+// import { PageProps } from "../../utils/myUtils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useTranslation } from "react-i18next";
@@ -29,12 +29,11 @@ import APIService from "../../services/api-service";
 import {
   setButtonBackdrop,
   setButtonClicked,
+  setCurrentPage,
   setWalletSendPaymentDetails,
 } from "../../redux/reducers/pay";
 
-interface WalletCardProps extends PageProps {
-  // otpVerified: boolean;
-}
+
 
 // const style = {
 //   position: "absolute" as const,
@@ -48,7 +47,7 @@ interface WalletCardProps extends PageProps {
 //   p: 4,
 // };
 
-const WalletCard: React.FC<WalletCardProps> = ({ setCurrentPage }) => {
+export default function WalletCard(): React.JSX.Element{
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -140,7 +139,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ setCurrentPage }) => {
             "API RESPONSE FROM WALLET SEND OTP CHECK FOR ESCROW =>>> ",
             resp.data?.escrow_status
           );
-          setCurrentPage("escrow-page");
+          dispatch(setCurrentPage("escrow-page"));
         } else {
           // resend-otp request
           const walletPayload = {
@@ -168,7 +167,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ setCurrentPage }) => {
                 );
                 dispatch(setWalletSendPaymentDetails(respo.data));
 
-                setCurrentPage("wallet-confirm");
+                dispatch(setCurrentPage("wallet-confirm"));
               })
               .catch((error: unknown) => {
                 console.log("ERROR ::::::: ", error);
@@ -387,6 +386,4 @@ const WalletCard: React.FC<WalletCardProps> = ({ setCurrentPage }) => {
       </Card>
     </Box>
   );
-};
-
-export default WalletCard;
+}

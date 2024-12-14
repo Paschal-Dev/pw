@@ -13,16 +13,13 @@ import WalletCard from "../../components/pay/wallet-card";
 import P2pCard from "../../components/pay/p2p-card";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Gif from "../../components/pay/gif";
-import { PageProps } from "../../utils/myUtils";
+// import { PageProps } from "../../utils/myUtils";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useTranslation } from "react-i18next";
 import loader from "../../assets/images/loader.gif";
 
-export default function PayDashboard({
-  setCurrentPage,
-  apiResponse,
-}: PageProps): React.JSX.Element {
+export default function PayDashboard(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [isloading, setIsLoading] = React.useState(true);
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -82,7 +79,7 @@ export default function PayDashboard({
                     }}
                     zIndex={2}
                   >
-                    <Otp deviceType={deviceType} apiResponse={apiResponse} />
+                    <Otp deviceType={deviceType}/>
                   </Box>
                 )}
                 {isloading ? (
@@ -263,8 +260,6 @@ export default function PayDashboard({
                       />
                     ) : (
                       <WalletCard
-                        setCurrentPage={setCurrentPage}
-                        apiResponse={apiResponse}
                       />
                     )}
                     {isloading ? (
@@ -290,8 +285,6 @@ export default function PayDashboard({
                       />
                     ) : (
                       <P2pCard
-                        setCurrentPage={setCurrentPage}
-                        apiResponse={apiResponse}
                         otpVerified={false}
                       />
                     )}

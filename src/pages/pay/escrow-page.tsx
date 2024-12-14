@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import VideoThumb from "../../components/pay/video-thumb";
 import { theme } from "../../assets/themes/theme";
 import menu from "../../assets/images/menu.svg";
-import { PageProps } from "../../utils/myUtils";
+// import { PageProps } from "../../utils/myUtils";
 import EscrowConfirmDetails from "../../components/pay/escrow-confirm-details";
 import EscrowStatus from "../../components/pay/escrow-status";
 import EscrowConfirm from "../../components/pay/escrow-confirm";
@@ -17,10 +17,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import loader from "../../assets/images/loader.gif";
 
-export default function EscrowPage({
-  setCurrentPage,
-}: // apiResponse
-PageProps): React.JSX.Element {
+export default function EscrowPage(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
 
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -57,7 +54,7 @@ PageProps): React.JSX.Element {
               mr={deviceType === "mobile" ? 0 : 4}
             >
               {deviceType !== "mobile" && deviceType !== "tablet" && (
-                <EscrowStatus setCurrentPage={setCurrentPage} />
+                <EscrowStatus />
               )}
 
               {deviceType !== "mobile" && deviceType !== "tablet" && (
@@ -112,10 +109,10 @@ PageProps): React.JSX.Element {
               </Box>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={5} lg={5} md={5} display={"flex"}>
-                  <EscrowConfirm setCurrentPage={setCurrentPage} apiResponse={undefined}/>
+                  <EscrowConfirm />
                 </Grid>
                 <Grid item xs={12} sm={7} lg={7} md={7}>
-                  <EscrowConfirmDetails setCurrentPage={setCurrentPage} />
+                  <EscrowConfirmDetails />
                 </Grid>
               </Grid>
             </Box>

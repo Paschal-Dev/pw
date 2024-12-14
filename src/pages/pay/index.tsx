@@ -24,16 +24,16 @@ import ErrorPage from "./error_page";
 import EscrowPage from "./escrow-page";
 import { RootState } from "../../redux/store";
 import { Helmet } from "react-helmet";
-import { setButtonClicked } from "../../redux/reducers/pay";
+import { setButtonClicked, setCurrentPage, setApiResponse } from "../../redux/reducers/pay";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import P2PPayment from "./p2p-payment";
 
 export default function Pay(): React.JSX.Element {
-  const [currentPage, setCurrentPage] = useState("pay");
-  const [apiResponse, setApiResponse] = useState(null);
+  // const [currentPage, setCurrentPage] = useState("pay");
+  // const [apiResponse, setApiResponse] = useState(null);
   const [errorResponse, setErrorResponse] = useState(null);
   const [errorPage, setErrorPage] = useState(false);
-  const { paymentDetails, shouldRedirectEscrow } = useSelector((state: RootState) => state.pay);
+  const { paymentDetails, shouldRedirectEscrow, currentPage} = useSelector((state: RootState) => state.pay);
 
 
   // const currency_sign = paymentDetails?.data?.currency_sign;
@@ -193,7 +193,7 @@ export default function Pay(): React.JSX.Element {
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
 
-                setCurrentPage("escrow-page");
+                dispatch(setCurrentPage("escrow-page"));
                 return;
               } else {
                 console.log("No checkout link found in response.");
@@ -296,13 +296,11 @@ export default function Pay(): React.JSX.Element {
       case "pay/v":
         return (
           <PayDashboard
-            setCurrentPage={setCurrentPage}
-            apiResponse={apiResponse}
           />
         );
       case "p2p":
         return (
-          <PayP2P setCurrentPage={setCurrentPage} apiResponse={undefined} />
+          <PayP2P />
         );
       case "p2p-payment":
         return (
@@ -310,22 +308,17 @@ export default function Pay(): React.JSX.Element {
         );
       case "escrow-page":
         return (
-          <EscrowPage setCurrentPage={setCurrentPage} apiResponse={apiResponse} />
+          <EscrowPage />
         );
       case "wallet-confirm":
         return (
-          <WalletConfirm
-            setCurrentPage={setCurrentPage}
-            apiResponse={apiResponse}
-          />
+          <WalletConfirm />
         );
       case "wallet-payment":
         return <WalletPayment />;
       default:
         return (
           <PayDashboard
-            setCurrentPage={setCurrentPage}
-            apiResponse={apiResponse}
           />
         );
     }
@@ -363,7 +356,7 @@ export default function Pay(): React.JSX.Element {
           content={paymentDetails?.seller?.image || ""}
         />
       </Helmet>
-      <Topbar setCurrentPage={setCurrentPage} apiResponse={undefined} />
+      <Topbar  />
       <Container
         maxWidth="xl"
         sx={{

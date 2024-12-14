@@ -7,15 +7,13 @@ import { useTranslation } from "react-i18next";
 import APIService from "../../services/api-service";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import close from "../../assets/images/close-icon.svg";
-import { setConfirmButtonBackdrop, setP2PVendorsDetails } from "../../redux/reducers/pay";
+import { setConfirmButtonBackdrop, setCurrentPage, setP2PVendorsDetails } from "../../redux/reducers/pay";
 // import background from "../../assets/images/background.png";
 
 
-interface Props {
-  setCurrentPage: (page: string) => void;
-}
 
-const EscrowConfirmDetails: React.FC<Props> = ({ setCurrentPage }) => {
+
+export default function EscrowConfirmDetails() {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const { p2pEscrowDetails, payId } = useSelector(
     (state: RootState) => state.pay
@@ -144,7 +142,7 @@ const EscrowConfirmDetails: React.FC<Props> = ({ setCurrentPage }) => {
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
 
-            setCurrentPage("p2p");
+            dispatch(setCurrentPage("p2p"));
           }
         } catch (error) {
           console.log("ERROR ::::::: ", error);
@@ -870,5 +868,4 @@ const EscrowConfirmDetails: React.FC<Props> = ({ setCurrentPage }) => {
       </Box>
     </Box>
   );
-};
-export default EscrowConfirmDetails;
+}

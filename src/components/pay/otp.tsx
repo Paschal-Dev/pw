@@ -127,13 +127,12 @@ const OtpInput = React.forwardRef<HTMLInputElement, OtpInputProps>(
 
 interface OtpProps extends MediaProps {
   // onOtpVerification: (isVerified: boolean) => void;
-  apiResponse: any;
+  // apiResponse: any;
 }
 
 const Otp: React.FC<OtpProps> = ({
   deviceType,
   // onOtpVerification,
-  apiResponse,
 }) => {
   const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -149,6 +148,7 @@ const Otp: React.FC<OtpProps> = ({
     payId: payId,
     paymentDetails,
     isOTPVerified,
+    apiResponse,
   } = useSelector((state: RootState) => state.pay);
   const dispatch = useDispatch();
   const { t } = useTranslation();
