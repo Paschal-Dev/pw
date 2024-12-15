@@ -67,7 +67,7 @@ export default function Pay(): React.JSX.Element {
         console.log("PP :: ", currentPath);
 
         dispatch(setPayId(payId));
-        console.log("Pay ID", payId);
+        console.log("The Pay ID", payId);
 
         // send-otp request
         // const sendOtpPayload = {
