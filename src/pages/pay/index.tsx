@@ -180,7 +180,7 @@ export default function Pay(): React.JSX.Element {
                 if (!sessionStorage.getItem('redirected')) {
                   // Store a flag to prevent repeated redirection
                   sessionStorage.setItem('redirected', 'true');
-                  // window.location.assign(checkoutLink);
+                  window.location.assign(checkoutLink);
                 } else {
                   // Redirection has already occurred; no query string manipulation needed
                   sessionStorage.removeItem('redirected'); // Clean up if needed
