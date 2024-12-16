@@ -177,13 +177,13 @@ export default function Pay(): React.JSX.Element {
                 //   window.history.replaceState({}, document.title, newUrl);
                 // }
 
-                if (!sessionStorage.getItem('redirected')) {
+                if (!localStorage.getItem('redirected')) {
                   // Store a flag to prevent repeated redirection
-                  sessionStorage.setItem('redirected', 'true');
+                  localStorage.setItem('redirected', 'true');
                   window.location.assign(checkoutLink);
                 } else {
                   // Redirection has already occurred; no query string manipulation needed
-                  sessionStorage.removeItem('redirected'); // Clean up if needed
+                  localStorage.removeItem('redirected'); // Clean up if needed
                 }
                 
                 // Dispatch actions
