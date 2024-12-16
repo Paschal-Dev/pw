@@ -146,7 +146,8 @@ export default function EscrowStatus(){
             if (!localStorage.getItem('checkout_link')) {
               // Store a flag to prevent repeated redirection
               // localStorage.setItem('redirected', 'true');
-              window.location.assign(`https://pay.pwat.net/?v=${respo2.data.unique_id}`);
+              console.log("The Unique Id =>>>", respo2.data.unique_id)
+              // window.location.assign(`https://pay.pwat.net/?v=${respo2.data.unique_id}`);
             }
 
             dispatch(setP2PVendorsDetails(respo2.data));
