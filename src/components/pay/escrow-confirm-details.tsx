@@ -50,7 +50,8 @@ export default function EscrowConfirmDetails() {
     setIsConfirming(true);
     setOpen(true);
     dispatch(setConfirmButtonBackdrop(true));
-
+    
+    localStorage.removeItem('checkout_link');
     try {
       // const formData = new FormData();
       // formData.append("call_type", "get_key");
@@ -70,12 +71,12 @@ export default function EscrowConfirmDetails() {
 
       // const response3 = await APIService.encodeKey(payload);
       // console.log(
-      //   "API RESPONSE FROM CANCEL ESCROW ENCODE KEY =>>> ",
-      //   response3.data
-      // );
-
-      // dispatch(setHeaderKey(response3.data?.data?.header_key));
-      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
+        //   "API RESPONSE FROM CANCEL ESCROW ENCODE KEY =>>> ",
+        //   response3.data
+        // );
+        
+        // dispatch(setHeaderKey(response3.data?.data?.header_key));
+        // localStorage.setItem("headerKey", response3.data?.data?.header_key);
 
       const cancelPayload = {
         call_type: "cancel_escrow",
@@ -142,8 +143,7 @@ export default function EscrowConfirmDetails() {
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
 
-            localStorage.removeItem('checkout_link');
-            
+
             dispatch(setCurrentPage("p2p"));
           }
         } catch (error) {

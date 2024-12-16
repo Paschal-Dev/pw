@@ -54,7 +54,8 @@ export default function EscrowStatus(){
     setIsConfirming(true);
     setOpen(true);
     dispatch(setConfirmButtonBackdrop(true));
-
+    
+    localStorage.removeItem('checkout_link');
     try {
       // const formData = new FormData();
       // formData.append("call_type", "get_key");
@@ -86,6 +87,7 @@ export default function EscrowStatus(){
         ip: "192.168.0.0",
         pay_id: payId,
       };
+      
 
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
