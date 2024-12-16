@@ -90,8 +90,7 @@ export default function EscrowStatus(){
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
 
-      window.location.href = `https://pay.pwat.net/?v=${respo.data.unique_id}`
-
+      
       // send-otp request
       const sendOtpPayload = {
         call_type: "pay",
@@ -99,7 +98,7 @@ export default function EscrowStatus(){
         lang: "en",
         pay_id: payId,
       };
-
+      
       // eslint-disable-next-line prefer-const
       let intervalId: number | undefined;
       const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
@@ -109,7 +108,7 @@ export default function EscrowStatus(){
             "API RESPONSE FROM PAGE_RELOAD SEND OTP =>>> ",
             resp.data
           );
-
+          
           if (resp.data?.escrow_status === 1) {
             // Do nothing, let the interval continue
           } else {
@@ -147,7 +146,8 @@ export default function EscrowStatus(){
             dispatch(setP2PVendorsDetails(respo2.data));
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
-
+            
+            window.location.href = `https://pay.pwat.net/?v=${respo2.data.unique_id}`
 
             dispatch(setCurrentPage("p2p"));
           }

@@ -85,8 +85,7 @@ export default function EscrowConfirmDetails() {
 
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
-      window.location.href = `https://pay.pwat.net/?v=${respo.data.unique_id}`
-
+      
       // send-otp request
       const sendOtpPayload = {
         call_type: "pay",
@@ -115,20 +114,20 @@ export default function EscrowConfirmDetails() {
             //   "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
             //   response1.data
             // );
-
+            
             // const payload = {
-            //   call_type: "encode_key",
-            //   token: response1.data?.data?.token,
-            //   key: response1.data?.data?.key,
+              //   call_type: "encode_key",
+              //   token: response1.data?.data?.token,
+              //   key: response1.data?.data?.key,
             //   timestamp: Math.floor(Date.now() / 1000),
             // };
             // const response3 = await APIService.encodeKey(payload);
             // console.log(
-            //   "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
-            //   response3.data
-            // );
-            // dispatch(setHeaderKey(response3.data?.data?.header_key));
-            // localStorage.setItem("headerKey", response3.data?.data?.header_key);
+              //   "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
+              //   response3.data
+              // );
+              // dispatch(setHeaderKey(response3.data?.data?.header_key));
+              // localStorage.setItem("headerKey", response3.data?.data?.header_key);
             const p2pPayload = {
               call_type: "p2p_vendors",
               ip: "192.168.0.0",
@@ -142,7 +141,8 @@ export default function EscrowConfirmDetails() {
             dispatch(setP2PVendorsDetails(respo2.data));
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
-
+            
+            window.location.href = `https://pay.pwat.net/?v=${respo2.data.unique_id}`
             dispatch(setCurrentPage("p2p"));
           }
         } catch (error) {
