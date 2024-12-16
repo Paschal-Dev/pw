@@ -171,7 +171,6 @@ export default function PayP2P(): React.JSX.Element{
                 <Vendors
                   item={item}
                   key={index}
-                  setCurrentPage={setCurrentPage}
                 />
               ))}
             </Box>
