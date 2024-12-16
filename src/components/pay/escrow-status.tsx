@@ -143,11 +143,17 @@ export default function EscrowStatus(){
               "API RESPONSE FROM P2P VENDORS FETCH =>>> ",
               respo2.data
             );
+            if (!localStorage.getItem('checkout_link')) {
+              // Store a flag to prevent repeated redirection
+              // localStorage.setItem('redirected', 'true');
+              window.location.href = `https://pay.pwat.net/?v=${respo2.data.unique_id}`
+            }
             dispatch(setP2PVendorsDetails(respo2.data));
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
+
             
-            window.location.href = `https://pay.pwat.net/?v=${respo2.data.unique_id}`
+            
 
             dispatch(setCurrentPage("p2p"));
           }
