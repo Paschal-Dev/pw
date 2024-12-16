@@ -147,7 +147,7 @@ export default function EscrowStatus(){
             dispatch(setP2PVendorsDetails(respo2.data));
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
-            dispatch(setCurrentPage("p2p"));
+            dispatch(setCurrentPage("pay/v"));
           }
         } catch (error) {
           console.log("ERROR ::::::: ", error);
