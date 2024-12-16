@@ -50,7 +50,7 @@ export default function EscrowConfirmDetails() {
     setIsConfirming(true);
     setOpen(true);
     dispatch(setConfirmButtonBackdrop(true));
-    
+
     localStorage.removeItem('checkout_link');
     try {
       // const formData = new FormData();
@@ -86,6 +86,8 @@ export default function EscrowConfirmDetails() {
 
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
+
+      window.location.href = `https://pay.pwat.net/?v=${payId}`;
 
       // send-otp request
       const sendOtpPayload = {
@@ -144,7 +146,7 @@ export default function EscrowConfirmDetails() {
             dispatch(setConfirmButtonBackdrop(false));
 
 
-            dispatch(setCurrentPage("pay/v"));
+            dispatch(setCurrentPage("p2p"));
           }
         } catch (error) {
           console.log("ERROR ::::::: ", error);
