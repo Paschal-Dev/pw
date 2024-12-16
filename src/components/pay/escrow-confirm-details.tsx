@@ -142,6 +142,8 @@ export default function EscrowConfirmDetails() {
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
 
+            localStorage.removeItem('checkout_link');
+            
             dispatch(setCurrentPage("p2p"));
           }
         } catch (error) {
