@@ -50,7 +50,6 @@ export default function EscrowConfirmDetails() {
     setIsConfirming(true);
     setOpen(true);
     dispatch(setConfirmButtonBackdrop(true));
-
     localStorage.removeItem('checkout_link');
     try {
       // const formData = new FormData();
@@ -71,12 +70,12 @@ export default function EscrowConfirmDetails() {
 
       // const response3 = await APIService.encodeKey(payload);
       // console.log(
-        //   "API RESPONSE FROM CANCEL ESCROW ENCODE KEY =>>> ",
-        //   response3.data
-        // );
-        
-        // dispatch(setHeaderKey(response3.data?.data?.header_key));
-        // localStorage.setItem("headerKey", response3.data?.data?.header_key);
+      //   "API RESPONSE FROM CANCEL ESCROW ENCODE KEY =>>> ",
+      //   response3.data
+      // );
+
+      // dispatch(setHeaderKey(response3.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
 
       const cancelPayload = {
         call_type: "cancel_escrow",
@@ -86,8 +85,7 @@ export default function EscrowConfirmDetails() {
 
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
-
-      window.location.href = `https://pay.pwat.net/?v=${payId}`;
+      window.location.href = `https://pay.pwat.net/?v=${respo.data.unique_id}`
 
       // send-otp request
       const sendOtpPayload = {
@@ -144,7 +142,6 @@ export default function EscrowConfirmDetails() {
             dispatch(setP2PVendorsDetails(respo2.data));
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
-
 
             dispatch(setCurrentPage("p2p"));
           }
