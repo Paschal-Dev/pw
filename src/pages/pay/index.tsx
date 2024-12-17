@@ -185,6 +185,8 @@ export default function Pay(): React.JSX.Element {
                   // Redirection has already occurred; no query string manipulation needed
                   localStorage.removeItem('checkout_link'); // Clean up if needed
                 }
+
+                
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
