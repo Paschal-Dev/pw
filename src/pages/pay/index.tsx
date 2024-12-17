@@ -149,7 +149,7 @@ export default function Pay(): React.JSX.Element {
 
               if (checkoutLink) {
                 localStorage.getItem('checkout_link');
-                window.location.assign(checkoutLink);
+                // window.location.assign(checkoutLink);
               }
 
 
@@ -253,10 +253,11 @@ export default function Pay(): React.JSX.Element {
                         // Store a flag to prevent repeated redirection
                         // localStorage.setItem('redirected', 'true');
                         window.location.assign(checkoutLink);
-                      } else {
-                        // Redirection has already occurred; no query string manipulation needed
-                        localStorage.setItem('checkout_link', checkoutLink); // Clean up if needed
-                      }
+                      } 
+                      // else {
+                      //   // Redirection has already occurred; no query string manipulation needed
+                      //   localStorage.setItem('checkout_link', checkoutLink); // Clean up if needed
+                      // }
 
                       // Dispatch actions
                       dispatch(setButtonClicked(true));
@@ -266,7 +267,7 @@ export default function Pay(): React.JSX.Element {
                       // return;
                       // } else {
                       // console.log("No checkout link found in response.");
-                      localStorage.clear();
+                      // localStorage.clear();
 
                       // Redirect to the checkout link
 
