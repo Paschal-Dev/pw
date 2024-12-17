@@ -138,7 +138,7 @@ export default function Pay(): React.JSX.Element {
 
         // if ()
         localStorage.clear();
-        
+
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
             try {
@@ -183,6 +183,7 @@ export default function Pay(): React.JSX.Element {
                 if (localStorage.getItem('checkout_link')) {
                   // Store a flag to prevent repeated redirection
                   // localStorage.setItem('redirected', 'true');
+                  localStorage.clear();
                   window.location.assign(checkoutLink);
                 }
                 //  else {
