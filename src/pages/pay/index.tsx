@@ -137,7 +137,8 @@ export default function Pay(): React.JSX.Element {
 
 
         // if ()
-
+        localStorage.clear();
+        
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
             try {
@@ -177,16 +178,19 @@ export default function Pay(): React.JSX.Element {
                 //   window.history.replaceState({}, document.title, newUrl);
                 // }
 
+                localStorage.setItem('checkout_link', checkoutLink)
+
                 if (localStorage.getItem('checkout_link')) {
                   // Store a flag to prevent repeated redirection
                   // localStorage.setItem('redirected', 'true');
                   window.location.assign(checkoutLink);
-                } else {
-                  // Redirection has already occurred; no query string manipulation needed
-                  localStorage.removeItem('checkout_link'); // Clean up if needed
                 }
+                //  else {
+                //   // Redirection has already occurred; no query string manipulation needed
+                //   localStorage.removeItem('checkout_link'); // Clean up if needed
+                // }
 
-                
+
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
