@@ -142,7 +142,7 @@ export default function EscrowConfirmDetails() {
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
             
-            window.location.href = `https://pay.pwat.net/?v=${respo2.data.unique_id}`
+            window.location.href = `https://pay.pwat.net/?v=${respo2.data.data.unique_id}`
             dispatch(setCurrentPage("p2p"));
           }
         } catch (error) {
