@@ -193,7 +193,7 @@ export default function Pay(): React.JSX.Element {
                 
                 return;
               } else {
-                // console.log("No checkout link found in response.");
+                console.log("No checkout link found in response.");
                 localStorage.clear();
               }
 
