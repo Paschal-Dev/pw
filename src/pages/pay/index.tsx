@@ -143,9 +143,14 @@ export default function Pay(): React.JSX.Element {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
+              const checkoutLink = resp.data.data.checkout_link;
+              console.log("Above all:", checkoutLink);
 
 
-              // if (resp?.data?.data?.checkout_link) {
+              if (checkoutLink) {
+                localStorage.getItem('checkout_link');
+                window.location.assign(checkoutLink);
+              }
 
 
 
@@ -250,7 +255,7 @@ export default function Pay(): React.JSX.Element {
                         window.location.assign(checkoutLink);
                       } else {
                         // Redirection has already occurred; no query string manipulation needed
-                        localStorage.removeItem('checkout_link'); // Clean up if needed
+                        localStorage.setItem('checkout_link', checkoutLink); // Clean up if needed
                       }
 
                       // Dispatch actions
