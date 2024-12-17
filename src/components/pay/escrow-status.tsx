@@ -55,7 +55,6 @@ export default function EscrowStatus(){
     setOpen(true);
     dispatch(setConfirmButtonBackdrop(true));
     localStorage.removeItem('checkout_link');
-    localStorage.clear();
     try {
       // const formData = new FormData();
       // formData.append("call_type", "get_key");
@@ -147,9 +146,8 @@ export default function EscrowStatus(){
             if (!localStorage.getItem('checkout_link')) {
               // Store a flag to prevent repeated redirection
               // localStorage.setItem('redirected', 'true');
-              const url = `https://pay.pwat.net/?v=${respo2.data.data.unique_id}`;
-              console.log("The Unique Id =>>>", url)
-              window.location.assign(url);
+              console.log("The Unique Id =>>>", respo2.data.data.unique_id)
+              // window.location.assign(`https://pay.pwat.net/?v=${respo2.data.dataunique_id}`);
             }
 
             dispatch(setP2PVendorsDetails(respo2.data));

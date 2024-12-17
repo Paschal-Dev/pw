@@ -33,7 +33,7 @@ export default function Pay(): React.JSX.Element {
   // const [apiResponse, setApiResponse] = useState(null);
   const [errorResponse, setErrorResponse] = useState(null);
   const [errorPage, setErrorPage] = useState(false);
-  const { paymentDetails, shouldRedirectEscrow, currentPage} = useSelector((state: RootState) => state.pay);
+  const { paymentDetails, shouldRedirectEscrow, currentPage } = useSelector((state: RootState) => state.pay);
 
 
   // const currency_sign = paymentDetails?.data?.currency_sign;
@@ -137,7 +137,6 @@ export default function Pay(): React.JSX.Element {
 
 
         // if ()
-        localStorage.clear();
 
         if (!shouldRedirectEscrow) {
           setTimeout(async () => {
@@ -146,63 +145,39 @@ export default function Pay(): React.JSX.Element {
               console.log("API RESPONSE FROM SEND OTP", resp.data);
 
 
-              if (resp?.data?.data?.checkout_link) {
-                const checkoutLink = resp.data.data.checkout_link;
-                console.log("Redirecting to Checkout Link:", checkoutLink);
+              // if (resp?.data?.data?.checkout_link) {
 
 
 
-                // Redirect to checkoutLink without causing a reload
-                // Redirect to checkoutLink
 
-                // const queryString = new URLSearchParams(window.location.search);
-                // if (!queryString.get('external')) {
-                //   window.location.assign(`${checkoutLink}&external=true`);
-                // } else {
-                //   // Remove `external=true` from the URL in the address bar
-                //   queryString.delete('external');
-                //   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
-                //   window.history.replaceState({}, document.title, newUrl);
-                // }
+              // Redirect to checkoutLink without causing a reload
+              // Redirect to checkoutLink
 
-                // if (!sessionStorage.getItem('externalRedirected')) {
-                //   // Store a flag to prevent infinite redirects
-                //   sessionStorage.setItem('externalRedirected', 'true');
-                //   window.location.assign(`${checkoutLink}`);
-                // } else {
-                //   // Clear the flag and continue
-                //   sessionStorage.removeItem('externalRedirected');
-                //   const queryString = new URLSearchParams(window.location.search);
-                //   queryString.delete('external');
-                //   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
-                //   window.history.replaceState({}, document.title, newUrl);
-                // }
+              // const queryString = new URLSearchParams(window.location.search);
+              // if (!queryString.get('external')) {
+              //   window.location.assign(`${checkoutLink}&external=true`);
+              // } else {
+              //   // Remove `external=true` from the URL in the address bar
+              //   queryString.delete('external');
+              //   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
+              //   window.history.replaceState({}, document.title, newUrl);
+              // }
 
-                localStorage.setItem('checkout_link', checkoutLink)
-
-                if (localStorage.getItem('checkout_link')) {
-                  // Store a flag to prevent repeated redirection
-                  // localStorage.setItem('redirected', 'true');
-                  localStorage.clear();
-                  window.location.assign(checkoutLink);
-                }
-                //  else {
-                //   // Redirection has already occurred; no query string manipulation needed
-                //   localStorage.removeItem('checkout_link'); // Clean up if needed
-                // }
+              // if (!sessionStorage.getItem('externalRedirected')) {
+              //   // Store a flag to prevent infinite redirects
+              //   sessionStorage.setItem('externalRedirected', 'true');
+              //   window.location.assign(`${checkoutLink}`);
+              // } else {
+              //   // Clear the flag and continue
+              //   sessionStorage.removeItem('externalRedirected');
+              //   const queryString = new URLSearchParams(window.location.search);
+              //   queryString.delete('external');
+              //   const newUrl = `${window.location.origin}${window.location.pathname}?${queryString.toString()}`;
+              //   window.history.replaceState({}, document.title, newUrl);
+              // }
 
 
-                // Dispatch actions
-                dispatch(setButtonClicked(true));
-                dispatch(setP2PEscrowDetails(resp.data));
-
-                dispatch(setCurrentPage("escrow-page"));
-                
-                return;
-              } else {
-                console.log("No checkout link found in response.");
-                localStorage.clear();
-              }
+              // }
 
               // if (resp?.data?.data?.checkout_link) {
               //   dispatch(setButtonClicked(true));
@@ -249,6 +224,7 @@ export default function Pay(): React.JSX.Element {
                       setCurrentPage("wallet-payment");
                     }
 
+
                     // if (resp?.data?.data?.checkout_link) {
                     //   dispatch(setButtonClicked(true));
                     //   dispatch(setP2PEscrowDetails(resp.data));
@@ -261,21 +237,43 @@ export default function Pay(): React.JSX.Element {
                     // }
 
                     if (resp.data?.escrow_status === 1) {
-                      dispatch(setButtonClicked(true));
+                      // dispatch(setButtonClicked(true));
 
+                      // dispatch(setP2PEscrowDetails(resp.data));
+
+                      const checkoutLink = resp.data.data.checkout_link;
+                      console.log("Redirecting to Checkout Link:", checkoutLink);
+
+                      if (localStorage.getItem('checkout_link')) {
+                        // Store a flag to prevent repeated redirection
+                        // localStorage.setItem('redirected', 'true');
+                        window.location.assign(checkoutLink);
+                      } else {
+                        // Redirection has already occurred; no query string manipulation needed
+                        localStorage.removeItem('checkout_link'); // Clean up if needed
+                      }
+
+                      // Dispatch actions
+                      dispatch(setButtonClicked(true));
                       dispatch(setP2PEscrowDetails(resp.data));
+
+                      dispatch(setCurrentPage("escrow-page"));
+                      // return;
+                      // } else {
+                      // console.log("No checkout link found in response.");
+                      localStorage.clear();
 
                       // Redirect to the checkout link
 
 
                       // window.location.href = resp?.data?.data?.checkout_link;
 
-                      setTimeout(() => {
-                        if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                          dispatch(setP2PEscrowDetails(resp.data));
-                          setCurrentPage("p2p-payment");
-                        }
-                      }, 60000);
+                      // setTimeout(() => {
+                      //   if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
+                      //     dispatch(setP2PEscrowDetails(resp.data));
+                      //     setCurrentPage("p2p-payment");
+                      //   }
+                      // }, 60000);
                     }
                   })
                   .catch((error) => {
@@ -361,7 +359,7 @@ export default function Pay(): React.JSX.Element {
           content={paymentDetails?.seller?.image || ""}
         />
       </Helmet>
-      <Topbar  />
+      <Topbar />
       <Container
         maxWidth="xl"
         sx={{
