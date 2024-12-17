@@ -179,18 +179,18 @@ export default function Pay(): React.JSX.Element {
 
                 if (localStorage.getItem('checkout_link')) {
                   // Store a flag to prevent repeated redirection
+                  // Dispatch actions
                   // localStorage.setItem('redirected', 'true');
                   window.location.assign(checkoutLink);
+                  dispatch(setButtonClicked(true));
+                  dispatch(setP2PEscrowDetails(resp.data));
+  
+                  dispatch(setCurrentPage("escrow-page"));
                 } else {
                   // Redirection has already occurred; no query string manipulation needed
                   localStorage.removeItem('checkout_link'); // Clean up if needed
                 }
                 
-                // Dispatch actions
-                dispatch(setButtonClicked(true));
-                dispatch(setP2PEscrowDetails(resp.data));
-
-                dispatch(setCurrentPage("escrow-page"));
                 // return;
               // } else {
                 // console.log("No checkout link found in response.");
