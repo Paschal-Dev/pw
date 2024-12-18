@@ -165,7 +165,7 @@ export default function Pay(): React.JSX.Element {
                 dispatch(setP2PEscrowDetails(resp.data));
                 dispatch(setCurrentPage("escrow-page"));
   
-                if (intervalRef.current) clearInterval(intervalRef.current);
+                // if (intervalRef.current) clearInterval(intervalRef.current);
                 return;
               } else {
                 console.log("Escrow Is Not Active");
