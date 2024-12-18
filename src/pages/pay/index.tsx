@@ -152,14 +152,15 @@ export default function Pay(): React.JSX.Element {
                 console.log("Redirecting to Checkout Link:", checkoutLink);
 
                 localStorage.removeItem('checkout_link')
-                localStorage.setItem('checkout_link2', checkoutLink);
+                localStorage.clear()
+                localStorage.setItem('checkout_link', checkoutLink);
                 // if (checkoutLink) {
                 //   window.location.assign(checkoutLink);
 
                 // } else {
                 //   console.log("No Checkout Link Found", checkoutLink);
                 // }
-                if (localStorage.getItem('checkout_link2')) {
+                if (localStorage.getItem('checkout_link')) {
                   // Store a flag to prevent repeated redirection
                   // localStorage.setItem('redirected', 'true');
                   window.location.assign(checkoutLink);
