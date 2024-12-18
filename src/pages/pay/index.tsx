@@ -139,7 +139,7 @@ export default function Pay(): React.JSX.Element {
         // if ()
 
         if (!shouldRedirectEscrow) {
-          setInterval(async () => {
+          const intervalId = setInterval(async () => {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
@@ -176,6 +176,8 @@ export default function Pay(): React.JSX.Element {
                 dispatch(setP2PEscrowDetails(resp.data));
 
                 dispatch(setCurrentPage("escrow-page"));
+                // Clear the interval to prevent further executions
+                clearInterval(intervalId);
                 return;
               } else {
                 console.log("Escrow Is Not Active");
