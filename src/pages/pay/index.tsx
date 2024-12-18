@@ -139,10 +139,36 @@ export default function Pay(): React.JSX.Element {
         // if ()
 
         if (!shouldRedirectEscrow) {
-          setTimeout(async () => {
+          setInterval(async () => {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
+              if (resp.data?.escrow_status === 1) {
+                // dispatch(setButtonClicked(true));
+
+                // dispatch(setP2PEscrowDetails(resp.data));
+
+                const checkoutLink = resp.data.data.checkout_link;
+                console.log("Redirecting to Checkout Link:", checkoutLink);
+
+                if (localStorage.getItem('checkout_link')) {
+                  // Store a flag to prevent repeated redirection
+                  // localStorage.setItem('redirected', 'true');
+                  window.location.assign(checkoutLink);
+                } else {
+                  // Redirection has already occurred; no query string manipulation needed
+                  console.log("No Checkout Link Found", checkoutLink); // Clean up if needed
+                }
+
+                // Dispatch actions
+                dispatch(setButtonClicked(true));
+                dispatch(setP2PEscrowDetails(resp.data));
+
+                dispatch(setCurrentPage("escrow-page"));
+                // return;
+              }else{
+                console.log("Escrow Is Not Active");
+              }
 
 
               if (resp.data?.message?.toLowerCase()?.includes("verified")) {
@@ -163,7 +189,7 @@ export default function Pay(): React.JSX.Element {
 
               if (resp.data?.otp_modal === 0 || !resp.data?.otp_modal) {
                 dispatch(setOTPVerified(true));
-                setInterval(async () => {
+                // setInterval(async () => {
                 const body = {
                   call_type: "pay",
                   ip: "192.168.0.0",
@@ -179,46 +205,21 @@ export default function Pay(): React.JSX.Element {
                       setCurrentPage("wallet-payment");
                     }
 
-                    if (resp.data?.escrow_status === 1) {
-                      // dispatch(setButtonClicked(true));
-      
-                      // dispatch(setP2PEscrowDetails(resp.data));
-      
-                      const checkoutLink = resp.data.data.checkout_link;
-                      console.log("Redirecting to Checkout Link:", checkoutLink);
-      
-                      // if (localStorage.getItem('checkout_link')) {
-                        // Store a flag to prevent repeated redirection
-                        // localStorage.setItem('redirected', 'true');
-                        window.location.assign(checkoutLink);
-                      // } else {
-                      //   // Redirection has already occurred; no query string manipulation needed
-                      //   console.log("No Checkout Link Found", checkoutLink); // Clean up if needed
-                      // }
-      
-                      // Dispatch actions
-                      dispatch(setButtonClicked(true));
-                      dispatch(setP2PEscrowDetails(resp.data));
-      
-                      dispatch(setCurrentPage("escrow-page"));
-                      // return;
-                    }else{
-                      console.log("Escrow Is Not Active");
-                    }
+                    
 
                     
                   })
                   .catch((error) => {
                     console.log(error);
                   });
-                }, 2000);
+                // }, 2000);
               } else {
                 dispatch(setOTPVerified(false));
               }
             } catch (error) {
               console.log("ERROR :::: ", error);
             }
-          }, 1000);
+          }, 3000);
 
         }
       }
