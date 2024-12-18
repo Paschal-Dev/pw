@@ -151,21 +151,27 @@ export default function Pay(): React.JSX.Element {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
 
-                if (localStorage.getItem('checkout_link')) {
+                if(checkoutLink){
+                  window.location.assign(checkoutLink);
+
+                }else{
+                  console.log("No Checkout Link Found", checkoutLink);
+                }
+                // if (localStorage.getItem('checkout_link')) {
                   // Store a flag to prevent repeated redirection
                   // localStorage.setItem('redirected', 'true');
-                  window.location.assign(checkoutLink);
-                } else {
-                  // Redirection has already occurred; no query string manipulation needed
-                  console.log("No Checkout Link Found", checkoutLink); // Clean up if needed
-                }
+                  // window.location.assign(checkoutLink);
+                // } else {
+                //   // Redirection has already occurred; no query string manipulation needed
+                //   console.log("No Checkout Link Found", checkoutLink); // Clean up if needed
+                // }
 
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
 
                 dispatch(setCurrentPage("escrow-page"));
-                // return;
+                return;
               }else{
                 console.log("Escrow Is Not Active");
               }
@@ -204,8 +210,6 @@ export default function Pay(): React.JSX.Element {
                       dispatch(setWalletPaymentDetails(resp.data));
                       setCurrentPage("wallet-payment");
                     }
-
-                    
 
                     
                   })
