@@ -135,11 +135,12 @@ export default function Pay(): React.JSX.Element {
           pay_id: payId,
         };
 
+        let intervalId: ReturnType<typeof setInterval>;
 
         // if ()
 
         if (!shouldRedirectEscrow) {
-          const intervalId = setInterval(async () => {
+          intervalId = setInterval(async () => {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
