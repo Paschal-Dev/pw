@@ -139,17 +139,49 @@ export default function Pay(): React.JSX.Element {
         // if ()
 
         if (!shouldRedirectEscrow) {
-          setTimeout(async () => {
+          setInterval(async () => {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
-              const checkoutLink = resp.data.data.checkout_link;
-              console.log("Above all:", checkoutLink);
+              if (resp.data?.escrow_status === 1) {
+                // dispatch(setButtonClicked(true));
+
+                // dispatch(setP2PEscrowDetails(resp.data));
+
+                const checkoutLink = resp.data.data.checkout_link;
+                console.log("Redirecting to Checkout Link:", checkoutLink);
+
+                if (localStorage.getItem('checkout_link')) {
+                  // Store a flag to prevent repeated redirection
+                  // localStorage.setItem('redirected', 'true');
+                  window.location.assign(checkoutLink);
+                } 
+                // else {
+                //   // Redirection has already occurred; no query string manipulation needed
+                //   localStorage.setItem('checkout_link', checkoutLink); // Clean up if needed
+                // }
+
+                // Dispatch actions
+                dispatch(setButtonClicked(true));
+                dispatch(setP2PEscrowDetails(resp.data));
+
+                dispatch(setCurrentPage("escrow-page"));
+                // return;
+                // } else {
+                // console.log("No checkout link found in response.");
+                // localStorage.clear();
+
+                // Redirect to the checkout link
 
 
-              if (checkoutLink) {
-                localStorage.getItem('checkout_link');
-                // window.location.assign(checkoutLink);
+                // window.location.href = resp?.data?.data?.checkout_link;
+
+                // setTimeout(() => {
+                //   if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
+                //     dispatch(setP2PEscrowDetails(resp.data));
+                //     setCurrentPage("p2p-payment");
+                //   }
+                // }, 60000);
               }
 
 
@@ -241,46 +273,7 @@ export default function Pay(): React.JSX.Element {
                     //   return;
                     // }
 
-                    if (resp.data?.escrow_status === 1) {
-                      // dispatch(setButtonClicked(true));
-
-                      // dispatch(setP2PEscrowDetails(resp.data));
-
-                      const checkoutLink = resp.data.data.checkout_link;
-                      console.log("Redirecting to Checkout Link:", checkoutLink);
-
-                      if (localStorage.getItem('checkout_link')) {
-                        // Store a flag to prevent repeated redirection
-                        // localStorage.setItem('redirected', 'true');
-                        window.location.assign(checkoutLink);
-                      } 
-                      // else {
-                      //   // Redirection has already occurred; no query string manipulation needed
-                      //   localStorage.setItem('checkout_link', checkoutLink); // Clean up if needed
-                      // }
-
-                      // Dispatch actions
-                      dispatch(setButtonClicked(true));
-                      dispatch(setP2PEscrowDetails(resp.data));
-
-                      dispatch(setCurrentPage("escrow-page"));
-                      // return;
-                      // } else {
-                      // console.log("No checkout link found in response.");
-                      // localStorage.clear();
-
-                      // Redirect to the checkout link
-
-
-                      // window.location.href = resp?.data?.data?.checkout_link;
-
-                      // setTimeout(() => {
-                      //   if (resp.data?.data?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                      //     dispatch(setP2PEscrowDetails(resp.data));
-                      //     setCurrentPage("p2p-payment");
-                      //   }
-                      // }, 60000);
-                    }
+                    
                   })
                   .catch((error) => {
                     console.log(error);
