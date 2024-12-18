@@ -152,16 +152,19 @@ export default function Pay(): React.JSX.Element {
                 // dispatch(setP2PEscrowDetails(resp.data));
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to:", checkoutLink);
-    
-                // Perform redirection
-                window.location.assign(checkoutLink);
-    
-                // Update state
+
+                if (!localStorage.getItem("redirected")) {
+                  localStorage.setItem("redirected", "true");
+                  window.location.assign(checkoutLink);
+                  // clearInterval(intervalId);
+                } else {
+                  console.log("Redirection already occurred or no checkout link found.");
+                }
+  
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
                 dispatch(setCurrentPage("escrow-page"));
-    
-                // Clear interval
+  
                 if (intervalRef.current) clearInterval(intervalRef.current);
                 return;
               } else {
