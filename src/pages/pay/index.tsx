@@ -162,10 +162,10 @@ export default function Pay(): React.JSX.Element {
                   // localStorage.setItem('redirected', 'true');
                   window.location.assign(checkoutLink);
                 } else {
-                  localStorage.setItem('checkout_link', checkoutLink);
+                  // localStorage.setItem('checkout_link', checkoutLink);
                   // Redirection has already occurred; no query string manipulation needed
-                  console.log("No Checkout Link Found", checkoutLink);
-                  window.location.assign(checkoutLink);
+                  console.log("No Checkout Link Found", 'checkout_link');
+                  // window.location.assign(checkoutLink);
                   // Clean up if needed
                 }
 
