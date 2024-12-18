@@ -70,7 +70,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
       const checkoutLink = item.checkout_link;
       // setTimeout(() => {
 
-      // localStorage.setItem('checkout_link', checkoutLink);
+      localStorage.setItem('checkout_link', checkoutLink);
       
       window.location.href = checkoutLink; // Redirect after 5 seconds
       // }, 5000);
