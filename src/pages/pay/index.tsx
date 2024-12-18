@@ -150,25 +150,33 @@ export default function Pay(): React.JSX.Element {
                 // dispatch(setButtonClicked(true));
 
                 // dispatch(setP2PEscrowDetails(resp.data));
-                const checkoutLink = resp.data.data.checkout_link;
-                console.log("Redirecting to:", checkoutLink);
+                if (typeof window !== 'undefined' && window.localStorage) {
+                  const checkoutLink = localStorage.getItem("checkout_link") || resp.data.data.checkout_link;
+                  if (checkoutLink) {
+                    window.location.assign(checkoutLink);
+                    dispatch(setButtonClicked(true));
+                    dispatch(setP2PEscrowDetails(resp.data));
+                    dispatch(setCurrentPage("escrow-page"));
 
-                if (checkoutLink) {
-                  window.location.assign(checkoutLink);
-                  dispatch(setButtonClicked(true));
-                  dispatch(setP2PEscrowDetails(resp.data));
-                  dispatch(setCurrentPage("escrow-page"));
-              
-                  if (intervalRef.current) clearInterval(intervalRef.current);
+                    if (intervalRef.current) clearInterval(intervalRef.current);
+                  } else {
+                    console.log("No checkout link found.");
+                  }
                 } else {
-                  console.log("No checkout link found.");
+                  // Handle cases where localStorage is not available (e.g., in SSR or mobile environments)
+                  const checkoutLink = resp.data.data.checkout_link;
+                  if (checkoutLink) {
+                    window.location.assign(checkoutLink);
+                    dispatch(setButtonClicked(true));
+                    dispatch(setP2PEscrowDetails(resp.data));
+                    dispatch(setCurrentPage("escrow-page"));
+
+                    if (intervalRef.current) clearInterval(intervalRef.current);
+                  } else {
+                    console.log("No checkout link found.");
+                  }
                 }
-  
-                dispatch(setButtonClicked(true));
-                dispatch(setP2PEscrowDetails(resp.data));
-                dispatch(setCurrentPage("escrow-page"));
-  
-                if (intervalRef.current) clearInterval(intervalRef.current);
+
                 return;
               } else {
                 console.log("Escrow Is Not Active");
