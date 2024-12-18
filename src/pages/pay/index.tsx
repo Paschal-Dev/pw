@@ -39,6 +39,8 @@ export default function Pay(): React.JSX.Element {
   // const currency_sign = paymentDetails?.data?.currency_sign;
 
   const dispatch = useDispatch();
+  const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
   let count: number = 0;
 
   useEffect(() => {
@@ -135,12 +137,12 @@ export default function Pay(): React.JSX.Element {
           pay_id: payId,
         };
 
-        let intervalId: ReturnType<typeof setInterval>;
+        // let intervalId: ReturnType<typeof setInterval>;
 
         // if ()
 
         if (!shouldRedirectEscrow) {
-          intervalId = setInterval(async () => {
+          intervalRef.current = setInterval(async () => {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
@@ -148,20 +150,19 @@ export default function Pay(): React.JSX.Element {
                 // dispatch(setButtonClicked(true));
 
                 // dispatch(setP2PEscrowDetails(resp.data));
-
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to:", checkoutLink);
-        
-                // Immediate redirection for testing
+    
+                // Perform redirection
                 window.location.assign(checkoutLink);
-
-                // Dispatch actions
+    
+                // Update state
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
-
                 dispatch(setCurrentPage("escrow-page"));
-                // Clear the interval to prevent further executions
-                clearInterval(intervalId);
+    
+                // Clear interval
+                if (intervalRef.current) clearInterval(intervalRef.current);
                 return;
               } else {
                 console.log("Escrow Is Not Active");
