@@ -151,20 +151,23 @@ export default function Pay(): React.JSX.Element {
                 const checkoutLink = resp.data.data.checkout_link;
                 console.log("Redirecting to Checkout Link:", checkoutLink);
 
-                if(checkoutLink){
-                  window.location.assign(checkoutLink);
+                // if (checkoutLink) {
+                //   window.location.assign(checkoutLink);
 
-                }else{
-                  console.log("No Checkout Link Found", checkoutLink);
-                }
-                // if (localStorage.getItem('checkout_link')) {
+                // } else {
+                //   console.log("No Checkout Link Found", checkoutLink);
+                // }
+                if (localStorage.getItem('checkout_link')) {
                   // Store a flag to prevent repeated redirection
                   // localStorage.setItem('redirected', 'true');
-                  // window.location.assign(checkoutLink);
-                // } else {
-                //   // Redirection has already occurred; no query string manipulation needed
-                //   console.log("No Checkout Link Found", checkoutLink); // Clean up if needed
-                // }
+                  window.location.assign(checkoutLink);
+                } else {
+                  localStorage.setItem('checkout_link', checkoutLink);
+                  // Redirection has already occurred; no query string manipulation needed
+                  console.log("No Checkout Link Found", checkoutLink);
+                  window.location.assign(checkoutLink);
+                  // Clean up if needed
+                }
 
                 // Dispatch actions
                 dispatch(setButtonClicked(true));
@@ -172,54 +175,54 @@ export default function Pay(): React.JSX.Element {
 
                 dispatch(setCurrentPage("escrow-page"));
                 return;
-              }else{
+              } else {
                 console.log("Escrow Is Not Active");
-              }
+
+                if (resp.data?.message?.toLowerCase()?.includes("verified")) {
+                  dispatch(setOTPVerified(true));
+                }
+                if (resp.data?.error_code === 400) {
+                  setErrorPage(true);
+                  setErrorResponse(resp.data);
+                } else {
+                  // Otherwise, set the API response data and dispatch payment details
+                  setApiResponse(resp.data);
+                  dispatch(setPaymentDetails(resp.data));
+                }
+                if (resp.data?.otp_modal === 0 || !resp.data?.otp_modal) {
+                  dispatch(setOTPVerified(true));
+                  // setInterval(async () => {
+                  const body = {
+                    call_type: "pay",
+                    ip: "192.168.0.0",
+                    lang: "en",
+                    pay_id: payId,
+                  };
+                  APIService.sendOTP(body)
+                    .then((resp) => {
+                      console.log("PAYMENT STATUS RESPONSE :: :: ", resp.data);
+
+                      if (resp.data?.pay?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
+                        dispatch(setWalletPaymentDetails(resp.data));
+                        setCurrentPage("wallet-payment");
+                      }
 
 
-              if (resp.data?.message?.toLowerCase()?.includes("verified")) {
-                dispatch(setOTPVerified(true));
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                  // }, 2000);
+                } else {
+                  dispatch(setOTPVerified(false));
+                }
               }
+
 
               // Check if error_code is 400
-              if (resp.data?.error_code === 400) {
-                setErrorPage(true);
-                setErrorResponse(resp.data);
-              } else {
-                // Otherwise, set the API response data and dispatch payment details
-                setApiResponse(resp.data);
-                dispatch(setPaymentDetails(resp.data));
-              }
 
               // new checks
 
-              if (resp.data?.otp_modal === 0 || !resp.data?.otp_modal) {
-                dispatch(setOTPVerified(true));
-                // setInterval(async () => {
-                const body = {
-                  call_type: "pay",
-                  ip: "192.168.0.0",
-                  lang: "en",
-                  pay_id: payId,
-                };
-                APIService.sendOTP(body)
-                  .then((resp) => {
-                    console.log("PAYMENT STATUS RESPONSE :: :: ", resp.data);
-
-                    if (resp.data?.pay?.payment_status === 0 || resp.data?.data?.payment_status === 1 || resp.data?.data?.payment_status === 2 || resp.data?.data?.payment_status === 3 || resp.data?.data?.payment_status === 5) {
-                      dispatch(setWalletPaymentDetails(resp.data));
-                      setCurrentPage("wallet-payment");
-                    }
-
-                    
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
-                // }, 2000);
-              } else {
-                dispatch(setOTPVerified(false));
-              }
             } catch (error) {
               console.log("ERROR :::: ", error);
             }
