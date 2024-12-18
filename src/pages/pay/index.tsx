@@ -202,6 +202,8 @@ export default function Pay(): React.JSX.Element {
       
                       dispatch(setCurrentPage("escrow-page"));
                       // return;
+                    }else{
+                      console.log("Escrow Is Not Active");
                     }
 
                     
