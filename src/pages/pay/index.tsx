@@ -139,7 +139,7 @@ export default function Pay(): React.JSX.Element {
         // if ()
 
         if (!shouldRedirectEscrow) {
-          setInterval(async () => {
+          setTimeout(async () => {
             try {
               const resp = await APIService.sendOTP(sendOtpPayload);
               console.log("API RESPONSE FROM SEND OTP", resp.data);
@@ -163,7 +163,7 @@ export default function Pay(): React.JSX.Element {
 
               if (resp.data?.otp_modal === 0 || !resp.data?.otp_modal) {
                 dispatch(setOTPVerified(true));
-                // setInterval(async () => {
+                setInterval(async () => {
                 const body = {
                   call_type: "pay",
                   ip: "192.168.0.0",
@@ -209,7 +209,7 @@ export default function Pay(): React.JSX.Element {
                   .catch((error) => {
                     console.log(error);
                   });
-                // }, 10000);
+                }, 2000);
               } else {
                 dispatch(setOTPVerified(false));
               }
