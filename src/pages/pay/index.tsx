@@ -37,6 +37,7 @@ export default function Pay(): React.JSX.Element {
 
   const dispatch = useDispatch();
   const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  const [redirectHandled, setRedirectHandled] = useState(false);
   const renderCount = React.useRef(0);
 
   useEffect(() => {
@@ -65,7 +66,7 @@ export default function Pay(): React.JSX.Element {
         pay_id: payId,
       };
 
-      if (!shouldRedirectEscrow && !localStorage.getItem("redirected")) {
+      if (!shouldRedirectEscrow && !redirectHandled && !localStorage.getItem("redirected")) {
         intervalRef.current = setInterval(async () => {
           try {
             const resp = await APIService.sendOTP(sendOtpPayload);
@@ -76,6 +77,7 @@ export default function Pay(): React.JSX.Element {
               if (checkoutLink) {
                 console.log("Redirecting to:", checkoutLink);
                 localStorage.setItem("redirected", "true");
+                setRedirectHandled(true);
                 window.location.assign(checkoutLink);
 
                 dispatch(setButtonClicked(true));
@@ -101,7 +103,7 @@ export default function Pay(): React.JSX.Element {
         clearInterval(intervalRef.current);
       }
     };
-  }, [dispatch, shouldRedirectEscrow]);
+  }, [dispatch, shouldRedirectEscrow, redirectHandled]);
 
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
