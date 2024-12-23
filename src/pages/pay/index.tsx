@@ -37,7 +37,7 @@ export default function Pay(): React.JSX.Element {
 
   const dispatch = useDispatch();
   const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
-  const [redirectHandled, setRedirectHandled] = useState(false);
+  // const [redirectHandled, setRedirectHandled] = useState(false);
   const renderCount = React.useRef(0);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function Pay(): React.JSX.Element {
         pay_id: payId,
       };
 
-      if (!shouldRedirectEscrow && !redirectHandled && !localStorage.getItem("redirected")) {
+      if (!shouldRedirectEscrow) {
         intervalRef.current = setInterval(async () => {
           try {
             const resp = await APIService.sendOTP(sendOtpPayload);
@@ -76,13 +76,14 @@ export default function Pay(): React.JSX.Element {
               const checkoutLink = resp.data?.data?.checkout_link;
               if (checkoutLink) {
                 console.log("Redirecting to:", checkoutLink);
-                localStorage.setItem("redirected", "true");
-                setRedirectHandled(true);
+                // localStorage.setItem("redirected", "true");
+                // setRedirectHandled(true);
                 window.location.assign(checkoutLink);
 
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
                 dispatch(setCurrentPage("escrow-page"));
+                if (intervalRef.current) clearInterval(intervalRef.current);
               } else {
                 console.log("No checkout link found.");
               }
@@ -103,7 +104,7 @@ export default function Pay(): React.JSX.Element {
         clearInterval(intervalRef.current);
       }
     };
-  }, [dispatch, shouldRedirectEscrow, redirectHandled]);
+  }, [dispatch, shouldRedirectEscrow]);
 
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
