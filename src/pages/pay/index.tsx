@@ -65,7 +65,7 @@ export default function Pay(): React.JSX.Element {
         pay_id: payId,
       };
 
-      if (!shouldRedirectEscrow) {
+      if (!shouldRedirectEscrow && !localStorage.getItem("redirected")) {
         intervalRef.current = setInterval(async () => {
           try {
             const resp = await APIService.sendOTP(sendOtpPayload);
@@ -75,6 +75,7 @@ export default function Pay(): React.JSX.Element {
               const checkoutLink = resp.data?.data?.checkout_link;
               if (checkoutLink) {
                 console.log("Redirecting to:", checkoutLink);
+                localStorage.setItem("redirected", "true");
                 window.location.assign(checkoutLink);
 
                 dispatch(setButtonClicked(true));
