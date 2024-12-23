@@ -116,6 +116,7 @@ export default function Pay(): React.JSX.Element {
       dispatch(setPaymentDetails(data));
 
       if (data?.otp_modal === 0 || !data?.otp_modal) {
+        dispatch(setOTPVerified(true));
         const body = {
           call_type: "pay",
           ip: "192.168.0.0",
