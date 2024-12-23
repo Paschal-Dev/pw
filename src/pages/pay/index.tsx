@@ -32,7 +32,7 @@ export default function Pay(): React.JSX.Element {
   const [errorResponse, setErrorResponse] = useState(null);
   const [errorPage, setErrorPage] = useState(false);
   const { paymentDetails, shouldRedirectEscrow, currentPage } = useSelector(
-      (state: RootState) => state.pay
+    (state: RootState) => state.pay
   );
 
   const dispatch = useDispatch();
@@ -40,174 +40,175 @@ export default function Pay(): React.JSX.Element {
   const renderCount = React.useRef(0);
 
   useEffect(() => {
-      renderCount.current += 1;
+    renderCount.current += 1;
 
-      if (renderCount.current === 1) {
-          const url = new URL(window.location.href);
+    if (renderCount.current === 1) {
+      const url = new URL(window.location.href);
 
-          if (!url.searchParams.has("v")) {
-              url.searchParams.append("v", "");
-          }
-
-          const payId = url.searchParams.get("v") || "";
-          dispatch(setPayId(payId));
-
-          if (!payId) {
-              console.log("Invalid or missing Pay ID");
-              setErrorPage(true);
-              return;
-          }
-
-          const sendOtpPayload = {
-              call_type: "pay",
-              ip: "192.168.0.0",
-              lang: "en",
-              pay_id: payId,
-          };
-
-          if (!shouldRedirectEscrow) {
-              intervalRef.current = setInterval(async () => {
-                  try {
-                      const resp = await APIService.sendOTP(sendOtpPayload);
-                      console.log("API Response from Send OTP:", resp.data);
-
-                      if (resp.data?.escrow_status === 1) {
-                          const checkoutLink = resp.data?.data?.checkout_link;
-                          if (checkoutLink) {
-                              console.log("Redirecting to:", checkoutLink);
-                              window.location.assign(checkoutLink);
-
-                              dispatch(setButtonClicked(true));
-                              dispatch(setP2PEscrowDetails(resp.data));
-                              dispatch(setCurrentPage("escrow-page"));
-                          } else {
-                              console.log("No checkout link found.");
-                          }
-
-                          if (intervalRef.current) clearInterval(intervalRef.current);
-                      } else {
-                          handleNonEscrowResponse(resp.data);
-                      }
-                  } catch (error) {
-                      console.error("Error during Send OTP:", error);
-                  }
-              }, 3000);
-          }
+      if (!url.searchParams.has("v")) {
+        url.searchParams.append("v", "");
       }
 
-      return () => {
-          if (intervalRef.current) {
-              clearInterval(intervalRef.current);
-          }
+      const payId = url.searchParams.get("v") || "";
+      dispatch(setPayId(payId));
+
+      if (!payId) {
+        console.log("Invalid or missing Pay ID");
+        setErrorPage(true);
+        return;
+      }
+
+      const sendOtpPayload = {
+        call_type: "pay",
+        ip: "192.168.0.0",
+        lang: "en",
+        pay_id: payId,
       };
+
+      if (!shouldRedirectEscrow) {
+        intervalRef.current = setInterval(async () => {
+          try {
+            const resp = await APIService.sendOTP(sendOtpPayload);
+            console.log("API Response from Send OTP:", resp.data);
+
+            if (resp.data?.escrow_status === 1) {
+              const checkoutLink = resp.data?.data?.checkout_link;
+              if (checkoutLink) {
+                console.log("Redirecting to:", checkoutLink);
+                window.location.assign(checkoutLink);
+
+                dispatch(setButtonClicked(true));
+                dispatch(setP2PEscrowDetails(resp.data));
+                dispatch(setCurrentPage("escrow-page"));
+              } else {
+                console.log("No checkout link found.");
+              }
+
+              if (intervalRef.current) clearInterval(intervalRef.current);
+            } else {
+              handleNonEscrowResponse(resp.data);
+            }
+          } catch (error) {
+            console.error("Error during Send OTP:", error);
+          }
+        }, 3000);
+      }
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, [dispatch, shouldRedirectEscrow]);
 
   const handleNonEscrowResponse = (data: any) => {
-      if (data?.message?.toLowerCase()?.includes("verified")) {
-          dispatch(setOTPVerified(true));
-      }
+    if (data?.message?.toLowerCase()?.includes("verified")) {
+      console.log("Message >>>", data?.message);
+      dispatch(setOTPVerified(true));
+    }
 
-      if (data?.error_code === 400) {
-          setErrorPage(true);
-          setErrorResponse(data);
+    if (data?.error_code === 400) {
+      setErrorPage(true);
+      setErrorResponse(data);
+    } else {
+      setApiResponse(data);
+      dispatch(setPaymentDetails(data));
+
+      if (data?.otp_modal === 0 || !data?.otp_modal) {
+        const body = {
+          call_type: "pay",
+          ip: "192.168.0.0",
+          lang: "en",
+          pay_id: data?.pay_id,
+        };
+        APIService.sendOTP(body)
+          .then((resp) => {
+            if (
+              [0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)
+            ) {
+              dispatch(setWalletPaymentDetails(resp.data));
+              dispatch(setCurrentPage("wallet-payment"));
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
-          setApiResponse(data);
-          dispatch(setPaymentDetails(data));
-
-          if (data?.otp_modal === 0 || !data?.otp_modal) {
-              const body = {
-                  call_type: "pay",
-                  ip: "192.168.0.0",
-                  lang: "en",
-                  pay_id: data?.pay_id,
-              };
-              APIService.sendOTP(body)
-                  .then((resp) => {
-                      if (
-                          [0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)
-                      ) {
-                          dispatch(setWalletPaymentDetails(resp.data));
-                          dispatch(setCurrentPage("wallet-payment"));
-                      }
-                  })
-                  .catch((error) => {
-                      console.error(error);
-                  });
-          } else {
-              dispatch(setOTPVerified(false));
-          }
+        dispatch(setOTPVerified(false));
       }
+    }
   };
 
   const renderActivePage = () => {
-      switch (currentPage) {
-          case "pay/v":
-              return <PayDashboard />;
-          case "p2p":
-              return <PayP2P />;
-          case "p2p-payment":
-              return <P2PPayment />;
-          case "escrow-page":
-              return <EscrowPage />;
-          case "wallet-confirm":
-              return <WalletConfirm />;
-          case "wallet-payment":
-              return <WalletPayment />;
-          default:
-              return <PayDashboard />;
-      }
+    switch (currentPage) {
+      case "pay/v":
+        return <PayDashboard />;
+      case "p2p":
+        return <PayP2P />;
+      case "p2p-payment":
+        return <P2PPayment />;
+      case "escrow-page":
+        return <EscrowPage />;
+      case "wallet-confirm":
+        return <WalletConfirm />;
+      case "wallet-payment":
+        return <WalletPayment />;
+      default:
+        return <PayDashboard />;
+    }
   };
 
   return (
-      <Box
-          height="100vh"
-          sx={{
-              backgroundImage: `url(${background})`,
-              backgroundSize: "cover",
-          }}
-          zIndex={-2}
-          display="flex"
-          flexDirection="column"
-          justifyContent="space-between"
+    <Box
+      height="100vh"
+      sx={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+      }}
+      zIndex={-2}
+      display="flex"
+      flexDirection="column"
+      justifyContent="space-between"
+    >
+      <Helmet>
+        <title>
+          {paymentDetails?.data
+            ? `Pay ${paymentDetails.data.currency_sign}${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+            : "Payment Page"}
+        </title>
+        <meta
+          property="og:description"
+          content={
+            paymentDetails?.data
+              ? `Pay ${paymentDetails.data.currency_sign}${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+              : "Payment Page"
+          }
+        />
+        <meta
+          property="og:image"
+          content={paymentDetails?.seller?.image || ""}
+        />
+      </Helmet>
+      <Topbar />
+      <Container
+        maxWidth="xl"
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-evenly",
+          py: 1,
+        }}
       >
-          <Helmet>
-              <title>
-                  {paymentDetails?.data
-                      ? `Pay ${paymentDetails.data.currency_sign}${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
-                      : "Payment Page"}
-              </title>
-              <meta
-                  property="og:description"
-                  content={
-                      paymentDetails?.data
-                          ? `Pay ${paymentDetails.data.currency_sign}${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
-                          : "Payment Page"
-                  }
-              />
-              <meta
-                  property="og:image"
-                  content={paymentDetails?.seller?.image || ""}
-              />
-          </Helmet>
-          <Topbar />
-          <Container
-              maxWidth="xl"
-              sx={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-evenly",
-                  py: 1,
-              }}
-          >
-              {errorPage ? (
-                  <ErrorPage errorResponse={errorResponse} />
-              ) : (
-                  renderActivePage()
-              )}
-              <Disclaimer />
-              <Footer />
-          </Container>
-      </Box>
+        {errorPage ? (
+          <ErrorPage errorResponse={errorResponse} />
+        ) : (
+          renderActivePage()
+        )}
+        <Disclaimer />
+        <Footer />
+      </Container>
+    </Box>
   );
 }
