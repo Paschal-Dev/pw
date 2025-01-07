@@ -1,8 +1,8 @@
 // hooks/useSendOTP.ts
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { sendOTP } from "./send_otp_logic";
 import { setP2PEscrowDetails, setCurrentPage } from "../../redux/reducers/pay";
+import APIService from "../../services/api-service";
 
 export const useSendOTP = (shouldRedirectEscrow: boolean, payId: string) => {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ export const useSendOTP = (shouldRedirectEscrow: boolean, payId: string) => {
         };
 
         try {
-          const resp = await sendOTP(sendOtpPayload);
+          const resp = await APIService.sendOTP(sendOtpPayload);
           if (resp.data?.escrow_status === 1) {
             const checkoutLink = resp.data?.data?.checkout_link;
             if (checkoutLink) {
