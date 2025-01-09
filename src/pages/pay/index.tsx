@@ -120,7 +120,7 @@ export default function Pay(): React.JSX.Element {
         clearInterval(intervalRef.current);
       }
     };
-  }, [dispatch, shouldRedirectEscrow]);
+  }, [dispatch ]);
 
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
