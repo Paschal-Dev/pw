@@ -79,8 +79,8 @@ export default function Pay(): React.JSX.Element {
               if (checkoutLink) {
                 console.log("Redirecting to:", checkoutLink);
 
-                if (localStorage.getItem("redirectHandled")) {
-                // localStorage.setItem("redirectHandled", "true");
+                if (!localStorage.getItem("redirectHandled")) {
+                localStorage.setItem("redirectHandled", "true");
                 window.location.assign(checkoutLink); // Perform the redirection
                 }
                 dispatch(setButtonClicked(true));

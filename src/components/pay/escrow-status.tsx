@@ -17,7 +17,7 @@ import { theme } from "../../assets/themes/theme";
 import { setConfirmButtonBackdrop, setCurrentPage, setP2PVendorsDetails } from "../../redux/reducers/pay";
 
 
-export default function EscrowStatus() {
+export default function EscrowStatus(){
   const [deviceType, setDeviceType] = useState("mobile");
   const [open, setOpen] = useState(false);
 
@@ -91,7 +91,7 @@ export default function EscrowStatus() {
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
 
-
+      
       // send-otp request
       const sendOtpPayload = {
         call_type: "pay",
@@ -99,7 +99,7 @@ export default function EscrowStatus() {
         lang: "en",
         pay_id: payId,
       };
-
+      
       // eslint-disable-next-line prefer-const
       let intervalId: number | undefined;
       const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
@@ -109,7 +109,7 @@ export default function EscrowStatus() {
             "API RESPONSE FROM PAGE_RELOAD SEND OTP =>>> ",
             resp.data
           );
-
+          
           if (resp.data?.escrow_status === 1) {
             // Do nothing, let the interval continue
           } else {
@@ -146,8 +146,7 @@ export default function EscrowStatus() {
             );
             if (!localStorage.getItem('checkout_link')) {
               // Store a flag to prevent repeated redirection
-              localStorage.setItem("redirectHandled", "true");
-
+              localStorage.setItem('redirected', 'true');
               const url = `https://pay.pwat.net/?v=${respo2.data.data.unique_id}`;
               console.log("The Unique URL =>>>", url)
               window.location.assign(url);
@@ -159,8 +158,8 @@ export default function EscrowStatus() {
             clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
 
-
-
+            
+            
 
             dispatch(setCurrentPage("p2p"));
             return;
