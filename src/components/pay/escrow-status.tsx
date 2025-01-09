@@ -152,7 +152,7 @@ export default function EscrowStatus() {
               console.log("The Unique URL =>>>", url)
               window.location.assign(url);
 
-              // dispatch(setCurrentPage("p2p"));
+              dispatch(setCurrentPage("p2p"));
             }
 
             dispatch(setP2PVendorsDetails(respo2.data));
@@ -162,7 +162,7 @@ export default function EscrowStatus() {
 
 
 
-            dispatch(setCurrentPage("p2p"));
+            // dispatch(setCurrentPage("p2p"));
             return;
           }
         } catch (error) {
