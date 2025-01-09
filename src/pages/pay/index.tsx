@@ -74,13 +74,15 @@ export default function Pay(): React.JSX.Element {
 
             if (resp.data?.escrow_status === 1) {
               const checkoutLink = resp.data?.data?.checkout_link;
+              localStorage.setItem('checkout_link', checkoutLink);
+
               if (checkoutLink) {
                 console.log("Redirecting to:", checkoutLink);
 
-                if (!localStorage.getItem("redirectHandled")) {
-                  localStorage.setItem("redirectHandled", "true");
-                  window.location.assign(checkoutLink); // Perform the redirection
-                }
+                // if (!localStorage.getItem("redirectHandled")) {
+                localStorage.setItem("redirectHandled", "true");
+                window.location.assign(checkoutLink); // Perform the redirection
+                // }
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
                 dispatch(setCurrentPage("escrow-page"));
