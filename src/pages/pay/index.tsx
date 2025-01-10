@@ -71,21 +71,40 @@ export default function Pay(): React.JSX.Element {
           try {
             const resp = await APIService.sendOTP(sendOtpPayload);
             console.log("API Response from Send OTP:", resp.data);
-  
+
             if (resp.data?.escrow_status === 1) {
               const checkoutLink = resp.data?.data?.checkout_link;
-  
-              if (checkoutLink && !localStorage.getItem("redirectHandled")) {
+              localStorage.setItem('checkout_link', checkoutLink);
+
+              if (checkoutLink) {
                 console.log("Redirecting to:", checkoutLink);
+
+                if (!localStorage.getItem("redirectHandled")) {
                 localStorage.setItem("redirectHandled", "true");
-                window.location.assign(checkoutLink);
-  
+                window.location.assign(checkoutLink); // Perform the redirection
+                }
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
                 dispatch(setCurrentPage("escrow-page"));
-  
-                if (intervalRef.current) clearInterval(intervalRef.current);
+
+                if (intervalRef.current) {
+                  clearInterval(intervalRef.current);
+                }
               }
+              // if (checkoutLink) {
+              //   console.log("Redirecting to:", checkoutLink);
+              //   // localStorage.setItem("redirected", "true");
+              //   // setRedirectHandled(true);
+              //   window.location.assign(checkoutLink);
+
+
+              //   if (intervalRef.current) clearInterval(intervalRef.current);
+              // }
+              else {
+                console.log("No checkout link found.");
+              }
+
+              if (intervalRef.current) clearInterval(intervalRef.current);
             } else {
               handleNonEscrowResponse(resp.data);
             }
@@ -94,7 +113,6 @@ export default function Pay(): React.JSX.Element {
           }
         }, 3000);
       }
-    // }
     }
 
     return () => {
@@ -102,7 +120,7 @@ export default function Pay(): React.JSX.Element {
         clearInterval(intervalRef.current);
       }
     };
-  }, [dispatch ]);
+  }, [dispatch, shouldRedirectEscrow]);
 
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
