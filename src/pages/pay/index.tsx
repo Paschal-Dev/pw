@@ -71,17 +71,22 @@ export default function Pay(): React.JSX.Element {
         // Check if escrow status is 1 and handle redirection
         if (resp.data?.escrow_status === 1 && !isRedirecting && !localStorage.getItem("redirectHandled")) {
           const checkoutLink = resp.data?.data?.checkout_link;
+      
           if (checkoutLink) {
             localStorage.setItem("redirectHandled", "true");
-            console.log("Redirecting to:", checkoutLink);
-        
-            // Set necessary Redux state before redirecting
+            console.log("Preparing to redirect to:", checkoutLink);
+      
+            // Update Redux state before redirecting
             dispatch(setButtonClicked(true));
             dispatch(setP2PEscrowDetails(resp.data));
-            
+            dispatch(setCurrentPage("escrow-page")); // Set the current page to 'escrow-page'
+      
             setIsRedirecting(true); // Set redirecting state
-            window.location.assign(checkoutLink); // Redirect user
-            dispatch(setCurrentPage("escrow-page"));
+      
+            // Delay redirection to give React time to render the escrow page
+            setTimeout(() => {
+              window.location.assign(checkoutLink); // Perform the redirection
+            }, 1000); // 1-second delay to ensure the escrow page is rendered
           }
         }
          else {
