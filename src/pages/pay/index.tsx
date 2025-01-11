@@ -78,6 +78,7 @@ export default function Pay(): React.JSX.Element {
             // Set necessary Redux state before redirecting
             dispatch(setButtonClicked(true));
             dispatch(setP2PEscrowDetails(resp.data));
+            dispatch(setCurrentPage("escrow-page"));
         
             setIsRedirecting(true); // Set redirecting state
             window.location.assign(checkoutLink); // Redirect user
