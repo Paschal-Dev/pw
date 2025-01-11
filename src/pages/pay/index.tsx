@@ -67,21 +67,22 @@ export default function Pay(): React.JSX.Element {
         if (resp.data?.escrow_status === 1) {
           const checkoutLink = resp.data?.data?.checkout_link;
   
-          // If on the `checkoutLink`, directly display escrow-page
-          if (window.location.href === checkoutLink) {
-            console.log("On checkout link, displaying escrow page.");
-            dispatch(setButtonClicked(true));
-            dispatch(setCurrentPage("escrow-page"));
-            dispatch(setP2PEscrowDetails(resp.data));
-            return;
-          }
-  
-          // If `checkoutLink` exists and redirection not handled
-          if (checkoutLink && !localStorage.getItem("redirectHandled")) {
-            localStorage.setItem("redirectHandled", "true");
-            console.log("Redirecting to:", checkoutLink);
-            window.location.assign(checkoutLink);
-            return; // Exit after redirection
+          // Prevent infinite loop by checking for redirection flag
+          if (checkoutLink) {
+            if (localStorage.getItem("redirectHandled") === "true") {
+              // If the page has already been redirected, show the escrow-page
+              console.log("Already redirected, displaying escrow page.");
+              dispatch(setButtonClicked(true));
+              dispatch(setCurrentPage("escrow-page"));
+              dispatch(setP2PEscrowDetails(resp.data));
+              return; // Skip redirection logic
+            } else {
+              // If not redirected yet, perform the redirection
+              console.log("Redirecting to checkout link:", checkoutLink);
+              localStorage.setItem("redirectHandled", "true");
+              window.location.assign(checkoutLink);
+              return; // Skip further execution after redirect
+            }
           }
         } else {
           console.log("No checkout link or escrow status not 1.");
@@ -99,6 +100,7 @@ export default function Pay(): React.JSX.Element {
       initializePayment();
     }
   }, [dispatch, hasCheckedEscrow]);
+  
   
   
   
