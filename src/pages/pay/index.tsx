@@ -66,6 +66,17 @@ export default function Pay(): React.JSX.Element {
         pay_id: payId,
       };
   
+      const redirectToCheckout = (checkoutLink: string) => {
+        if (!localStorage.getItem("redirectHandled")) {
+          localStorage.setItem("redirectHandled", "true");
+          if (intervalRef.current) clearInterval(intervalRef.current); // Stop the interval
+          console.log("Redirecting to:", checkoutLink);
+          window.location.assign(checkoutLink); // Perform the redirection
+        } else {
+          console.log("No checkout link found or already redirected.");
+        }
+      };
+  
       if (!shouldRedirectEscrow) {
         intervalRef.current = setInterval(async () => {
           try {
@@ -76,19 +87,11 @@ export default function Pay(): React.JSX.Element {
               const checkoutLink = resp.data?.data?.checkout_link;
               localStorage.setItem("checkout_link", checkoutLink);
   
-              if (checkoutLink && !localStorage.getItem("redirectHandled")) {
-                console.log("Redirecting to:", checkoutLink);
-                localStorage.setItem("redirectHandled", "true");
-                window.location.assign(checkoutLink); // Perform the redirection
+              if (checkoutLink) {
+                redirectToCheckout(checkoutLink);
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
                 dispatch(setCurrentPage("escrow-page"));
-  
-                if (intervalRef.current) {
-                  clearInterval(intervalRef.current);
-                }
-              } else {
-                console.log("No checkout link found or already redirected.");
               }
             } else {
               handleNonEscrowResponse(resp.data);
@@ -107,20 +110,19 @@ export default function Pay(): React.JSX.Element {
     };
   }, [dispatch, shouldRedirectEscrow]);
   
-
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
       console.log("Message >>>", data?.message);
       dispatch(setOTPVerified(true));
     }
-
+  
     if (data?.error_code === 400) {
       setErrorPage(true);
       setErrorResponse(data);
     } else {
       setApiResponse(data);
       dispatch(setPaymentDetails(data));
-
+  
       if (data?.otp_modal === 0 || !data?.otp_modal) {
         dispatch(setOTPVerified(true));
         const body = {
@@ -131,9 +133,7 @@ export default function Pay(): React.JSX.Element {
         };
         APIService.sendOTP(body)
           .then((resp) => {
-            if (
-              [0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)
-            ) {
+            if ([0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)) {
               dispatch(setWalletPaymentDetails(resp.data));
               dispatch(setCurrentPage("wallet-payment"));
             }
@@ -146,6 +146,7 @@ export default function Pay(): React.JSX.Element {
       }
     }
   };
+  
 
   const renderActivePage = () => {
     switch (currentPage) {
