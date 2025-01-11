@@ -70,21 +70,19 @@ export default function Pay(): React.JSX.Element {
           // Log checkoutLink to check if it's valid
           console.log("Checkout Link:", checkoutLink);
   
-          // Prevent infinite loop by checking for redirection flag
           if (checkoutLink) {
-            if (localStorage.getItem("redirectHandled") === "true") {
+            // Only proceed with the redirect if redirectHandled is not set yet
+            if (localStorage.getItem("redirectHandled") !== "true") {
+              console.log("Redirecting to checkout link:", checkoutLink);
+              localStorage.setItem("redirectHandled", "true");
+              window.location.assign(checkoutLink);
+              return; // Skip further execution after redirect
+            } else {
               // If already redirected, show the escrow page
               console.log("Already redirected, displaying escrow page.");
               dispatch(setButtonClicked(true));
               dispatch(setCurrentPage("escrow-page"));
               dispatch(setP2PEscrowDetails(resp.data));
-              return; // Skip redirection logic
-            } else {
-              // If not redirected yet, perform the redirection
-              console.log("Redirecting to checkout link:", checkoutLink);
-              localStorage.setItem("redirectHandled", "true");
-              window.location.assign(checkoutLink);
-              return; // Skip further execution after redirect
             }
           } else {
             console.log("No checkout link available.");
@@ -105,6 +103,7 @@ export default function Pay(): React.JSX.Element {
       initializePayment();
     }
   }, [dispatch, hasCheckedEscrow]);
+  
   
   
   
