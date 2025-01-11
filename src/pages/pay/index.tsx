@@ -31,7 +31,7 @@ import P2PPayment from "./p2p-payment";
 export default function Pay(): React.JSX.Element {
   const [errorResponse, setErrorResponse] = useState(null);
   const [errorPage, setErrorPage] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [isRedirecting] = useState(false);
   const [hasCheckedEscrow, setHasCheckedEscrow] = useState(false); // Ensure only one check
   const { paymentDetails, currentPage } = useSelector(
     (state: RootState) => state.pay
@@ -69,24 +69,20 @@ export default function Pay(): React.JSX.Element {
         console.log("API Response from Send OTP:", resp.data);
 
         // Check if escrow status is 1 and handle redirection
-        if (resp.data?.escrow_status === 1 && !isRedirecting && !localStorage.getItem("redirectHandled")) {
+        if (resp.data?.escrow_status === 1) {
           const checkoutLink = resp.data?.data?.checkout_link;
-      
-          if (checkoutLink) {
+  
+          if (checkoutLink && !localStorage.getItem("redirectHandled")) {
             localStorage.setItem("redirectHandled", "true");
-            console.log("Preparing to redirect to:", checkoutLink);
-      
-            // Update Redux state before redirecting
+            console.log("Redirecting to:", checkoutLink);
+  
+            // Perform the redirection
+            window.location.assign(checkoutLink);
+          } else {
+            console.log("User already redirected.");
             dispatch(setButtonClicked(true));
+            dispatch(setCurrentPage("escrow-page"));
             dispatch(setP2PEscrowDetails(resp.data));
-            dispatch(setCurrentPage("escrow-page")); // Set the current page to 'escrow-page'
-      
-            setIsRedirecting(true); // Set redirecting state
-      
-            // Delay redirection to give React time to render the escrow page
-            setTimeout(() => {
-              window.location.assign(checkoutLink); // Perform the redirection
-            }, 1000); // 1-second delay to ensure the escrow page is rendered
           }
         }
          else {
