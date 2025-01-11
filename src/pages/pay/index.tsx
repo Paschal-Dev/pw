@@ -40,55 +40,52 @@ export default function Pay(): React.JSX.Element {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // const initializePayment = async () => {
+    const initializePayment = async () => {
       const url = new URL(window.location.href);
-
+  
       // Extract or set "v" parameter
       if (!url.searchParams.has("v")) {
         url.searchParams.append("v", "");
       }
-
+  
       const payId = url.searchParams.get("v") || "";
       dispatch(setPayId(payId));
-
+  
       if (!payId) {
         console.log("Invalid or missing Pay ID");
         setErrorPage(true);
         return;
       }
-
+  
       const sendOtpPayload = {
         call_type: "pay",
         ip: "192.168.0.0",
         lang: "en",
         pay_id: payId,
       };
-
-      const checkAndRedirect = async () => {
-
+  
       try {
         const resp = await APIService.sendOTP(sendOtpPayload);
         console.log("API Response from Send OTP:", resp.data);
-
-        // Check if escrow status is 1 and handle redirection
+  
         if (resp.data?.escrow_status === 1) {
           const checkoutLink = resp.data?.data?.checkout_link;
   
           if (checkoutLink && !localStorage.getItem("redirectHandled")) {
+            // Mark redirection in localStorage
             localStorage.setItem("redirectHandled", "true");
             console.log("Redirecting to:", checkoutLink);
   
-            // Perform the redirection
+            // Redirect to checkout link
             window.location.assign(checkoutLink);
           } else {
-            console.log("User already redirected.");
+            console.log("Already redirected or no checkout link found.");
             dispatch(setButtonClicked(true));
             dispatch(setCurrentPage("escrow-page"));
             dispatch(setP2PEscrowDetails(resp.data));
           }
-        }
-         else {
-          console.log("No checkout link found or already redirected.");
+        } else {
+          console.log("Escrow status is not 1. Handling response...");
           handleNonEscrowResponse(resp.data);
         }
       } catch (error) {
@@ -98,13 +95,13 @@ export default function Pay(): React.JSX.Element {
         setHasCheckedEscrow(true); // Mark check as complete
       }
     };
-
-    // if (!hasCheckedEscrow) {
-      // initializePayment();
-    // }
-    checkAndRedirect();
   
-  }, [dispatch, isRedirecting, hasCheckedEscrow]);
+    if (!hasCheckedEscrow) {
+      initializePayment();
+    }
+  }, [dispatch, hasCheckedEscrow]);
+  
+  
 
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
