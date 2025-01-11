@@ -43,11 +43,7 @@ export default function Pay(): React.JSX.Element {
     const initializePayment = async () => {
       const url = new URL(window.location.href);
   
-      // Extract or set "v" parameter
-      if (!url.searchParams.has("v")) {
-        url.searchParams.append("v", "");
-      }
-  
+      // Extract "v" parameter from URL
       const payId = url.searchParams.get("v") || "";
       dispatch(setPayId(payId));
   
@@ -71,28 +67,31 @@ export default function Pay(): React.JSX.Element {
         if (resp.data?.escrow_status === 1) {
           const checkoutLink = resp.data?.data?.checkout_link;
   
-          if (checkoutLink && !localStorage.getItem("redirectHandled")) {
-            // Mark redirection in localStorage
-            localStorage.setItem("redirectHandled", "true");
-            console.log("Redirecting to:", checkoutLink);
-  
-            // Redirect to checkout link
-            window.location.assign(checkoutLink);
-          } else {
-            console.log("Already redirected or no checkout link found.");
+          // If on the `checkoutLink`, directly display escrow-page
+          if (window.location.href === checkoutLink) {
+            console.log("On checkout link, displaying escrow page.");
             dispatch(setButtonClicked(true));
             dispatch(setCurrentPage("escrow-page"));
             dispatch(setP2PEscrowDetails(resp.data));
+            return;
+          }
+  
+          // If `checkoutLink` exists and redirection not handled
+          if (checkoutLink && !localStorage.getItem("redirectHandled")) {
+            localStorage.setItem("redirectHandled", "true");
+            console.log("Redirecting to:", checkoutLink);
+            window.location.assign(checkoutLink);
+            return; // Exit after redirection
           }
         } else {
-          console.log("Escrow status is not 1. Handling response...");
+          console.log("No checkout link or escrow status not 1.");
           handleNonEscrowResponse(resp.data);
         }
       } catch (error) {
         console.error("Error during Send OTP:", error);
         setErrorPage(true);
       } finally {
-        setHasCheckedEscrow(true); // Mark check as complete
+        setHasCheckedEscrow(true);
       }
     };
   
@@ -100,6 +99,7 @@ export default function Pay(): React.JSX.Element {
       initializePayment();
     }
   }, [dispatch, hasCheckedEscrow]);
+  
   
   
 
