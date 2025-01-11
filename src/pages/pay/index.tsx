@@ -40,7 +40,7 @@ export default function Pay(): React.JSX.Element {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const initializePayment = async () => {
+    // const initializePayment = async () => {
       const url = new URL(window.location.href);
 
       // Extract or set "v" parameter
@@ -63,6 +63,8 @@ export default function Pay(): React.JSX.Element {
         lang: "en",
         pay_id: payId,
       };
+
+      const checkAndRedirect = async () => {
 
       try {
         const resp = await APIService.sendOTP(sendOtpPayload);
@@ -97,9 +99,11 @@ export default function Pay(): React.JSX.Element {
       }
     };
 
-    if (!hasCheckedEscrow) {
-      initializePayment();
-    }
+    // if (!hasCheckedEscrow) {
+      // initializePayment();
+    // }
+    checkAndRedirect();
+  
   }, [dispatch, isRedirecting, hasCheckedEscrow]);
 
   const handleNonEscrowResponse = (data: any) => {
