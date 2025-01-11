@@ -42,69 +42,54 @@ export default function Pay(): React.JSX.Element {
 
   useEffect(() => {
     renderCount.current += 1;
-
+  
     if (renderCount.current === 1) {
       const url = new URL(window.location.href);
-
+  
       if (!url.searchParams.has("v")) {
         url.searchParams.append("v", "");
       }
-
+  
       const payId = url.searchParams.get("v") || "";
       dispatch(setPayId(payId));
-
+  
       if (!payId) {
         console.log("Invalid or missing Pay ID");
         setErrorPage(true);
         return;
       }
-
+  
       const sendOtpPayload = {
         call_type: "pay",
         ip: "192.168.0.0",
         lang: "en",
         pay_id: payId,
       };
-
+  
       if (!shouldRedirectEscrow) {
         intervalRef.current = setInterval(async () => {
           try {
             const resp = await APIService.sendOTP(sendOtpPayload);
             console.log("API Response from Send OTP:", resp.data);
-
+  
             if (resp.data?.escrow_status === 1) {
               const checkoutLink = resp.data?.data?.checkout_link;
-              localStorage.setItem('checkout_link', checkoutLink);
-
-              if (checkoutLink) {
+              localStorage.setItem("checkout_link", checkoutLink);
+  
+              if (checkoutLink && !localStorage.getItem("redirectHandled")) {
                 console.log("Redirecting to:", checkoutLink);
-
-                if (!localStorage.getItem("redirectHandled")) {
                 localStorage.setItem("redirectHandled", "true");
                 window.location.assign(checkoutLink); // Perform the redirection
-                }
                 dispatch(setButtonClicked(true));
                 dispatch(setP2PEscrowDetails(resp.data));
                 dispatch(setCurrentPage("escrow-page"));
-
+  
                 if (intervalRef.current) {
                   clearInterval(intervalRef.current);
                 }
+              } else {
+                console.log("No checkout link found or already redirected.");
               }
-              // if (checkoutLink) {
-              //   console.log("Redirecting to:", checkoutLink);
-              //   // localStorage.setItem("redirected", "true");
-              //   // setRedirectHandled(true);
-              //   window.location.assign(checkoutLink);
-
-
-              //   if (intervalRef.current) clearInterval(intervalRef.current);
-              // }
-              else {
-                console.log("No checkout link found.");
-              }
-
-              if (intervalRef.current) clearInterval(intervalRef.current);
             } else {
               handleNonEscrowResponse(resp.data);
             }
@@ -114,13 +99,14 @@ export default function Pay(): React.JSX.Element {
         }, 3000);
       }
     }
-
+  
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
   }, [dispatch, shouldRedirectEscrow]);
+  
 
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
