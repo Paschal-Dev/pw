@@ -42,7 +42,7 @@ export default function Pay(): React.JSX.Element {
   useEffect(() => {
     const initializePayment = async () => {
       const url = new URL(window.location.href);
-      // localStorage.clear();
+      localStorage.clear();
   
       // Extract "v" parameter from URL
       const payId = url.searchParams.get("v") || "";
@@ -71,9 +71,9 @@ export default function Pay(): React.JSX.Element {
           // Log checkoutLink to check if it's valid
           console.log("Checkout Link:", checkoutLink);
   
-          // if (checkoutLink) {
+          if (checkoutLink) {
             // Only proceed with the redirect if redirectHandled is not set yet
-            if (localStorage.getItem("redirectHandled")) {
+            if (localStorage.getItem("redirectHandled") === "true") {
               // localStorage.clear();
               console.log("Redirecting to checkout link:", checkoutLink);
               localStorage.setItem("redirectHandled", "true");
@@ -86,9 +86,9 @@ export default function Pay(): React.JSX.Element {
               dispatch(setCurrentPage("escrow-page"));
               dispatch(setP2PEscrowDetails(resp.data));
             }
-          // } else {
-          //   console.log("No checkout link available.");
-          // }
+          } else {
+            console.log("No checkout link available.");
+          }
         } else {
           console.log("No checkout link or escrow status not 1.");
           handleNonEscrowResponse(resp.data);
@@ -104,7 +104,7 @@ export default function Pay(): React.JSX.Element {
     if (!hasCheckedEscrow) {
       initializePayment();
     }
-  }, [dispatch, hasCheckedEscrow]);
+  }, []);
   
   
   
