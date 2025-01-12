@@ -74,6 +74,7 @@ export default function Pay(): React.JSX.Element {
             // Only proceed with the redirect if redirectHandled is not set yet
             if (localStorage.getItem("redirectHandled") !== "true") {
               console.log("Redirecting to checkout link:", checkoutLink);
+              localStorage.clear();
               localStorage.setItem("redirectHandled", "true");
               window.location.assign(checkoutLink);
               return; // Skip further execution after redirect
