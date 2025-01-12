@@ -42,7 +42,7 @@ export default function Pay(): React.JSX.Element {
   useEffect(() => {
     const initializePayment = async () => {
       const url = new URL(window.location.href);
-      localStorage.clear();
+      // localStorage.clear();
   
       // Extract "v" parameter from URL
       const payId = url.searchParams.get("v") || "";
