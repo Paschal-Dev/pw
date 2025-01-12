@@ -72,11 +72,11 @@ export default function Pay(): React.JSX.Element {
   
           if (checkoutLink) {
             // Only proceed with the redirect if redirectHandled is not set yet
-            if (localStorage.getItem("redirectHandled") !== "true") {
+            if (localStorage.getItem("redirectHandled") === "true") {
+              localStorage.clear();
               console.log("Redirecting to checkout link:", checkoutLink);
               localStorage.setItem("redirectHandled", "true");
               window.location.assign(checkoutLink);
-              localStorage.clear();
               return; // Skip further execution after redirect
             } else {
               // If already redirected, show the escrow page
