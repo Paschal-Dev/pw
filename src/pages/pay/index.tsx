@@ -71,7 +71,7 @@ export default function Pay(): React.JSX.Element {
           // Log checkoutLink to check if it's valid
           console.log("Checkout Link:", checkoutLink);
   
-          if (checkoutLink) {
+          // if (checkoutLink) {
             // Only proceed with the redirect if redirectHandled is not set yet
             if (!localStorage.getItem("redirectHandled")) {
               // localStorage.clear();
@@ -86,9 +86,9 @@ export default function Pay(): React.JSX.Element {
               dispatch(setCurrentPage("escrow-page"));
               dispatch(setP2PEscrowDetails(resp.data));
             }
-          } else {
-            console.log("No checkout link available.");
-          }
+          // } else {
+          //   console.log("No checkout link available.");
+          // }
         } else {
           console.log("No checkout link or escrow status not 1.");
           handleNonEscrowResponse(resp.data);
