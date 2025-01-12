@@ -42,34 +42,34 @@ export default function Pay(): React.JSX.Element {
   useEffect(() => {
     const initializePayment = async () => {
       const url = new URL(window.location.href);
-
+  
       // Extract "v" parameter from URL
       const payId = url.searchParams.get("v") || "";
       dispatch(setPayId(payId));
-
+  
       if (!payId) {
         console.log("Invalid or missing Pay ID");
         setErrorPage(true);
         return;
       }
-
+  
       const sendOtpPayload = {
         call_type: "pay",
         ip: "192.168.0.0",
         lang: "en",
         pay_id: payId,
       };
-
+  
       try {
         const resp = await APIService.sendOTP(sendOtpPayload);
         console.log("API Response from Send OTP:", resp.data);
-
+  
         if (resp.data?.escrow_status === 1) {
           const checkoutLink = resp.data?.data?.checkout_link;
-
+  
           // Log checkoutLink to check if it's valid
           console.log("Checkout Link:", checkoutLink);
-
+  
           if (checkoutLink) {
             // Only proceed with the redirect if redirectHandled is not set yet
             if (localStorage.getItem("redirectHandled") === "true") {
@@ -99,14 +99,17 @@ export default function Pay(): React.JSX.Element {
         setHasCheckedEscrow(true);
       }
     };
-
+  
     if (!hasCheckedEscrow) {
       initializePayment();
     }
   }, [dispatch, hasCheckedEscrow]);
-
-
-
+  
+  
+  
+  
+  
+  
 
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
