@@ -18,70 +18,95 @@ import {
   setPaymentDetails,
   setWalletPaymentDetails,
   setP2PEscrowDetails,
+  // setP2PVendorsDetails,
 } from "../../redux/reducers/pay";
 import ErrorPage from "./error_page";
 import EscrowPage from "./escrow-page";
 import { RootState } from "../../redux/store";
 import { Helmet } from "react-helmet";
 import { setButtonClicked, setCurrentPage, setApiResponse } from "../../redux/reducers/pay";
+// import { setHeaderKey } from "../../redux/reducers/auth";
 import P2PPayment from "./p2p-payment";
 
 export default function Pay(): React.JSX.Element {
   const [errorResponse, setErrorResponse] = useState(null);
   const [errorPage, setErrorPage] = useState(false);
+  const [isRedirecting] = useState(false);
+  const [hasCheckedEscrow, setHasCheckedEscrow] = useState(false); // Ensure only one check
   const { paymentDetails, currentPage } = useSelector(
     (state: RootState) => state.pay
   );
 
   const dispatch = useDispatch();
 
-  const checkEscrowStatus = async () => {
-    const url = new URL(window.location.href);
-    const payId = url.searchParams.get("v") || "";
-    dispatch(setPayId(payId));
-    if (!payId) {
-      console.log("Invalid or missing Pay ID");
-      setErrorPage(true);
-      return;
-    }
+  useEffect(() => {
+    const initializePayment = async () => {
+      const url = new URL(window.location.href);
 
-    const sendOtpPayload = {
-      call_type: "pay",
-      ip: "192.168.0.0",
-      lang: "en",
-      pay_id: payId,
-    };
+      // Extract "v" parameter from URL
+      const payId = url.searchParams.get("v") || "";
+      dispatch(setPayId(payId));
 
-    try {
-      const resp = await APIService.sendOTP(sendOtpPayload);
-      console.log("Escrow Status Check Response:", resp.data);
+      if (!payId) {
+        console.log("Invalid or missing Pay ID");
+        setErrorPage(true);
+        return;
+      }
 
-      if (resp.data?.escrow_status === 1) {
-        const checkoutLink = resp.data?.data?.checkout_link;
+      const sendOtpPayload = {
+        call_type: "pay",
+        ip: "192.168.0.0",
+        lang: "en",
+        pay_id: payId,
+      };
 
-        if (checkoutLink) {
-          if (!localStorage.getItem("redirectHandled")) {
-            console.log("Redirecting to checkout link:", checkoutLink);
-            localStorage.setItem("redirectHandled", "true");
-            window.location.assign(checkoutLink);
-            return;
+      try {
+        const resp = await APIService.sendOTP(sendOtpPayload);
+        console.log("API Response from Send OTP:", resp.data);
+
+        if (resp.data?.escrow_status === 1) {
+          const checkoutLink = resp.data?.data?.checkout_link;
+
+          // Log checkoutLink to check if it's valid
+          console.log("Checkout Link:", checkoutLink);
+
+          if (checkoutLink) {
+            // Only proceed with the redirect if redirectHandled is not set yet
+            if (localStorage.getItem("redirectHandled") === "true") {
+              // localStorage.clear();
+              console.log("Redirecting to checkout link:", checkoutLink);
+              localStorage.setItem("redirectHandled", "true");
+              window.location.assign(checkoutLink);
+              return; // Skip further execution after redirect
+            } else {
+              // If already redirected, show the escrow page
+              console.log("Already redirected, displaying escrow page.");
+              dispatch(setButtonClicked(true));
+              dispatch(setCurrentPage("escrow-page"));
+              dispatch(setP2PEscrowDetails(resp.data));
+            }
           } else {
-            console.log("Already redirected, displaying escrow page.");
-            dispatch(setButtonClicked(true));
-            dispatch(setCurrentPage("escrow-page"));
-            dispatch(setP2PEscrowDetails(resp.data));
+            console.log("No checkout link available.");
           }
         } else {
-          console.log("No checkout link available.");
+          console.log("No checkout link or escrow status not 1.");
+          handleNonEscrowResponse(resp.data);
         }
-      } else {
-        handleNonEscrowResponse(resp.data);
+      } catch (error) {
+        console.error("Error during Send OTP:", error);
+        setErrorPage(true);
+      } finally {
+        setHasCheckedEscrow(true);
       }
-    } catch (error) {
-      console.error("Error during escrow status check:", error);
-      setErrorPage(true);
+    };
+
+    if (!hasCheckedEscrow) {
+      initializePayment();
     }
-  };
+  }, [dispatch, hasCheckedEscrow]);
+
+
+
 
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
@@ -120,19 +145,11 @@ export default function Pay(): React.JSX.Element {
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      checkEscrowStatus();
-    }, 10000); // Check escrow status every 10 seconds
-
-    // Initial check on component mount
-    checkEscrowStatus();
-
-    // Clear interval on component unmount
-    return () => clearInterval(intervalId);
-  }, []);
-
   const renderActivePage = () => {
+    if (isRedirecting) {
+      return <div>Redirecting...</div>; // Placeholder while redirecting
+    }
+
     switch (currentPage) {
       case "pay/v":
         return <PayDashboard />;
@@ -204,3 +221,4 @@ export default function Pay(): React.JSX.Element {
     </Box>
   );
 }
+
