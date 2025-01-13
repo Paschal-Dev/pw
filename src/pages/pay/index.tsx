@@ -79,6 +79,7 @@ export default function Pay(): React.JSX.Element {
             return; // Skip further execution after redirect
           } else {
             // If already redirected, show the escrow page
+            window.location.assign(checkoutLink);
             console.log("Already redirected, displaying escrow page.");
             dispatch(setButtonClicked(true));
             dispatch(setCurrentPage("escrow-page"));
