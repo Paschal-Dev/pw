@@ -80,14 +80,21 @@ export default function EscrowConfirm(): React.JSX.Element {
       APIService.sendOTP(body)
         .then((resp) => {
           if ([0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)) {
+            console.log("Status Check", resp.data?.pay?.payment_status);
             dispatch(setP2PEscrowDetails(resp.data));
             if (resp.data?.pay?.payment_status === 1) {
+            console.log("Status Check", resp.data?.pay?.payment_status);
+            console.log("Payment Successful, rendering success page");
               paymentWindow && paymentWindow.closed
               dispatch(setCurrentPage("p2p-payment"));
             } else if (resp.data?.pay?.payment_status === 5) {
+              console.log("Status Check", resp.data?.pay?.payment_status);
+              console.log("Payment failed, rendering error page");
               paymentWindow && paymentWindow.closed
               dispatch(setCurrentPage("p2p-payment"));
             } else if (resp.data?.pay?.payment_status === 3) {
+              console.log("Status Check", resp.data?.pay?.payment_status);
+              console.log("Wrong Payment");
               paymentWindow && paymentWindow.closed
               dispatch(setCurrentPage("p2p-payment"));
             }
