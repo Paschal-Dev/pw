@@ -11,7 +11,7 @@ import emptyRating from "../../assets/images/empty-rating.svg";
 import { t } from "i18next";
 // import { PageProps } from "../../utils/myUtils";
 // import { setCurrentPage, setP2PEscrowDetails, setShouldRedirectEscrow } from "../../redux/reducers/pay";
-import { setCurrentPage, setP2PEscrowDetails} from "../../redux/reducers/pay";
+import { setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
 import APIService from "../../services/api-service";
 
 export default function EscrowConfirm(): React.JSX.Element {
@@ -83,19 +83,22 @@ export default function EscrowConfirm(): React.JSX.Element {
             console.log("Status Check", resp.data?.pay?.payment_status);
             dispatch(setP2PEscrowDetails(resp.data));
             if (resp.data?.pay?.payment_status === 1) {
-            console.log("Status Check", resp.data?.pay?.payment_status);
-            console.log("Payment Successful, rendering success page");
+              console.log("Status Check", resp.data?.pay?.payment_status);
+              console.log("Payment Successful, rendering success page");
               paymentWindow && paymentWindow.closed
+              clearInterval(checkPaymentStatus);
               dispatch(setCurrentPage("p2p-payment"));
             } else if (resp.data?.pay?.payment_status === 5) {
               console.log("Status Check", resp.data?.pay?.payment_status);
               console.log("Payment failed, rendering error page");
               paymentWindow && paymentWindow.closed
+              clearInterval(checkPaymentStatus);
               dispatch(setCurrentPage("p2p-payment"));
             } else if (resp.data?.pay?.payment_status === 3) {
               console.log("Status Check", resp.data?.pay?.payment_status);
               console.log("Wrong Payment");
               paymentWindow && paymentWindow.closed
+              clearInterval(checkPaymentStatus);
               dispatch(setCurrentPage("p2p-payment"));
             }
 
@@ -119,7 +122,6 @@ export default function EscrowConfirm(): React.JSX.Element {
       //   dispatch(setShouldRedirectEscrow(true));
 
       // }
-      clearInterval(checkPaymentStatus);
     }, 5000);
   };
 
