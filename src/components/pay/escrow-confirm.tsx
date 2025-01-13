@@ -10,10 +10,13 @@ import rating from "../../assets/images/rating.png";
 import emptyRating from "../../assets/images/empty-rating.svg";
 import { t } from "i18next";
 // import { PageProps } from "../../utils/myUtils";
-import { setCurrentPage, setShouldRedirectEscrow } from "../../redux/reducers/pay";
+// import { setCurrentPage, setP2PEscrowDetails, setShouldRedirectEscrow } from "../../redux/reducers/pay";
+import { setCurrentPage, setP2PEscrowDetails} from "../../redux/reducers/pay";
+import APIService from "../../services/api-service";
 
-export default function EscrowConfirm(): React.JSX.Element{
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+export default function EscrowConfirm(): React.JSX.Element {
+  const { p2pEscrowDetails, payId } = useSelector((state: RootState) => state.pay);
+  // const resp = await APIService.sendOTP(sendOtpPayload);
   // const { payId } = useSelector((state: RootState) => state.pay);
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const dispatch = useDispatch();
@@ -63,20 +66,54 @@ export default function EscrowConfirm(): React.JSX.Element{
       "PaymentWindow",
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
     );
-    const checkWindowClosed = setInterval(() => {
-      if (paymentWindow && paymentWindow.closed) {
+    const checkPaymentStatus = setInterval(() => {
 
-        clearInterval(checkWindowClosed);
-        
-        setTimeout(() => {
-          dispatch(setCurrentPage("p2p-payment"));
-        }, 2000);
+      dispatch(setCurrentPage("p2p-payment"));
 
-        console.log("Payment Window Closed =>>> ");
-        dispatch(setShouldRedirectEscrow(true));
 
-      }
-    }, 500);
+      const body = {
+        call_type: "pay",
+        ip: "192.168.0.0",
+        lang: "en",
+        pay_id: payId,
+      };
+      APIService.sendOTP(body)
+        .then((resp) => {
+          if ([0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)) {
+            dispatch(setP2PEscrowDetails(resp.data));
+            if (resp.data?.pay?.payment_status === 1) {
+              paymentWindow && paymentWindow.closed
+              dispatch(setCurrentPage("p2p-payment"));
+            } else if (resp.data?.pay?.payment_status === 5) {
+              paymentWindow && paymentWindow.closed
+              dispatch(setCurrentPage("p2p-payment"));
+            } else if (resp.data?.pay?.payment_status === 3) {
+              paymentWindow && paymentWindow.closed
+              dispatch(setCurrentPage("p2p-payment"));
+            }
+
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+
+
+      // if (paymentWindow && paymentWindow.closed) {
+
+      //   clearInterval(checkWindowClosed);
+
+      //   setTimeout(() => {
+      //     dispatch(setCurrentPage("p2p-payment"));
+      //   }, 2000);
+
+      //   console.log("Payment Window Closed =>>> ");
+      //   dispatch(setShouldRedirectEscrow(true));
+
+      // }
+      clearInterval(checkPaymentStatus);
+    }, 5000);
   };
 
 
