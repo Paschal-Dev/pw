@@ -39,73 +39,71 @@ export default function Pay(): React.JSX.Element {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const initializePayment = async () => {
-      const url = new URL(window.location.href);
-      localStorage.clear();
-  
-      // Extract "v" parameter from URL
-      const payId = url.searchParams.get("v") || "";
-      dispatch(setPayId(payId));
-  
-      if (!payId) {
-        console.log("Invalid or missing Pay ID");
-        setErrorPage(true);
-        return;
-      }
-  
-      const sendOtpPayload = {
-        call_type: "pay",
-        ip: "192.168.0.0",
-        lang: "en",
-        pay_id: payId,
-      };
-  
-      try {
-        const resp = await APIService.sendOTP(sendOtpPayload);
-        console.log("API Response from Send OTP:", resp.data);
-  
-        if (resp.data?.escrow_status === 1) {
-          const checkoutLink = resp.data?.data?.checkout_link;
-  
-          // Log checkoutLink to check if it's valid
-          console.log("Checkout Link:", checkoutLink);
-  
-          if (checkoutLink) {
-            // Only proceed with the redirect if redirectHandled is not set yet
-            if (localStorage.getItem("redirectHandled") !== "true") {
-              // localStorage.clear();
-              console.log("Redirecting to checkout link:", checkoutLink);
-              localStorage.setItem("redirectHandled", "true");
-              window.location.assign(checkoutLink);
-              return; // Skip further execution after redirect
-            } else {
-              // If already redirected, show the escrow page
-              console.log("Already redirected, displaying escrow page.");
-              dispatch(setButtonClicked(true));
-              dispatch(setCurrentPage("escrow-page"));
-              dispatch(setP2PEscrowDetails(resp.data));
-            }
+ useEffect(() => {
+  const initializePayment = async () => {
+    const url = new URL(window.location.href);
+
+    // Extract "v" parameter from URL
+    const payId = url.searchParams.get("v") || "";
+    dispatch(setPayId(payId));
+
+    if (!payId) {
+      console.log("Invalid or missing Pay ID");
+      setErrorPage(true);
+      return;
+    }
+
+    const sendOtpPayload = {
+      call_type: "pay",
+      ip: "192.168.0.0",
+      lang: "en",
+      pay_id: payId,
+    };
+
+    try {
+      const resp = await APIService.sendOTP(sendOtpPayload);
+      console.log("API Response from Send OTP:", resp.data);
+
+      if (resp.data?.escrow_status === 1) {
+        const checkoutLink = resp.data?.data?.checkout_link;
+
+        // Log checkoutLink to check if it's valid
+        console.log("Checkout Link:", checkoutLink);
+
+        if (checkoutLink) {
+          // Only proceed with the redirect if redirectHandled is not set yet
+          if (localStorage.getItem("redirectHandled") !== "true") {
+            console.log("Redirecting to checkout link:", checkoutLink);
+            localStorage.setItem("redirectHandled", "true");
+            window.location.assign(checkoutLink);
+            return; // Skip further execution after redirect
           } else {
-            console.log("No checkout link available.");
+            // If already redirected, show the escrow page
+            console.log("Already redirected, displaying escrow page.");
+            dispatch(setButtonClicked(true));
+            dispatch(setCurrentPage("escrow-page"));
+            dispatch(setP2PEscrowDetails(resp.data));
           }
         } else {
-          console.log("No checkout link or escrow status not 1.");
-          handleNonEscrowResponse(resp.data);
+          console.log("No checkout link available.");
         }
-      } catch (error) {
-        console.error("Error during Send OTP:", error);
-        setErrorPage(true);
-      } finally {
-        setHasCheckedEscrow(true);
+      } else {
+        console.log("No checkout link or escrow status not 1.");
+        handleNonEscrowResponse(resp.data);
       }
-    };
-  
-    if (!hasCheckedEscrow) {
-      initializePayment();
+    } catch (error) {
+      console.error("Error during Send OTP:", error);
+      setErrorPage(true);
+    } finally {
+      setHasCheckedEscrow(true);
     }
-  }, [dispatch]);
-  
+  };
+
+  if (!hasCheckedEscrow) {
+    initializePayment();
+  }
+}, [dispatch, hasCheckedEscrow]);
+
   
   
   
