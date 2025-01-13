@@ -86,6 +86,7 @@ export default function Pay(): React.JSX.Element {
             dispatch(setButtonClicked(true));
             dispatch(setCurrentPage("escrow-page"));
             dispatch(setP2PEscrowDetails(resp.data));
+            return;
           }
         } else {
           console.log("No checkout link available.");
