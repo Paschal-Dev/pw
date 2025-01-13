@@ -73,21 +73,21 @@ export default function Pay(): React.JSX.Element {
 
           if (checkoutLink) {
             // Only proceed with the redirect if redirectHandled is not set yet
-            if (!localStorage.getItem("redirectHandled")) {
+            // if (localStorage.getItem("redirectHandled")) {
               // localStorage.clear();
               console.log("Redirecting to checkout link:", checkoutLink);
               localStorage.setItem("redirectHandled", "true");
               window.location.assign(checkoutLink);
-              return; // Skip further execution after redirect
-            } else {
-              // If already redirected, show the escrow page
-              console.log("Already redirected, displaying escrow page.");
-              localStorage.removeItem('redirectHandled');
-
-              dispatch(setButtonClicked(true));
-              dispatch(setCurrentPage("escrow-page"));
-              dispatch(setP2PEscrowDetails(resp.data));
-            }
+              // } else {
+                // If already redirected, show the escrow page
+                console.log("Already redirected, displaying escrow page.");
+                localStorage.removeItem('redirectHandled');
+                
+                dispatch(setButtonClicked(true));
+                dispatch(setCurrentPage("escrow-page"));
+                dispatch(setP2PEscrowDetails(resp.data));
+                return; // Skip further execution after redirect
+            // }
           } else {
             console.log("No checkout link available.");
           }
