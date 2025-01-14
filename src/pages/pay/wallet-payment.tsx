@@ -11,7 +11,7 @@ import { theme } from "../../assets/themes/theme";
 // import { Icon } from "@iconify/react/dist/iconify.js";
 import WalletProcessingDetails from "../../components/pay/wallet-payment-processing-details";
 import PaymentProcessingLoader from "../../components/pay/payment-processing-loader";
-import PaymentSuccessful from "../../components/pay/payment-successful";
+import PaymentSuccessful from "../../components/pay/wallet-payment-successful";
 import WalletPaymentDetails from "../../components/pay/walletpayment-details";
 // import { PageProps } from "../../utils/myUtils";
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,7 @@ import WrongPayment from "../../components/pay/wrong-payment";
 import WalletPaymentWrongDetails from "../../components/pay/wallet-payment-wrong-details";
 import WalletPaymentFailedDetails from "../../components/pay/walletpayment-failed-details";
 import NotYetPaidLoader from "../../components/pay/payment-not-yet-paid-loader";
-import NotYetPaidDetails from "../../components/pay/payment-not-yet-paid-details";
+import NotYetPaidDetails from "../../components/pay/wallet-payment-not-yet-paid-details";
 import Gif from "../../components/pay/gif";
 
 export default function WalletPayment(): React.JSX.Element {

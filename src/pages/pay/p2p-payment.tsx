@@ -13,12 +13,12 @@ import { useSelector } from "react-redux";
 import P2pProcessingDetails from "../../components/pay/p2p-payment-processing-details";
 import PaymentProcessingLoader from "../../components/pay/payment-processing-loader";
 import Gif from "../../components/pay/gif";
-import PaymentSuccessful from "../../components/pay/payment-successful";
+import PaymentSuccessful from "../../components/pay/p2p-payment-successful";
 import NotYetPaidLoader from "../../components/pay/payment-not-yet-paid-loader";
 import PaymentFailed from "../../components/pay/payment-failed";
 import WrongPayment from "../../components/pay/wrong-payment";
 import P2pPaymentFailedDetails from "../../components/pay/p2p-payment-failed-details ";
-import P2pPaymentWrongDetails from "../../components/pay/p2p-wallet-payment-wrong-details";
+import P2pPaymentWrongDetails from "../../components/pay/p2p-payment-wrong-details";
 import P2pPaymentDetails from "../../components/pay/p2ppayment-details";
 
 export default function P2PPayment(): React.JSX.Element {

@@ -8,9 +8,9 @@ export default function P2pProcessingDetails() {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pEscrowDetails, paymentDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails} = useSelector((state: RootState) => state.pay);
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
-  const shouldDisplayBox = paymentDetails?.pay?.payment_status === 0;
+  const shouldDisplayBox = p2pEscrowDetails?.pay?.payment_status === 0;
 
   const { t } = useTranslation();
   React.useEffect(() => {
@@ -168,7 +168,7 @@ export default function P2pProcessingDetails() {
             textAlign="center"
             justifyContent={"end"}
           >
-            {paymentDetails?.data?.pwat_value}
+            {p2pEscrowDetails?.data?.pwat_value}
           </Typography>
         </Box>
         <Box
@@ -198,7 +198,7 @@ export default function P2pProcessingDetails() {
             textAlign="center"
             justifyContent={"end"}
           >
-            {paymentDetails?.data?.pwat_exchange_rate}
+            {p2pEscrowDetails?.data?.pwat_exchange_rate}
           </Typography>
         </Box>
         <Box
