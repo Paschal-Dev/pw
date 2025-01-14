@@ -14,7 +14,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
     (state: RootState) => state.pay
   );
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
-  const shouldDisplayBox1 = p2pEscrowDetails?.pay?.payment_status === 1;
+  const shouldDisplayBox1 = p2pEscrowDetails?.data?.payment_status === 1;
 
   // Function to format Unix timestamp to a human-readable date string with time
   const formatDate = (timestamp: number) => {
