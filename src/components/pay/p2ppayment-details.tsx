@@ -10,7 +10,9 @@ export default function P2pPaymentDetails(): React.JSX.Element {
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useTranslation();
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails} = useSelector(
+    (state: RootState) => state.pay
+  );
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const shouldDisplayBox1 = p2pEscrowDetails?.pay?.payment_status === 1;
 
