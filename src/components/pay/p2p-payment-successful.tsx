@@ -85,7 +85,7 @@ export default function PaymentSuccessful(): React.JSX.Element {
 
 
 
-        {!p2pEscrowDetails?.others?.seller_receipt && (
+        {p2pEscrowDetails?.others?.seller_receipt && (
           <Button
             variant="contained"
             sx={{
@@ -104,7 +104,7 @@ export default function PaymentSuccessful(): React.JSX.Element {
           </Button>
         )}
 
-        {!p2pEscrowDetails?.others?.vendor_receipt && (
+        {p2pEscrowDetails?.others?.vendor_receipt && (
           <Button
             variant="outlined"
             sx={{
