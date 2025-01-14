@@ -31,6 +31,9 @@ export default function P2pPaymentDetails(): React.JSX.Element {
     console.log("Options:", options);
     
     console.log("Current Date:", date);
+
+    console.log("Successful Details:", p2pEscrowDetails);
+
   
   };
   React.useEffect(() => {
