@@ -24,7 +24,7 @@ import P2pPaymentDetails from "../../components/pay/p2ppayment-details";
 export default function P2PPayment(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [isLoading, setIsLoading] = useState(true);
-  const [paymentStatus, setPaymentStatus] = useState<number>();
+  // const [p2pEscrowDetails?.data?.payment_status, setp2pEscrowDetails?.data?.payment_status] = useState<number>();
   const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
 
 
@@ -43,13 +43,13 @@ export default function P2PPayment(): React.JSX.Element {
     }
   }, [mobile, tablet]);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (p2pEscrowDetails) {
-      setPaymentStatus(p2pEscrowDetails?.pay?.payment_status);
-    }
+  //   if (p2pEscrowDetails) {
+  //     setp2pEscrowDetails?.data?.payment_status(p2pEscrowDetails?.data?.payment_status);
+  //   }
 
-  }, [p2pEscrowDetails]);
+  // }, [p2pEscrowDetails]);
 
   useEffect(() => {
     const preloaderTimeout = setTimeout(() => {
@@ -61,30 +61,30 @@ export default function P2PPayment(): React.JSX.Element {
 
   useEffect(() => {
     // Check the payment status and start/stop loading accordingly
-    if (paymentStatus === 0) {
+    if (p2pEscrowDetails?.data?.payment_status === 0) {
       setIsLoading(true);
     }
 
-    if (paymentStatus === 1) {
+    if (p2pEscrowDetails?.data?.payment_status === 1) {
       setIsLoading(false);
     }
 
     // Check the payment status and start/stop loading accordingly
-    if (paymentStatus === 2) {
+    if (p2pEscrowDetails?.data?.payment_status === 2) {
       setIsLoading(true);
     }
 
     // Check the payment status and start/stop loading accordingly
-    if (paymentStatus === 3) {
+    if (p2pEscrowDetails?.data?.payment_status === 3) {
       setIsLoading(false);
     }
 
     // Check the payment status and start/stop loading accordingly
-    if (paymentStatus === 5) {
+    if (p2pEscrowDetails?.data?.payment_status === 5) {
       setIsLoading(false);
     }
 
-  }, [paymentStatus]);
+  }, [p2pEscrowDetails?.data?.payment_status]);
 
 
   return (
@@ -158,15 +158,15 @@ export default function P2PPayment(): React.JSX.Element {
             >
               <Grid container spacing={1}>
                 <Grid item xs={12} md={5} lg={5} display={"flex"}>
-                  {isLoading || paymentStatus === 0 ? (
+                  {isLoading || p2pEscrowDetails?.data?.payment_status === 0 ? (
                     <NotYetPaidLoader />
-                  ) : paymentStatus === 1 ? (<PaymentSuccessful />) : paymentStatus === 2 ? (<PaymentProcessingLoader />) : paymentStatus === 3 ? (<WrongPayment />) : paymentStatus === 5 ? (<PaymentFailed />) : (<Box />)}
+                  ) : p2pEscrowDetails?.data?.payment_status === 1 ? (<PaymentSuccessful />) : p2pEscrowDetails?.data?.payment_status === 2 ? (<PaymentProcessingLoader />) : p2pEscrowDetails?.data?.payment_status === 3 ? (<WrongPayment />) : p2pEscrowDetails?.data?.payment_status === 5 ? (<PaymentFailed />) : (<Box />)}
                 </Grid>
 
                 <Grid item xs={12} md={7} lg={7}>
-                  {isLoading || paymentStatus === 0 ? (
+                  {isLoading || p2pEscrowDetails?.data?.payment_status === 0 ? (
                     <P2pProcessingDetails />
-                  ) : paymentStatus === 1 ? (<P2pPaymentDetails />) : paymentStatus === 2 ? (<P2pProcessingDetails />) : paymentStatus === 3 ? (<P2pPaymentWrongDetails />) : paymentStatus === 5 ? (<P2pPaymentFailedDetails />) : (<Box />)}
+                  ) : p2pEscrowDetails?.data?.payment_status === 1 ? (<P2pPaymentDetails />) : p2pEscrowDetails?.data?.payment_status === 2 ? (<P2pProcessingDetails />) : p2pEscrowDetails?.data?.payment_status === 3 ? (<P2pPaymentWrongDetails />) : p2pEscrowDetails?.data?.payment_status === 5 ? (<P2pPaymentFailedDetails />) : (<Box />)}
                 </Grid>
               </Grid>
             </Box>
