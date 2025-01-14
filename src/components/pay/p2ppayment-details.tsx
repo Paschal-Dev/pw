@@ -10,7 +10,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useTranslation();
-  const { p2pEscrowDetails } = useSelector(
+  const { p2pEscrowDetails} = useSelector(
     (state: RootState) => state.pay
   );
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
@@ -27,15 +27,13 @@ export default function P2pPaymentDetails(): React.JSX.Element {
       hour: "numeric",
       minute: "numeric",
     };
-
+    
     console.log("Options:", options);
-
+    
     console.log("Current Date:", date);
 
     console.log("Successful Details:", p2pEscrowDetails);
 
-    console.log("Date Processed", p2pEscrowDetails?.pay?.date_processed &&
-      formatDate(p2pEscrowDetails?.pay?.date_processed))
   
   };
   React.useEffect(() => {
@@ -246,12 +244,12 @@ export default function P2pPaymentDetails(): React.JSX.Element {
             {t("transaction-hash")}
           </Typography>
           {p2pEscrowDetails?.others?.hash && (
-            <Link href={p2pEscrowDetails?.others?.hash} style={{ color: "#12B76A" }}>
-              view hash
-            </Link>
-          )}
+          <Link href={p2pEscrowDetails?.others?.hash} style={{ color: "#12B76A" }}>
+            view hash
+          </Link>
+        )}
           {!p2pEscrowDetails?.others?.hash && (
-            <img src={processingHash} width={150} />
+          <img src={processingHash} width={150}/>
           )}
         </Box>
         <Box
