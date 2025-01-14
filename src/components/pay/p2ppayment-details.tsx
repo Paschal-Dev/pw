@@ -192,7 +192,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {p2pEscrowDetails?.others?.pwat_value}
+            {p2pEscrowDetails?.data?.pwat_value}
           </Typography>
         </Box>
         <Box
@@ -222,7 +222,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {p2pEscrowDetails?.others?.pwat_rate}
+            {p2pEscrowDetails?.data?.pwat_rate}
           </Typography>
         </Box>
         <Box
@@ -310,7 +310,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
             justifyContent={"end"}
           >
             {p2pEscrowDetails?.pay?.date_processed &&
-              formatDate(p2pEscrowDetails.pay.date_processed)}
+              formatDate(p2pEscrowDetails?.pay?.date_processed)}
           </Typography>
         </Box>
         <Box
