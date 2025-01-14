@@ -1,15 +1,15 @@
-import { Box, Button, Typography, Link, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
 import { theme } from "../../assets/themes/theme";
 import success from "../../assets/images/check.svg";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "../../redux/store";
 export default function PaymentSuccessful(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+  // const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
   const { t } = useTranslation();
   React.useEffect(() => {
     if (mobile) {
@@ -75,7 +75,7 @@ export default function PaymentSuccessful(): React.JSX.Element {
           {t("payment-received")}
         </Typography>
       </Box>
-      <Box
+      {/* <Box
         display={"flex"}
         justifyContent={"center"}
         flexDirection={"column"}
@@ -122,7 +122,7 @@ export default function PaymentSuccessful(): React.JSX.Element {
             </Link>
           </Button>
         )}
-      </Box>
+      </Box> */}
     </Box>
   );
 }
