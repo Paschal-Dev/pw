@@ -87,7 +87,7 @@ export default function Pay(): React.JSX.Element {
             dispatch(setButtonClicked(true));
             dispatch(setCurrentPage("escrow-page"));
             dispatch(setP2PEscrowDetails(resp.data));
-            if ([1, 2, 3, 5].includes(resp.data?.pay?.payment_status)) {
+            if (resp.data?.data?.payment_status === 1) {
               dispatch(setP2PEscrowDetails(resp.data));
               dispatch(setCurrentPage("p2p-payment"));
             }
