@@ -222,7 +222,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {p2pEscrowDetails?.data?.pwat_rate}
+            {p2pEscrowDetails?.data?.pwat_exchange_rate}
           </Typography>
         </Box>
         <Box
