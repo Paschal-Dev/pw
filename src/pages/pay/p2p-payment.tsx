@@ -24,7 +24,7 @@ import P2pPaymentDetails from "../../components/pay/p2ppayment-details";
 export default function P2PPayment(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [isLoading, setIsLoading] = useState(true);
-  // const [p2pEscrowDetails?.data?.payment_status, setp2pEscrowDetails?.data?.payment_status] = useState<number>();
+  // const [p2pEscrowDetails?.pay?.payment_status, setp2pEscrowDetails?.pay?.payment_status] = useState<number>();
   const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
 
 
@@ -46,7 +46,7 @@ export default function P2PPayment(): React.JSX.Element {
   // useEffect(() => {
 
   //   if (p2pEscrowDetails) {
-  //     setp2pEscrowDetails?.data?.payment_status(p2pEscrowDetails?.data?.payment_status);
+  //     setp2pEscrowDetails?.pay?.payment_status(p2pEscrowDetails?.pay?.payment_status);
   //   }
 
   // }, [p2pEscrowDetails]);
@@ -61,30 +61,30 @@ export default function P2PPayment(): React.JSX.Element {
 
   useEffect(() => {
     // Check the payment status and start/stop loading accordingly
-    if (p2pEscrowDetails?.data?.payment_status === 0) {
+    if (p2pEscrowDetails?.pay?.payment_status === 0) {
       setIsLoading(true);
     }
 
-    if (p2pEscrowDetails?.data?.payment_status === 1) {
+    if (p2pEscrowDetails?.pay?.payment_status === 1) {
       setIsLoading(false);
     }
 
     // Check the payment status and start/stop loading accordingly
-    if (p2pEscrowDetails?.data?.payment_status === 2) {
+    if (p2pEscrowDetails?.pay?.payment_status === 2) {
       setIsLoading(true);
     }
 
     // Check the payment status and start/stop loading accordingly
-    if (p2pEscrowDetails?.data?.payment_status === 3) {
+    if (p2pEscrowDetails?.pay?.payment_status === 3) {
       setIsLoading(false);
     }
 
     // Check the payment status and start/stop loading accordingly
-    if (p2pEscrowDetails?.data?.payment_status === 5) {
+    if (p2pEscrowDetails?.pay?.payment_status === 5) {
       setIsLoading(false);
     }
 
-  }, [p2pEscrowDetails?.data?.payment_status]);
+  }, [p2pEscrowDetails?.pay?.payment_status]);
 
 
   return (
@@ -146,7 +146,7 @@ export default function P2PPayment(): React.JSX.Element {
                   borderRadius={2}
                   px={2}
                 >
-                  #{p2pEscrowDetails?.data?.unique_id}
+                  #{p2pEscrowDetails?.pay?.unique_id}
                 </Typography>
               </Box>
             </Box>
@@ -158,15 +158,15 @@ export default function P2PPayment(): React.JSX.Element {
             >
               <Grid container spacing={1}>
                 <Grid item xs={12} md={5} lg={5} display={"flex"}>
-                  {isLoading || p2pEscrowDetails?.data?.payment_status === 0 ? (
+                  {isLoading || p2pEscrowDetails?.pay?.payment_status === 0 ? (
                     <NotYetPaidLoader />
-                  ) : p2pEscrowDetails?.data?.payment_status === 1 ? (<PaymentSuccessful />) : p2pEscrowDetails?.data?.payment_status === 2 ? (<PaymentProcessingLoader />) : p2pEscrowDetails?.data?.payment_status === 3 ? (<WrongPayment />) : p2pEscrowDetails?.data?.payment_status === 5 ? (<PaymentFailed />) : (<Box />)}
+                  ) : p2pEscrowDetails?.pay?.payment_status === 1 ? (<PaymentSuccessful />) : p2pEscrowDetails?.pay?.payment_status === 2 ? (<PaymentProcessingLoader />) : p2pEscrowDetails?.pay?.payment_status === 3 ? (<WrongPayment />) : p2pEscrowDetails?.pay?.payment_status === 5 ? (<PaymentFailed />) : (<Box />)}
                 </Grid>
 
                 <Grid item xs={12} md={7} lg={7}>
-                  {isLoading || p2pEscrowDetails?.data?.payment_status === 0 ? (
+                  {isLoading || p2pEscrowDetails?.pay?.payment_status === 0 ? (
                     <P2pProcessingDetails />
-                  ) : p2pEscrowDetails?.data?.payment_status === 1 ? (<P2pPaymentDetails />) : p2pEscrowDetails?.data?.payment_status === 2 ? (<P2pProcessingDetails />) : p2pEscrowDetails?.data?.payment_status === 3 ? (<P2pPaymentWrongDetails />) : p2pEscrowDetails?.data?.payment_status === 5 ? (<P2pPaymentFailedDetails />) : (<Box />)}
+                  ) : p2pEscrowDetails?.pay?.payment_status === 1 ? (<P2pPaymentDetails />) : p2pEscrowDetails?.pay?.payment_status === 2 ? (<P2pProcessingDetails />) : p2pEscrowDetails?.pay?.payment_status === 3 ? (<P2pPaymentWrongDetails />) : p2pEscrowDetails?.pay?.payment_status === 5 ? (<P2pPaymentFailedDetails />) : (<Box />)}
                 </Grid>
               </Grid>
             </Box>

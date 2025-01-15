@@ -39,84 +39,78 @@ export default function Pay(): React.JSX.Element {
 
   const dispatch = useDispatch();
 
- useEffect(() => {
-  const initializePayment = async () => {
-    const url = new URL(window.location.href);
+  useEffect(() => {
+    const initializePayment = async () => {
+      const url = new URL(window.location.href);
+      const redirectHandled = localStorage.getItem("redirectHandled");
 
-    // Extract "v" parameter from URL
-    const payId = url.searchParams.get("v") || "";
-    dispatch(setPayId(payId));
+      // Extract "v" parameter from URL
+      const payId = url.searchParams.get("v") || "";
+      dispatch(setPayId(payId));
 
-    if (!payId) {
-      console.log("Invalid or missing Pay ID");
-      setErrorPage(true);
-      return;
-    }
+      if (!payId) {
+        console.log("Invalid or missing Pay ID");
+        setErrorPage(true);
+        return;
+      }
 
-    const sendOtpPayload = {
-      call_type: "pay",
-      ip: "192.168.0.0",
-      lang: "en",
-      pay_id: payId,
-    };
+      const sendOtpPayload = {
+        call_type: "pay",
+        ip: "192.168.0.0",
+        lang: "en",
+        pay_id: payId,
+      };
 
-    try {
-      const resp = await APIService.sendOTP(sendOtpPayload);
-      console.log("API Response from Send OTP:", resp.data);
+      try {
+        const resp = await APIService.sendOTP(sendOtpPayload);
+        console.log("API Response from Send OTP:", resp.data);
 
-      if (resp.data?.escrow_status === 1) {
-        const checkoutLink = resp.data?.data?.checkout_link;
+        if (resp.data?.escrow_status === 1) {
+          const checkoutLink = resp.data?.data?.checkout_link;
 
-        // Log checkoutLink to check if it's valid
-        console.log("Checkout Link:", checkoutLink);
+          // Log checkoutLink to check if it's valid
+          console.log("Checkout Link:", checkoutLink);
 
-        if (checkoutLink) {
-          // Only proceed with the redirect if redirectHandled is not set yet
-          if (localStorage.getItem("redirectHandled") !== "true") {
-            console.log("Redirecting to checkout link:", checkoutLink);
-            localStorage.setItem("redirectHandled", "true");
-            window.location.assign(checkoutLink);
-            return; // Skip further execution after redirect
-          } else if (localStorage.getItem("redirectHandled") === "true")
-            {
-            // If already redirected, show the escrow page
-            // localStorage.removeItem("redirectHandled");
-            // localStorage.setItem("redirectHandled", "true");
-            // window.location.assign(checkoutLink);
-            console.log("Already redirected, displaying escrow page.");
-            dispatch(setButtonClicked(true));
-            dispatch(setCurrentPage("escrow-page"));
-            dispatch(setP2PEscrowDetails(resp.data));
-            if (resp.data?.data?.payment_status === 1) {
+          if (checkoutLink && url !== checkoutLink) {
+            if (redirectHandled !== "true") {
+              console.log("Redirecting to checkout link:", checkoutLink);
+              localStorage.setItem("redirectHandled", "true");
+              window.location.assign(checkoutLink);
+              return; // Prevent further execution   
+            } else {
+              console.log("Already redirected, displaying escrow page.");
+              dispatch(setButtonClicked(true));
+              dispatch(setCurrentPage("escrow-page"));
               dispatch(setP2PEscrowDetails(resp.data));
-              dispatch(setCurrentPage("p2p-payment"));
             }
+          } else if (!checkoutLink) {
+            console.log("No checkout link available.");
+          } else {
+            console.log("Clearing redirectHandled for current session.");
+            localStorage.removeItem("redirectHandled");
           }
         } else {
-          console.log("No checkout link available.");
+          console.log("No checkout link or escrow status not 1.");
+          handleNonEscrowResponse(resp.data);
         }
-      } else {
-        console.log("No checkout link or escrow status not 1.");
-        handleNonEscrowResponse(resp.data);
+      } catch (error) {
+        console.error("Error during Send OTP:", error);
+        setErrorPage(true);
+      } finally {
+        setHasCheckedEscrow(true);
       }
-    } catch (error) {
-      console.error("Error during Send OTP:", error);
-      setErrorPage(true);
-    } finally {
-      setHasCheckedEscrow(true);
+    };
+
+    if (!hasCheckedEscrow) {
+      initializePayment();
     }
-  };
+  }, [dispatch, hasCheckedEscrow]);
 
-  if (!hasCheckedEscrow) {
-    initializePayment();
-  }
-}, [dispatch, hasCheckedEscrow]);
 
-  
-  
-  
-  
-  
+
+
+
+
 
   const handleNonEscrowResponse = (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
@@ -141,9 +135,13 @@ export default function Pay(): React.JSX.Element {
         };
         APIService.sendOTP(body)
           .then((resp) => {
-            if ([0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)) {
+            if ([0, 1, 2, 3, 5].includes(resp.data?.wallet_pay?.payment_status)) {
               dispatch(setWalletPaymentDetails(resp.data));
               dispatch(setCurrentPage("wallet-payment"));
+            }
+            if (resp.data?.pay?.payment_status === 1) {
+              dispatch(setP2PEscrowDetails(resp.data));
+              dispatch(setCurrentPage("p2p-payment"));
             }
           })
           .catch((error) => {

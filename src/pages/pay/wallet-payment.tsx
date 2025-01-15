@@ -50,7 +50,7 @@ export default function WalletPayment(): React.JSX.Element {
   useEffect(() => {
 
     if (walletPaymentDetails) {
-      setPaymentStatus(walletPaymentDetails?.pay?.payment_status);
+      setPaymentStatus(walletPaymentDetails?.wallet_pay?.payment_status);
     }
    
   }, [walletPaymentDetails]);
