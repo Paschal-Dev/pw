@@ -42,7 +42,7 @@ export default function Pay(): React.JSX.Element {
   useEffect(() => {
     const initializePayment = async () => {
       const url = new URL(window.location.href);
-      const redirectHandled = localStorage.getItem("redirectHandled");
+      const redirectHandled = sessionStorage.getItem("redirectHandled");
 
       // Extract "v" parameter from URL
       const payId = url.searchParams.get("v") || "";
@@ -74,7 +74,7 @@ export default function Pay(): React.JSX.Element {
           if (checkoutLink && url !== checkoutLink) {
             if (redirectHandled !== "true") {
               console.log("Redirecting to checkout link:", checkoutLink);
-              localStorage.setItem("redirectHandled", "true");
+              sessionStorage.setItem("redirectHandled", "true");
               window.location.assign(checkoutLink);
               return; // Prevent further execution   
             } else {
@@ -87,7 +87,7 @@ export default function Pay(): React.JSX.Element {
             console.log("No checkout link available.");
           } else {
             console.log("Clearing redirectHandled for current session.");
-            localStorage.removeItem("redirectHandled");
+            sessionStorage.removeItem("redirectHandled");
           }
         } else {
           console.log("No checkout link or escrow status not 1.");
