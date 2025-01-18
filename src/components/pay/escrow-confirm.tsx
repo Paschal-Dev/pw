@@ -85,21 +85,27 @@ export default function EscrowConfirm(): React.JSX.Element {
             if (resp.data?.pay?.payment_status === 1) {
               console.log("Status Check", resp.data?.pay?.payment_status);
               console.log("Payment Successful, rendering success page");
-              paymentWindow && paymentWindow.closed
+              if (paymentWindow && !paymentWindow.closed) {
+                paymentWindow.close();
+              }
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));
               dispatch(setCurrentPage("p2p-payment"));
             } else if (resp.data?.pay?.payment_status === 5) {
               console.log("Status Check", resp.data?.pay?.payment_status);
               console.log("Payment failed, rendering error page");
-              paymentWindow && paymentWindow.closed
+              if (paymentWindow && !paymentWindow.closed) {
+                paymentWindow.close();
+              }
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));
               dispatch(setCurrentPage("p2p-payment"));
             } else if (resp.data?.pay?.payment_status === 3) {
               console.log("Status Check", resp.data?.pay?.payment_status);
               console.log("Wrong Payment");
-              paymentWindow && paymentWindow.closed
+              if (paymentWindow && !paymentWindow.closed) {
+                paymentWindow.close();
+              }
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));
               dispatch(setCurrentPage("p2p-payment"));
@@ -112,8 +118,12 @@ export default function EscrowConfirm(): React.JSX.Element {
         });
 
 
-
-      // if (paymentWindow && paymentWindow.closed) {
+      if (paymentWindow && paymentWindow.closed) {
+        console.log("Payment window closed by the user.");
+        clearInterval(checkPaymentStatus);
+        dispatch(setCurrentPage("p2p-payment"));
+      }
+      // if (paymentWindow.close()) {
 
       //   clearInterval(checkWindowClosed);
 
