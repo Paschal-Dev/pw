@@ -27,9 +27,9 @@ import chinese from "../../../assets/images/flag_chinese.png";
 import korean from "../../../assets/images/flag_korean.png";
 import arabic from "../../../assets/images/flag_arabic.png";
 import bengali from "../../../assets/images/flag_bengali.jpeg";
-import { useSelector } from "react-redux";
+import { setCurrentPage } from "../../../redux/reducers/pay";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import {useNavigate} from "react-router-dom";
 // import { PageProps } from "../../../utils/myUtils";
 
 
@@ -40,7 +40,7 @@ export default function Topbar(): React.JSX.Element{
   const [language, setLanguage] = React.useState(
     localStorage.getItem("language") ?? "en"
   );
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { payId } = useSelector((state: RootState) => state.pay);
 
 
@@ -78,7 +78,7 @@ export default function Topbar(): React.JSX.Element{
             justifyContent: "space-between",
           }}
         >
-            <img  src={Logo} onClick={() => navigate('https://pay.pwat.net/?v=${payId}')} style={{cursor: 'pointer'}}/>
+            <img  src={Logo} onClick={() => dispatch(setCurrentPage(`/`))} style={{cursor: 'pointer'}}/>
           <FormControl
             variant="standard"
             size="small"
