@@ -31,8 +31,6 @@ import { setCurrentPage } from "../../../redux/reducers/pay";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 // import { PageProps } from "../../../utils/myUtils";
-
-
 export default function Topbar(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -43,9 +41,7 @@ export default function Topbar(): React.JSX.Element{
   const dispatch = useDispatch();
   const { payId } = useSelector((state: RootState) => state.pay);
 
-
-  console.log("My Test >>>>", `https://pay.pwat.net/?v=${payId}`);
-
+ const goHome = window.location.href = `https://pay.pwat.net/?v=${payId}`;
   const { i18n } = useTranslation();
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value);
@@ -78,7 +74,7 @@ export default function Topbar(): React.JSX.Element{
             justifyContent: "space-between",
           }}
         >
-            <img  src={Logo} onClick={() => dispatch(setCurrentPage(`/`))} style={{cursor: 'pointer'}}/>
+            <img  src={Logo} onClick={() => dispatch(setCurrentPage(goHome))} style={{cursor: 'pointer'}}/>
           <FormControl
             variant="standard"
             size="small"
