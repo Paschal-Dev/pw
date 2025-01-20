@@ -3,17 +3,25 @@ import {
   Typography,
   CircularProgress,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { theme } from "../../assets/themes/theme";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
+import APIService from "../../services/api-service";
 
 export default function NotYetPaidLoader(): React.JSX.Element {
+  const { p2pEscrowDetails, payId } = useSelector((state: RootState) => state.pay);
   const [deviceType, setDeviceType] = useState("mobile");
   const [showPreloader, setShowPreloader] = useState(true);
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (mobile) {
       setDeviceType("mobile");
@@ -29,6 +37,89 @@ export default function NotYetPaidLoader(): React.JSX.Element {
     }, 5000);
     return () => clearTimeout(preloaderTimeout);
   }, []);
+
+  const handlePaymentClick = () => {
+    const width = window.innerWidth * 0.5;
+    const height = window.innerHeight * 0.6;
+    const left = (window.innerWidth - width) / 2;
+    const top = (window.innerHeight - height) / 2;
+
+    const paymentWindow = window.open(
+      `${p2pEscrowDetails?.vendor?.payment_link}`,
+      "PaymentWindow",
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    );
+    const checkPaymentStatus = setInterval(() => {
+
+      dispatch(setCurrentPage("p2p-payment"));
+
+
+      const body = {
+        call_type: "pay",
+        ip: "192.168.0.0",
+        lang: "en",
+        pay_id: payId,
+      };
+      APIService.sendOTP(body)
+        .then((resp) => {
+          if ([0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)) {
+            console.log("Status Check", resp.data?.pay?.payment_status);
+            dispatch(setP2PEscrowDetails(resp.data));
+            if (resp.data?.pay?.payment_status === 1) {
+              console.log("Status Check", resp.data?.pay?.payment_status);
+              console.log("Payment Successful, rendering success page");
+              if (paymentWindow && !paymentWindow.closed) {
+                paymentWindow.close();
+              }
+              clearInterval(checkPaymentStatus);
+              dispatch(setP2PEscrowDetails(resp.data));
+              dispatch(setCurrentPage("p2p-payment"));
+            } else if (resp.data?.pay?.payment_status === 5) {
+              console.log("Status Check", resp.data?.pay?.payment_status);
+              console.log("Payment failed, rendering error page");
+              if (paymentWindow && !paymentWindow.closed) {
+                paymentWindow.close();
+              }
+              clearInterval(checkPaymentStatus);
+              dispatch(setP2PEscrowDetails(resp.data));
+              dispatch(setCurrentPage("p2p-payment"));
+            } else if (resp.data?.pay?.payment_status === 3) {
+              console.log("Status Check", resp.data?.pay?.payment_status);
+              console.log("Wrong Payment");
+              if (paymentWindow && !paymentWindow.closed) {
+                paymentWindow.close();
+              }
+              clearInterval(checkPaymentStatus);
+              dispatch(setP2PEscrowDetails(resp.data));
+              dispatch(setCurrentPage("p2p-payment"));
+            }
+
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+
+      if (paymentWindow && paymentWindow.closed) {
+        console.log("Payment window closed by the user.");
+        dispatch(setCurrentPage("p2p-payment"));
+      }
+      // if (paymentWindow.close()) {
+
+      //   clearInterval(checkWindowClosed);
+
+      //   setTimeout(() => {
+      //     dispatch(setCurrentPage("p2p-payment"));
+      //   }, 2000);
+
+      //   console.log("Payment Window Closed =>>> ");
+      //   dispatch(setShouldRedirectEscrow(true));
+
+      // }
+    }, 5000);
+  };
+
   return (
     <Box
       boxShadow={
@@ -99,6 +190,20 @@ export default function NotYetPaidLoader(): React.JSX.Element {
           {t("not")}
         </Typography>
       </Box>
+      <Button
+          variant="contained"
+          sx={{
+            width: "80%",
+            paddingY: 1.5,
+            borderRadius: 2,
+            ":hover": { background: theme.palette.primary.main },
+            fontSize: 20,
+            fontWeight: 700,
+          }}
+          onClick={handlePaymentClick}
+        >
+          continue payment
+        </Button>
     </Box>
   );
 }

@@ -120,7 +120,6 @@ export default function EscrowConfirm(): React.JSX.Element {
 
       if (paymentWindow && paymentWindow.closed) {
         console.log("Payment window closed by the user.");
-        clearInterval(checkPaymentStatus);
         dispatch(setCurrentPage("p2p-payment"));
       }
       // if (paymentWindow.close()) {
