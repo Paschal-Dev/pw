@@ -94,7 +94,7 @@ export default function EscrowConfirm(): React.JSX.Element {
 
               const url = `https://pay.pwat.net/?v=${resp.data.data.unique_id}`;
 
-              const RedirectUrl = `https://pay.pwat.net/?v=${resp.data.data.reddirect_url}`;
+              const RedirectUrl = `https://pay.pwat.net/?v=${resp.data.data.redirect_url}`;
 
               if (resp.data?.data.redirect_url === url){
                 dispatch(setCurrentPage("p2p-payment"));
