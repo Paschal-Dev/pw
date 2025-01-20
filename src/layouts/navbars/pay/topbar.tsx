@@ -43,6 +43,7 @@ export default function Topbar(): React.JSX.Element{
 
 //  function ClickableImage({ payId }) {
   const handleClick = () => {
+    sessionStorage.removeItem("redirectHandled");
     window.location.href = `https://pay.pwat.net/?v=${payId}`;
   };
 
