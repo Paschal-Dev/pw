@@ -28,7 +28,8 @@ import korean from "../../../assets/images/flag_korean.png";
 import arabic from "../../../assets/images/flag_arabic.png";
 import bengali from "../../../assets/images/flag_bengali.jpeg";
 import { setCurrentPage } from "../../../redux/reducers/pay";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 // import { PageProps } from "../../../utils/myUtils";
 export default function Topbar(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
@@ -38,6 +39,9 @@ export default function Topbar(): React.JSX.Element{
     localStorage.getItem("language") ?? "en"
   );
   const dispatch = useDispatch();
+  const { payId } = useSelector((state: RootState) => state.pay);
+
+  console.log("My Test >>>>", `https://pay.pwat.net/?v=${payId}`);
 
   const { i18n } = useTranslation();
   const handleChange = (event: SelectChangeEvent) => {
@@ -71,7 +75,7 @@ export default function Topbar(): React.JSX.Element{
             justifyContent: "space-between",
           }}
         >
-            <img  src={Logo} onClick={() => dispatch(setCurrentPage("pay/v"))} style={{cursor: 'pointer'}}/>
+            <img  src={Logo} onClick={() => dispatch(setCurrentPage(`https://pay.pwat.net/?v=${payId}`))} style={{cursor: 'pointer'}}/>
           <FormControl
             variant="standard"
             size="small"
