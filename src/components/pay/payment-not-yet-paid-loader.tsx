@@ -171,6 +171,7 @@ export default function NotYetPaidLoader(): React.JSX.Element {
         flexDirection={"column"}
         alignItems={"center"}
         color={"#fff"}
+        mb={4}
       >
         <Typography
           variant="h6"
@@ -193,7 +194,7 @@ export default function NotYetPaidLoader(): React.JSX.Element {
       <Button
           variant="contained"
           sx={{
-            width: "80%",
+            width: "100%",
             paddingY: 1.5,
             borderRadius: 2,
             ":hover": { background: theme.palette.primary.main },
