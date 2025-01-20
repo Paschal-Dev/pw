@@ -83,12 +83,13 @@ export default function Pay(): React.JSX.Element {
               dispatch(setCurrentPage("escrow-page"));
               dispatch(setP2PEscrowDetails(resp.data));
             }
-          } else if (!checkoutLink) {
-            console.log("No checkout link available.");
           } else {
-            console.log("Clearing redirectHandled for current session.");
-            sessionStorage.removeItem("redirectHandled");
-          }
+            console.log("No checkout link available.");
+          } 
+          // else {
+          //   console.log("Clearing redirectHandled for current session.");
+          //   sessionStorage.removeItem("redirectHandled");
+          // }
         } else {
           console.log("No checkout link or escrow status not 1.");
           handleNonEscrowResponse(resp.data);
