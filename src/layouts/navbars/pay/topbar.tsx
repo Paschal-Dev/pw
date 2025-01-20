@@ -27,10 +27,12 @@ import chinese from "../../../assets/images/flag_chinese.png";
 import korean from "../../../assets/images/flag_korean.png";
 import arabic from "../../../assets/images/flag_arabic.png";
 import bengali from "../../../assets/images/flag_bengali.jpeg";
-import { setCurrentPage } from "../../../redux/reducers/pay";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
+import {useNavigate} from "react-router-dom";
 // import { PageProps } from "../../../utils/myUtils";
+
+
 export default function Topbar(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -38,7 +40,7 @@ export default function Topbar(): React.JSX.Element{
   const [language, setLanguage] = React.useState(
     localStorage.getItem("language") ?? "en"
   );
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { payId } = useSelector((state: RootState) => state.pay);
 
 
@@ -76,7 +78,7 @@ export default function Topbar(): React.JSX.Element{
             justifyContent: "space-between",
           }}
         >
-            <img  src={Logo} onClick={() => dispatch(setCurrentPage(`pay/v`))} style={{cursor: 'pointer'}}/>
+            <img  src={Logo} onClick={() => navigate('https://pay.pwat.net/?v=${payId}')} style={{cursor: 'pointer'}}/>
           <FormControl
             variant="standard"
             size="small"
