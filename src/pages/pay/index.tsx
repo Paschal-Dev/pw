@@ -135,11 +135,12 @@ export default function Pay(): React.JSX.Element {
         };
         APIService.sendOTP(body)
           .then((resp) => {
+            console.log("Wallet Payment Status >>>", resp.data?.wallet_pay?.payment_status);
+            console.log("P2P Payment Status >>>", resp.data?.pay?.payment_status);
             if ([0, 1, 2, 3, 5].includes(resp.data?.wallet_pay?.payment_status)) {
               dispatch(setWalletPaymentDetails(resp.data));
               dispatch(setCurrentPage("wallet-payment"));
-            }
-            if (resp.pay?.payment_status === 1) {
+            }else if (resp?.data?.pay?.payment_status === 1) {
               dispatch(setP2PEscrowDetails(resp.data));
               dispatch(setCurrentPage("p2p-payment"));
             }
