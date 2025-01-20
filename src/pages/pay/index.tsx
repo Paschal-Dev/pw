@@ -141,7 +141,7 @@ export default function Pay(): React.JSX.Element {
               dispatch(setWalletPaymentDetails(resp.data));
               dispatch(setCurrentPage("wallet-payment"));
             }else if (data?.pay?.payment_status === 1) {
-              dispatch(setP2PEscrowDetails(resp.data));
+              dispatch(setP2PEscrowDetails(data));
               dispatch(setCurrentPage("p2p-payment"));
             }
           })
