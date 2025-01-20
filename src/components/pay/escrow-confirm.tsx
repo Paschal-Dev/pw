@@ -91,7 +91,7 @@ export default function EscrowConfirm(): React.JSX.Element {
               
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));
-              
+
               const url = `https://pay.pwat.net/?v=${resp.data.data.unique_id}`;
 
               const RedirectUrl = `https://pay.pwat.net/?v=${resp.data.data.reddirect_url}`;
@@ -99,8 +99,8 @@ export default function EscrowConfirm(): React.JSX.Element {
               if (resp.data?.data.redirect_url === url){
                 dispatch(setCurrentPage("p2p-payment"));
               }else {
-                console.log("Payment Successful, rendering success page");
-                window.location.assign(RedirectUrl);
+                console.log("Payment Successful, rendering success page", RedirectUrl);
+                // window.location.assign(RedirectUrl);
               }
             } else if (resp.data?.pay?.payment_status === 5) {
               console.log("Status Check", resp.data?.pay?.payment_status);
