@@ -41,6 +41,7 @@ export default function Topbar(): React.JSX.Element{
   const dispatch = useDispatch();
   const { payId } = useSelector((state: RootState) => state.pay);
 
+
   console.log("My Test >>>>", `https://pay.pwat.net/?v=${payId}`);
 
   const { i18n } = useTranslation();
@@ -75,7 +76,7 @@ export default function Topbar(): React.JSX.Element{
             justifyContent: "space-between",
           }}
         >
-            <img  src={Logo} onClick={() => dispatch(setCurrentPage(`https://pay.pwat.net/?v=${payId}`))} style={{cursor: 'pointer'}}/>
+            <img  src={Logo} onClick={() => dispatch(setCurrentPage(`pay/v`))} style={{cursor: 'pointer'}}/>
           <FormControl
             variant="standard"
             size="small"
