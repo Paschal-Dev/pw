@@ -311,7 +311,7 @@ export default function WalletProcessingDetails() {
                   textAlign={"center"}
                   color={"#fff"}
                 >
-                  Processing
+                  {t("blc_pw_39")}
                 </Typography>
               </Box>
             )}

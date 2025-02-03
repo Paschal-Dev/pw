@@ -314,7 +314,7 @@ export default function P2pPaymentFailedDetails(): React.JSX.Element {
                   textAlign={"center"}
                   color={"#fff"}
                 >
-                  Failed
+                  {t("blc_pw_24")}
                 </Typography>
               </Box>
             )}

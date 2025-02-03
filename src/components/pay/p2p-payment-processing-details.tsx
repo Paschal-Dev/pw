@@ -258,7 +258,7 @@ export default function P2pProcessingDetails() {
             textAlign="center"
             justifyContent={"end"}
           >
-            Not Yet Paid
+            {t("blc_pw_25")}
           </Typography>
         </Box>
         <Box
@@ -294,7 +294,7 @@ export default function P2pProcessingDetails() {
                   textAlign={"center"}
                   color={"#000"}
                 >
-                  Not Yet Paid
+                  {t("blc_pw_25")}
                 </Typography>
               </Box>
             )}

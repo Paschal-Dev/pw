@@ -245,7 +245,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
           </Typography>
           {p2pEscrowDetails?.others?.hash && (
           <Link href={p2pEscrowDetails?.others?.hash} style={{ color: "#12B76A" }}>
-            view hash
+            {t("blc_pw_27")}
           </Link>
         )}
           {!p2pEscrowDetails?.others?.hash && (
@@ -347,7 +347,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
                   textAlign={"center"}
                   color={"#fff"}
                 >
-                  Paid
+                  {t("blc_pw_28")}
                 </Typography>
               </Box>
             )}

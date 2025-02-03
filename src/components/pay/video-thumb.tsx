@@ -3,6 +3,21 @@ import { Box,IconButton, Modal, Backdrop } from "@mui/material";
 import { theme } from "../../assets/themes/theme";
 import videoThumbImg from "../../assets/images/video-thumb.png";
 import { Icon } from "@iconify/react";
+import japanese from "../../assets/images/Japanese translated video thumbnail-10.png";
+import arabic from "../../assets/images/Arabic translated video thumbnail-14.png";
+import spanish from "../../assets/images/Spanish translated video thumbnail-02.png";
+import russian from "../../assets/images/Russian translated video thumbnail-08.png";
+import slovak from "../../assets/images/Slovak translated video thumbnail-03.png";
+import korean from "../../assets/images/Korean translated video thumbnail-11.png";
+import indonesian from "../../assets/images/Indonesian translated video thumbnail-09.png";
+import french from "../../assets/images/French translated video thumbnail-01.png";
+import bengali from "../../assets/images/Bengali translated video thumbnail-13.png";
+import italian from "../../assets/images/Italian translated video thumbnail-04.png";
+import chinese from "../../assets/images/Chinese translated video thumbnail-12.png";
+import portugese from "../../assets/images/Portuguese translated video thumbnail-05.png";
+import hindi from "../../assets/images/hindi translated video thumbnail-07.png";
+import german from "../../assets/images/German translated video thumbnail-06.png";
+import i18n from "../../i18n";
 
 
 export default function VideoThumb(): React.JSX.Element {
@@ -16,11 +31,36 @@ export default function VideoThumb(): React.JSX.Element {
     setOpen(false);
   };
 
+  const languageImages: Record<string, string> = {
+    en: videoThumbImg, // Default image for English
+    ja: japanese,
+    ar: arabic,
+    ru: russian,
+    es: spanish,
+    id: indonesian,
+    fr: french,
+    be: bengali,
+    it: italian,
+    zh: chinese,
+    de: german,
+    hi: hindi,
+    pt: portugese,
+    sl: slovak,
+    kr: korean
+
+   
+  };
+
+  const currentLanguage = i18n.language;
+  const selectedImage = languageImages[currentLanguage] || videoThumbImg;
+
+
   return (
     <>
       <Box position={"relative"}>
         <img
-          src={videoThumbImg}
+          src={selectedImage}
+          alt={currentLanguage}
           width={"100%"}
           style={{
             boxShadow: "0px 2px 10px 0px rgba(0,0,0,0.1)",

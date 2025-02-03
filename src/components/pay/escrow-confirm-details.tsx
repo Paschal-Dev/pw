@@ -250,7 +250,7 @@ export default function EscrowConfirmDetails() {
             fontWeight={600}
             style={{ flex: 1 }}
           >
-            Amount:
+            {t("blc_pw_8")}
           </Typography>
 
           <Typography
@@ -314,7 +314,7 @@ export default function EscrowConfirmDetails() {
             fontWeight={600}
             style={{ flex: 1 }}
           >
-            Escrow
+            {t("blc_pw_9")}
           </Typography>
 
           <Typography
@@ -435,7 +435,7 @@ export default function EscrowConfirmDetails() {
                       textAlign="center"
                       color="#12B76A"
                     >
-                      Active
+                      {t("blc_pw_10")}
                     </Typography>
                   )}
                   {shouldDisplayBox1 && (
@@ -446,7 +446,7 @@ export default function EscrowConfirmDetails() {
                       textAlign="center"
                       color="red"
                     >
-                      Not active
+                      {t("blc_pw_11")}
                     </Typography>
                   )}
                 </Box>
@@ -464,7 +464,7 @@ export default function EscrowConfirmDetails() {
                     fontWeight={600}
                     flex={1}
                   >
-                    Amount
+                    {t("blc_pw_12")}
                   </Typography>
                   <Typography
                     variant="caption"
@@ -535,7 +535,7 @@ export default function EscrowConfirmDetails() {
                 marginTop={1}
                 fontSize={15}
               >
-                Are you sure you want to cancel escrow
+               {t("blc_pw_13")}
               </Typography>
               <Typography
                 variant="body2"
@@ -544,7 +544,7 @@ export default function EscrowConfirmDetails() {
                 alignItems={"center"}
                 textAlign={"center"}
               >
-                You would be able to select another payment method when you cancel escrow
+                {t("blc_pw_14")}
               </Typography>
               <Box
                 display="flex"
@@ -566,7 +566,7 @@ export default function EscrowConfirmDetails() {
                     bgcolor: "#D92D20",
                   }}
                 >
-                  Close
+                  {t("blc_pw_15")}
                 </Button>
                 <Button
                   variant="outlined"
@@ -580,7 +580,7 @@ export default function EscrowConfirmDetails() {
                     ":hover": { background: "none" },
                   }}
                 >
-                  Confirm
+                  {t("blc_pw_16")}
                 </Button>
               </Box>
             </Box>
@@ -666,7 +666,7 @@ export default function EscrowConfirmDetails() {
               fontWeight={400}
               style={{ flex: 1 }}
             >
-              Vendor's Name:
+              {t("blc_pw_17")}
             </Typography>
 
             <Typography
@@ -738,7 +738,7 @@ export default function EscrowConfirmDetails() {
               textAlign="center"
               justifyContent={"end"}
             >
-              {p2pEscrowDetails?.vendor?.window_time} minutes
+              {p2pEscrowDetails?.vendor?.window_time} {t("blc_pw_18")}
             </Typography>
           </Box>
           <Box
@@ -786,7 +786,7 @@ export default function EscrowConfirmDetails() {
               fontWeight={400}
               style={{ flex: 1 }}
             >
-              Vendor's Fee:
+              {t("blc_pw_20")}
             </Typography>
 
             <Typography
@@ -819,7 +819,7 @@ export default function EscrowConfirmDetails() {
               fontWeight={400}
               style={{ flex: 1 }}
             >
-              Load Type:
+              {t("blc_pw_21")}
             </Typography>
 
             <Typography

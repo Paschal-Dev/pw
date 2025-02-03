@@ -342,7 +342,7 @@ export default function WalletPaymentDetails(): React.JSX.Element {
                   textAlign={"center"}
                   color={"#fff"}
                 >
-                  Paid
+                  {t("blc_pw_28")}
                 </Typography>
               </Box>
             )}

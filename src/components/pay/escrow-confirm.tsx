@@ -280,7 +280,7 @@ export default function EscrowConfirm(): React.JSX.Element {
           }}
           onClick={handlePaymentClick}
         >
-          continue payment
+          {t("blc_pw_19")}
         </Button>
       </Box>
     </Card>

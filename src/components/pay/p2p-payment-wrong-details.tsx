@@ -314,7 +314,7 @@ export default function P2pPaymentWrongDetails(): React.JSX.Element {
                   textAlign={"center"}
                   color={"#fff"}
                 >
-                  Wrong Payment
+                  {t("blc_pw_26")}
                 </Typography>
               </Box>
             )}    

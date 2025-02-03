@@ -281,7 +281,7 @@ export default function EscrowStatus(){
             textAlign="center"
             color="#12B76A"
           >
-            Active
+            {t("blc_pw_10")}
           </Typography>
         )}
         {shouldDisplayBox1 && (
@@ -292,7 +292,7 @@ export default function EscrowStatus(){
             textAlign="center"
             color="red"
           >
-            Not active
+            {t("blc_pw_11")}
           </Typography>
         )}
       </Box>
@@ -311,7 +311,7 @@ export default function EscrowStatus(){
           fontWeight={600}
           flex={1}
         >
-          Amount
+          {t("blc_pw_12")}
         </Typography>
         <Typography
           variant="caption"
@@ -435,7 +435,7 @@ export default function EscrowStatus(){
                 )}
               </Box>
               <Typography id="modal-modal-title" variant="h6" fontWeight={600}>
-                Are You Sure You Want To Cancel Escrow
+                {t("blc_pw_13")}
               </Typography>
               <Typography
                 variant="body2"
@@ -443,7 +443,7 @@ export default function EscrowStatus(){
                 sx={{ mt: 1 }}
                 textAlign={'center'}
               >
-                You would be able to select another payment method when you cancel escrow
+                {t("blc_pw_14")}
               </Typography>
               <Box
                 display={"flex"}
@@ -465,7 +465,7 @@ export default function EscrowStatus(){
                     bgcolor: "#D92D20",
                   }}
                 >
-                  Close
+                  {t("blc_pw_15")}
                 </Button>
                 <Button
                   variant="outlined"
@@ -479,7 +479,7 @@ export default function EscrowStatus(){
                     ":hover": { background: "none" },
                   }}
                 >
-                  Confirm
+                  {t("blc_pw_16")}
                 </Button>
               </Box>
             </Box>

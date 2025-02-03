@@ -77,7 +77,7 @@ export default function WalletConfirmDetails() {
             fontWeight={600}
             style={{ flex: 1 }}
           >
-           Amount:
+           {t("blc_pw_8")}
           </Typography>
 
           <Typography
@@ -245,7 +245,7 @@ export default function WalletConfirmDetails() {
               justifyContent={"end"}
             >
               {/* {walletSendPaymentDetails?.pay?.payment_method} */}
-              Wallet
+              {t("blc_pw_30")}
             </Typography>
           </Box>
           <Box
@@ -275,7 +275,7 @@ export default function WalletConfirmDetails() {
               textAlign="center"
               justifyContent={"end"}
             >
-              Unlimited
+              {t("blc_pw_31")}
             </Typography>
           </Box>
           <Box
@@ -322,7 +322,7 @@ export default function WalletConfirmDetails() {
               fontWeight={400}
               style={{ flex: 1 }}
             >
-              Vendor's Fee:
+              {t("blc_pw_20")}
             </Typography>
 
             <Typography

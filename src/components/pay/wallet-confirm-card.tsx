@@ -247,7 +247,7 @@ export default function WalletConfirmCard({
                 ":hover": { background: theme.palette.primary.main },
               }}
             >
-              Enter OTP to continue payment
+              {t("blc_pw_29")}
             </Button>
           )}
         </Box>

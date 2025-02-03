@@ -214,7 +214,7 @@ export default function NotYetPaidLoader(): React.JSX.Element {
           }}
           onClick={handlePaymentClick}
         >
-          continue payment
+          {t("blc_pw_19")}
         </Button>
     </Box>
   );

@@ -201,7 +201,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
             fontSize={12}
             fontWeight={500}
           >
-            Load Your Wallet Balance And Automatically Pay {paymentDetails?.seller?.name} Using Any Of The Vendors Below
+            {t("blc_pw_22")} {paymentDetails?.seller?.name} {t("blc_pw_23")}
           </Typography>
           <Box
             display={"flex"}
@@ -383,7 +383,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
                     bgcolor: "#D92D20",
                   }}
                 >
-                  Close
+                  {t("blc_pw_15")}
                 </Button>
                 {/* <Button
                   variant="outlined"

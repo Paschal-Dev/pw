@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import APIService from "../../services/api-service";
 import { RootState } from "../../redux/store";
 import { setCurrentPage, setWalletPaymentDetails } from "../../redux/reducers/pay";
+import { useTranslation } from "react-i18next";
 // import OtpInputs from "./otp-inputs";
 
 interface WalletOtpInputProps {
@@ -189,14 +190,14 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
   const handleChange = (index: number, value: string) => {
     const newOtpValues = [...otpValues];
     newOtpValues[index] = value;
-
+    
     setOtpValues(newOtpValues);
   };
 
   const getHash = React.useCallback(() => {
     const interval = setInterval(async function () {
       console.log(interval);
-
+      
       
       try {
         // const formData = new FormData();
@@ -356,6 +357,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
       handleButtonClick();
     }
   }, [handleButtonClick, isButtonDisabled]);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -402,17 +404,17 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
               fontWeight={700}
               color={theme.palette.secondary.main}
             >
-              OTP REQUIRED
+              {t("blc_pw_32")}
             </Typography>
             <Typography variant="body2" fontSize={12}>
-              Please enter the OTP sent to
+              {t("blc_pw_33")}
               <span
                 style={{ color: theme.palette.primary.main, fontWeight: 700 }}
               >
                 {" "}
                 {walletSendPaymentDetails?.data?.payee_email}
               </span>{" "}
-              to continue
+              {t("blc_pw_34")}
             </Typography>
           </Box>
 
@@ -448,13 +450,13 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
             onClick={handleButtonClick}
             disabled={isButtonDisabled}
           >
-            Enter OTP To Pay
+            {t("blc_pw_35")}
           </Button>
           <Typography variant="body2" fontSize={12}>
-            Didn’t receive code?{" "}
+            {t("blc_pw_36")}{" "}
             {countdown > 0 ? (
               <span style={{ color: theme.palette.primary.main }}>
-                Resend OTP in {Math.floor(countdown / 60)}:{countdown % 60}
+                {t("blc_pw_37")} {Math.floor(countdown / 60)}:{countdown % 60}
               </span>
             ) : (
               <Link
@@ -467,7 +469,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
                 }}
                 style={{ cursor: resendDisabled ? "not-allowed" : "pointer" }}
               >
-                Resend
+                {t("blc_pw_38")}
               </Link>
             )}
           </Typography>

@@ -314,7 +314,7 @@ export default function WalletPaymentFailedDetails(): React.JSX.Element {
                   textAlign={"center"}
                   color={"#fff"}
                 >
-                  Failed
+                  {t("blc_pw_40")}
                 </Typography>
               </Box>
             )}
