@@ -4,12 +4,16 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import danger from "../../assets/images/danger.svg";
+import { useTranslation } from "react-i18next";
+
+
 
 interface ErrorProps {
   errorResponse: any;
 }
 
 const ErrorPage: React.FC<ErrorProps> = ({ errorResponse }) => {
+  const { t } = useTranslation();
   return (
     <Box flex={1}>
       <Box
@@ -56,13 +60,13 @@ const ErrorPage: React.FC<ErrorProps> = ({ errorResponse }) => {
             color={"red"}
             fontWeight={600}
           >
-            Payment Error!
+            {t("blc_pw_1")}
           </Typography>
           <Typography variant="h6" fontWeight={500}>
             {errorResponse?.message}
           </Typography>
           <Typography variant="body1" fontWeight={500}>
-            Please contact support to rectify this error.
+            {t("blc_pw_2")}
           </Typography>
         </Box>
       </Box>

@@ -17,6 +17,7 @@ import Gif from "../../components/pay/gif";
 import { RootState } from "../../redux/store";
 import { useSelector, useDispatch } from "react-redux";
 import { setButtonClicked, setCurrentPage} from "../../redux/reducers/pay";
+import { useTranslation } from "react-i18next";
 export default function PayP2P(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -31,6 +32,7 @@ export default function PayP2P(): React.JSX.Element{
     dispatch(setButtonClicked(false));
     dispatch(setCurrentPage("pay"));
   }
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     if (mobile) {
@@ -97,7 +99,7 @@ export default function PayP2P(): React.JSX.Element{
                   borderRadius={1}
                   px={1}
                 >
-                  Pay
+                  {t("blc_pw_4")}
                 </Typography>
                 <Avatar variant="circular">
                   <img
@@ -140,12 +142,11 @@ export default function PayP2P(): React.JSX.Element{
             >
               <Box textAlign={"left"}>
                 <Typography variant="h5" fontWeight={700}>
-                  Pay Via P2P Vendors
+                  {t("blc_pw_5")}
                 </Typography>
                 <Typography variant="body2">
-                  Load your Wallet balance and automatically pay{" "}
-                  {p2pVendorsDetails?.seller?.name} using any of the Vendors
-                  below.
+                 {t("blc_pw_6")}{" "}
+                  {p2pVendorsDetails?.seller?.name} {t("blc_pw_7")}
                 </Typography>
               </Box>
             </Box>

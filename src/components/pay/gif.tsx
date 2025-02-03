@@ -2,20 +2,20 @@ import React from "react";
 import { Box } from "@mui/material";
 import checkoutGif from "../../assets/images/pw-checkout-gif-white.gif";
 import i18n from "../../i18n";
-import japanese from "../../assets/images/Japanese.gif";
-import spanish from "../../assets/images/Spanish GIF.gif";
-import arabic from "../../assets/images/Arabic.gif";
-import russian from "../../assets/images/Russian.gif";
-import indonesian from "../../assets/images/Indonesian.gif";
-import french from "../../assets/images/French GIF.gif";
-import italian from "../../assets/images/Italian.gif";
-import german from "../../assets/images/German.gif";
-import chinese from "../../assets/images/Chinese.gif";
-import hindi from "../../assets/images/Hindi.gif";
-import bengali from "../../assets/images/Bengali.gif";
+import japanese from "../../assets/images/japanese.gif";
+import spanish from "../../assets/images/spanish-gif.gif";
+import arabic from "../../assets/images/arabic.gif";
+import russian from "../../assets/images/russian.gif";
+import indonesian from "../../assets/images/indonesian.gif";
+import french from "../../assets/images/french.gif";
+import italian from "../../assets/images/italian.gif";
+import german from "../../assets/images/german.gif";
+import chinese from "../../assets/images/chinese.gif";
+import hindi from "../../assets/images/hindi.gif";
+import bengali from "../../assets/images/bengali.gif";
 import portugese from "../../assets/images/portuguese.gif";
-import slovak from "../../assets/images/Slovak.gif";
-import korean from "../../assets/images/Korean.gif";
+import slovak from "../../assets/images/slovak.gif";
+import korean from "../../assets/images/korean.gif";
 
 
 

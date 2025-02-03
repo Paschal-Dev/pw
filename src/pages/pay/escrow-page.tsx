@@ -16,6 +16,7 @@ import EscrowConfirm from "../../components/pay/escrow-confirm";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import loader from "../../assets/images/loader.gif";
+import { useTranslation } from "react-i18next";
 
 export default function EscrowPage(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
@@ -29,7 +30,7 @@ export default function EscrowPage(): React.JSX.Element{
 
   // eslint-disable-next-line no-empty-pattern
   const [] = useState(false);
-
+  const { t } = useTranslation();
   React.useEffect(() => {
     if (mobile) {
       setDeviceType("mobile");
@@ -102,7 +103,7 @@ export default function EscrowPage(): React.JSX.Element{
                     fontSize={deviceType === "mobile" ? 16 : "4vh"}
                     fontWeight={700}
                   >
-                    Confirm Order Details For #
+                    {t("blc_pw_3")} #
                     {p2pEscrowDetails?.pay?.unique_id}
                   </Typography>
                 </Box>

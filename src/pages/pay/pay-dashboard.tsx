@@ -145,7 +145,7 @@ export default function PayDashboard(): React.JSX.Element{
                         textAlign={"center"}
                       >
                         {" "}
-                        Pay{" "}
+                        {t("blc_pw_4")}{" "}
                         <span
                           dangerouslySetInnerHTML={{ __html: currency_sign }}
                         />
