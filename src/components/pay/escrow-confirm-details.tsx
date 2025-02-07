@@ -295,7 +295,7 @@ export default function EscrowConfirmDetails() {
             justifyContent={"end"}
           >
             <span dangerouslySetInnerHTML={{ __html: currency_sign }} />
-            {p2pEscrowDetails?.pay?.total_send_amount}
+            {p2pEscrowDetails?.pay?.total_original_amount}
           </Typography>
         </Box>
         <Box
@@ -862,7 +862,7 @@ export default function EscrowConfirmDetails() {
               justifyContent={"end"}
             >
               <span dangerouslySetInnerHTML={{ __html: currency_sign }} />
-              {p2pEscrowDetails?.pay?.total_send_amount}
+              {p2pEscrowDetails?.pay?.total_original_amount}
             </Typography>
           </Box>
         </Box>
