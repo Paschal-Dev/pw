@@ -1,0 +1,9 @@
+#root {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  /* padding: 2rem; */
+  /* text-align: center; */
+}
+.gradient-background {
+  background-image: radial-gradient(circle, #28304E, #28304E, #009FDD);
+}

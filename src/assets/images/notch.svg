@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="376" height="80" viewBox="0 0 376 80" fill="none">
+                    <g filter="url(#filter0_b_364_344)">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M388 0H386.745C373.442 0 362.007 9.43482 359.482 22.4959L352.712 57.5041C350.186 70.5652 338.752 80 325.449 80H53.7102C41.8051 80 31.2247 72.4111 27.4079 61.1345L24.9231 53.7931L16.082 20.6176C12.842 8.45989 1.83234 0 -10.7497 0H-12H24.9231H388Z" fill="url(#paint0_radial_364_344)" fill-opacity="0.8" />
+                        <path d="M24.9231 1.56897H373.539C365.64 5.55538 359.714 13.0314 357.941 22.198L351.171 57.2062C348.788 69.5293 338 78.4311 325.449 78.4311H53.7102C42.4778 78.4311 32.4952 71.271 28.8941 60.6315L26.4258 53.3391L17.598 20.2136C15.3869 11.9166 9.7508 5.24977 2.4543 1.56897H24.9231Z" stroke="white" stroke-opacity="0.1" stroke-width="3.13793" />
+                    </g>
+                    <defs>
+                        <filter id="filter0_b_364_344" x="-74.7586" y="-62.7586" width="525.517" height="205.517" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feGaussianBlur in="BackgroundImageFix" stdDeviation="31.3793" />
+                            <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_364_344" />
+                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_364_344" result="shape" />
+                        </filter>
+                        <radialGradient id="paint0_radial_364_344" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(111.06 16.7033) rotate(11.2563) scale(240.949 977.388)">
+                            <stop stop-color="#28304E" />
+                            <stop offset="0.0001" stop-color="#28304E" />
+                            <stop offset="1" stop-color="#009FDD" />
+                        </radialGradient>
+                    </defs>
+                </svg>
