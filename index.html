@@ -4,37 +4,30 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="/favicon.png" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peerwallet - Semi-Decentralized P2P payment Platform</title>
+
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-S478PR6LXN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-S478PR6LXN');
   </script>
-<!-- End Google tag (gtag.js) -->
+  <!-- End Google tag (gtag.js) -->
 
-<!-- Tido -->
-  <script defer src="//code.tidio.co/1hv7tslfaobmxvsyiz6kwvbisk18cpmw.js" async></script>
-<!--End Tido -->
+  <!-- Tido -->
+  <script src="//code.tidio.co/1hv7tslfaobmxvsyiz6kwvbisk18cpmw.js" async></script>
+  <!--End Tido -->
 
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Peerwallet - Semi-Decentralized P2P payment Platform</title>
-</head>
-
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-
-   <!-- Meta Pixel Code -->
-   <script>
+  <!-- Meta Pixel Code -->
+  <script>
     !function (f, b, e, v, n, t, s) {
       if (f.fbq) return; n = f.fbq = function () {
         n.callMethod ?
-        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
       };
       if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
       n.queue = []; t = b.createElement(e); t.async = !0;
@@ -45,10 +38,20 @@
     fbq('init', '1144445972820133');
     fbq('track', 'PageView');
   </script>
-  
-  <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=1144445972820133&ev=PageView&noscript=1" /></noscript>
   <!-- End Meta Pixel Code -->
+
+</head>
+
+<body>
+
+  <!-- End Meta Pixel Fallback -->
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1144445972820133&ev=PageView&noscript=1" /></noscript>
+  <!-- End Meta Pixel Fallback -->
+
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
 
 </body>
 

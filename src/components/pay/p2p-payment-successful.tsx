@@ -32,7 +32,7 @@ export default function PaymentSuccessful(): React.JSX.Element {
       flexDirection={"column"}
       position={"relative"}
       width={"100%"}
-      height={deviceType === "mobile" ? '22vh' : "37vh"}
+      height={deviceType === "mobile" ? 'auto' : "37vh"}
     >
       <Box
         marginTop={deviceType === "mobile" ? 0 : 5}
