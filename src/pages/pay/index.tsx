@@ -120,8 +120,20 @@ export default function Pay(): React.JSX.Element {
               dispatch(setWalletPaymentDetails(data));
               dispatch(setCurrentPage("wallet-payment"));
             } else if (data?.pay?.payment_status === 1) {
-              dispatch(setP2PEscrowDetails(data));
-              dispatch(setCurrentPage("p2p-payment"));
+
+              const url = `https://pay-ten-psi.vercel.app/?v=${data.data.unique_id}`;
+
+              const RedirectUrl = data.data.redirect_url;
+
+              if (data?.data.redirect_url === url) {
+                // console.log("Message >>>", RedirectUrl);
+                dispatch(setP2PEscrowDetails(data));
+                dispatch(setCurrentPage("p2p-payment"));
+              } else {
+                console.log("Rendering success page", RedirectUrl);
+                window.location.assign(RedirectUrl);
+              }
+
             }
           })
           .catch((error) => {
