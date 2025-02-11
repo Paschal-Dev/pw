@@ -5,7 +5,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import VideoThumb from "../../components/pay/video-thumb";
 import { theme } from "../../assets/themes/theme";
 import menu from "../../assets/images/menu.svg";
@@ -17,16 +17,37 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import loader from "../../assets/images/loader.gif";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 export default function EscrowPage(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
 
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails, paymentDetails } = useSelector((state: RootState) => state.pay);
   const { isConfirmButtonBackdrop } = useSelector(
     (state: RootState) => state.button
   );
+
+    // Function to decode HTML entities
+    const decodeHtmlEntity = (entity: string) => {
+      const txt = document.createElement("textarea");
+      txt.innerHTML = entity;
+      return txt.value;
+    };
+  
+    // Currency mapping
+    const currencyMap: { [key: string]: string } = {
+      "$": "USD", "€": "EUR", "£": "GBP", "₦": "NGN",
+      "₹": "INR", "¥": "JPY", "₿": "BTC", "₩": "KRW",
+      "₽": "RUB", "₮": "MNT", "₴": "UAH", "₪": "ILS", "₫": "VND"
+    };
+  
+    // Get the decoded currency symbol
+    const currencySign = useMemo(() => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""), [paymentDetails]);
+  
+    // Convert symbol to currency code if available
+    const displayCurrency = currencyMap[currencySign] || currencySign;
 
   // eslint-disable-next-line no-empty-pattern
   const [] = useState(false);
@@ -43,6 +64,23 @@ export default function EscrowPage(): React.JSX.Element{
 
   return (
     <>
+     <Helmet>
+        <title>
+          {paymentDetails?.data
+            ? `Escrow || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+            : "Payment Page"}
+        </title>
+        <meta
+          property="og:description"
+          content={paymentDetails?.data
+            ? `Escrow || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+            : "Escrow Page"}
+        />
+        <meta
+          property="og:image"
+          content={paymentDetails?.seller?.image || ""}
+        />
+      </Helmet>
       <Box pt={1} flex={1}>
         <Grid container height={"100%"}>
           <Grid item xs={12} sm={12} md={4} lg={4} display={"flex"}>

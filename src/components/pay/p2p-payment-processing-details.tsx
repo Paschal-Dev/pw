@@ -133,7 +133,7 @@ export default function P2pProcessingDetails() {
               style={{ flex: 1 }}
               textTransform={"uppercase"}
             >
-              {t("amount")}
+              Total Amount
             </Typography>
             <Typography
               color="#000"
@@ -145,7 +145,7 @@ export default function P2pProcessingDetails() {
               justifyContent={"end"}
             >
               <span dangerouslySetInnerHTML={{ __html: currency_sign }} />
-              {p2pEscrowDetails?.data?.amount}
+              {p2pEscrowDetails.pay?.total_original_amount}
             </Typography>
           </Box>
           <Box
@@ -235,7 +235,7 @@ export default function P2pProcessingDetails() {
               textAlign="center"
               justifyContent={"end"}
             >
-              {p2pEscrowDetails?.pay?.mode}
+              P2P
             </Typography>
           </Box>
           <Box

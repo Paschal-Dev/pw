@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Container } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useMemo} from "react";
 import Footer from "../../layouts/footers/pay/footer";
 import Disclaimer from "../../layouts/sections/pay/disclaimer";
 import background from "../../assets/images/bg.png";
@@ -37,7 +37,29 @@ export default function Pay(): React.JSX.Element {
     (state: RootState) => state.pay
   );
 
+
   const dispatch = useDispatch();
+
+
+  // Function to decode HTML entities
+  const decodeHtmlEntity = (entity: string) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = entity;
+    return txt.value;
+  };
+
+  // Currency mapping
+  const currencyMap: { [key: string]: string } = {
+    "$": "USD", "€": "EUR", "£": "GBP", "₦": "NGN",
+    "₹": "INR", "¥": "JPY", "₿": "BTC", "₩": "KRW",
+    "₽": "RUB", "₮": "MNT", "₴": "UAH", "₪": "ILS", "₫": "VND"
+  };
+
+  // Get the decoded currency symbol
+  const currencySign = useMemo(() => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""), [paymentDetails]);
+
+  // Convert symbol to currency code if available
+  const displayCurrency = currencyMap[currencySign] || currencySign;
 
   useEffect(() => {
     const initializePayment = async () => {
@@ -183,16 +205,14 @@ export default function Pay(): React.JSX.Element {
       <Helmet>
         <title>
           {paymentDetails?.data
-            ? `Pay ${paymentDetails.data.currency_sign}${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+            ? `Payment || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
             : "Payment Page"}
         </title>
         <meta
           property="og:description"
-          content={
-            paymentDetails?.data
-              ? `Pay ${paymentDetails.data.currency_sign}${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
-              : "Payment Page"
-          }
+          content={paymentDetails?.data
+            ? `Payment || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+            : "Payment Page"}
         />
         <meta
           property="og:image"
