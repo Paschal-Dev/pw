@@ -111,14 +111,13 @@ export default function PayP2P(): React.JSX.Element{
                 </Avatar>
 
                 <Box>
-                  <Typography textAlign={"center"} variant="h5" fontSize={deviceType === "mobile" ? 18 : ""} fontWeight={800}>
+                  <Typography textAlign={"center"} variant={deviceType === "mobile" ? 'body1' : "h5"} fontWeight={800}>
                     {p2pVendorsDetails?.seller?.name}
                   </Typography>
                 </Box>
               </Box>
               <Typography
-                variant={"h4"}
-                fontSize={deviceType === "mobile" ? 16 : ""}
+                variant={deviceType === "mobile" ? 'body1' : "h4"}
                 color={theme.palette.success.main}
                 bgcolor={theme.palette.success.light}
                 fontWeight={800}
