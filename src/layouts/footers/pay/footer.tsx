@@ -23,7 +23,7 @@ export default function Footer(): React.JSX.Element {
         <Box pt={1} justifySelf={"flex-start"}>
           <Typography variant="body2" fontSize={12} textAlign="center">
             {t("terms-condition")}
-            <Link href="#" color={theme.palette.primary.main} fontWeight={600}>
+            <Link href="https://peerwallet.com/terms" color={theme.palette.primary.main} fontWeight={600}>
               {t("terms")}
             </Link>
           </Typography>

@@ -6,7 +6,7 @@ import { Vendor } from "../../data/pay/vendors-data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 // import { setHeaderKey } from "../../redux/reducers/auth";
-import { setP2PEscrowDetails } from "../../redux/reducers/pay";
+import { setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
 import loader from "../../assets/images/loader.gif";
 
 // import { PageProps } from "../../utils/myUtils";
@@ -67,16 +67,16 @@ const Vendors: React.FC<Props> = ({ item, }) => {
       };
       const respo = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
       dispatch(setP2PEscrowDetails(respo.data));
-      const checkoutLink = item.checkout_link;
+      // const checkoutLink = item.checkout_link;
       // setTimeout(() => {
 
-      localStorage.setItem('checkout_link', checkoutLink);
+      // localStorage.setItem('checkout_link', checkoutLink);
       // localStorage.setItem("redirectHandled", "true");
 
       
-      window.location.href = checkoutLink; // Redirect after 5 seconds
+      // window.location.href = checkoutLink; // Redirect after 5 seconds
       // }, 5000);
-      // setCurrentPage("escrow-page");
+      dispatch(setCurrentPage("escrow-page"));
 
       console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
 

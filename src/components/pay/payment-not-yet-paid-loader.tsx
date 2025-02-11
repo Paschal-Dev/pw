@@ -71,7 +71,7 @@ export default function NotYetPaidLoader(): React.JSX.Element {
               if (paymentWindow && !paymentWindow.closed) {
                 paymentWindow.close();
               }
-              
+
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));
 
@@ -79,9 +79,9 @@ export default function NotYetPaidLoader(): React.JSX.Element {
 
               const RedirectUrl = resp.data.data.redirect_url;
 
-              if (resp.data?.data.redirect_url === url){
+              if (resp.data?.data.redirect_url === url) {
                 dispatch(setCurrentPage("p2p-payment"));
-              }else {
+              } else {
                 console.log("Payment Successful, rendering success page", RedirectUrl);
                 window.location.assign(RedirectUrl);
               }
@@ -137,13 +137,13 @@ export default function NotYetPaidLoader(): React.JSX.Element {
         "0px 1.3486182689666748px 5.394473075866699px  0px  rgba(0, 0, 0, 0.15)"
       }
       alignItems={"center"}
-      width={400}
+      width={deviceType === "mobile" ? '100%' : 400}
       p={6}
       borderRadius={3}
       display={"flex"}
       flexDirection={"column"}
       position={"relative"}
-      height={deviceType === "mobile" ? '22vh' : "34vh"}
+      height={deviceType === "mobile" ? 'auto' : "34vh"}
     >
       <Box
         marginTop={deviceType === "mobile" ? 0 : 5}
@@ -202,7 +202,7 @@ export default function NotYetPaidLoader(): React.JSX.Element {
           {t("not")}
         </Typography>
       </Box>
-      <Button
+        <Button
           variant="contained"
           sx={{
             width: "100%",

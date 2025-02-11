@@ -67,6 +67,7 @@ export default function PayP2P(): React.JSX.Element{
             justifyContent={"space-between"}
             gap={1}
             flex={1}
+            width={"100%"}
           >
             <Box
               bgcolor={theme.palette.background.default}
@@ -110,13 +111,14 @@ export default function PayP2P(): React.JSX.Element{
                 </Avatar>
 
                 <Box>
-                  <Typography variant="h5" fontWeight={800}>
+                  <Typography textAlign={"center"} variant="h5" fontSize={deviceType === "mobile" ? 18 : ""} fontWeight={800}>
                     {p2pVendorsDetails?.seller?.name}
                   </Typography>
                 </Box>
               </Box>
               <Typography
-                variant={deviceType === "mobile" ? "h6" : "h4"}
+                variant={"h4"}
+                fontSize={deviceType === "mobile" ? 16 : ""}
                 color={theme.palette.success.main}
                 bgcolor={theme.palette.success.light}
                 fontWeight={800}

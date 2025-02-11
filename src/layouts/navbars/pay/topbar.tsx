@@ -28,8 +28,9 @@ import korean from "../../../assets/images/flag_korean.png";
 import arabic from "../../../assets/images/flag_arabic.png";
 import bengali from "../../../assets/images/flag_bengali.jpeg";
 // import { setCurrentPage } from "../../../redux/reducers/pay";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
+import { useDispatch } from "react-redux";
+// import { RootState } from "../../../redux/store";
+import { setButtonClicked, setCurrentPage } from "../../../redux/reducers/pay";
 // import { PageProps } from "../../../utils/myUtils";
 export default function Topbar(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
@@ -38,13 +39,16 @@ export default function Topbar(): React.JSX.Element{
   const [language, setLanguage] = React.useState(
     localStorage.getItem("language") ?? "en"
   );
+  const dispatch = useDispatch();
   // const dispatch = useDispatch();
-  const { payId } = useSelector((state: RootState) => state.pay);
+  // const { payId } = useSelector((state: RootState) => state.pay);
 
 //  function ClickableImage({ payId }) {
   const handleClick = () => {
-    sessionStorage.removeItem("redirectHandled");
-    window.location.href = `https://pay.pwat.net/?v=${payId}`;
+    // sessionStorage.removeItem("redirectHandled");
+    // window.location.href = `https://pay.pwat.net/?v=${payId}`;
+    dispatch(setButtonClicked(false));
+    dispatch(setCurrentPage("pay/v"));
   };
 
   const { i18n } = useTranslation();

@@ -1,5 +1,5 @@
 import { Box, Typography, Link, useMediaQuery } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { theme } from "../../assets/themes/theme";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../redux/store";
@@ -7,35 +7,52 @@ import { useSelector } from "react-redux";
 import processingHash from '../../assets/images/processing-hash.gif';
 export default function P2pPaymentDetails(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
+  const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useTranslation();
-  const { p2pEscrowDetails} = useSelector(
+  const { p2pEscrowDetails } = useSelector(
     (state: RootState) => state.pay
   );
+
+
+
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const shouldDisplayBox1 = p2pEscrowDetails?.data?.payment_status === 1;
 
-  // Function to format Unix timestamp to a human-readable date string with time
+  const date = p2pEscrowDetails?.pay?.date_processed;
+
   const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp * 1000); // Convert timestamp to milliseconds
-    const options = {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
+    const formattedDate = new Date(timestamp * 1000).toLocaleDateString("en-US", {
       year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-    
-    console.log("Options:", options);
-    
-    console.log("Current Date:", date);
-
-    console.log("Successful Details:", p2pEscrowDetails);
-
-  
+      month: "long",
+      day: "numeric",
+    });
+    return formattedDate;
   };
+
+
+
+  // Function to format Unix timestamp to a human-readable date string with time
+  // const formatDate = (timestamp: number) => {
+  //   const date = new Date(timestamp * 1000); // Convert timestamp to milliseconds
+  //   const options = {
+  //     weekday: "long",
+  //     day: "numeric",
+  //     month: "long",
+  //     year: "numeric",
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //   };
+
+  //   console.log("Options:", options);
+
+  //   console.log("Current Date:", date);
+
+  //   console.log("Successful Details:", p2pEscrowDetails);
+
+
+  // };
   React.useEffect(() => {
     if (mobile) {
       setDeviceType("mobile");
@@ -45,6 +62,27 @@ export default function P2pPaymentDetails(): React.JSX.Element {
       setDeviceType("pc");
     }
   }, [mobile, tablet]);
+
+  useEffect(() => {
+    // Function to check for the transaction hash update
+    const checkHash = () => {
+      if (p2pEscrowDetails?.others?.hash) {
+        setTransactionHash(p2pEscrowDetails.others.hash);
+      }
+    };
+
+    // Check immediately on mount
+    checkHash();
+
+    // Set interval to check every 10 seconds
+    const interval = setInterval(() => {
+      checkHash();
+    }, 10000);
+
+    // Cleanup interval when component unmounts
+    return () => clearInterval(interval);
+  }, [p2pEscrowDetails]);
+
   return (
     <Box>
       <Box
@@ -243,13 +281,12 @@ export default function P2pPaymentDetails(): React.JSX.Element {
           >
             {t("transaction-hash")}
           </Typography>
-          {p2pEscrowDetails?.others?.hash && (
-          <Link href={p2pEscrowDetails?.others?.hash} style={{ color: "#12B76A" }}>
-            {t("blc_pw_27")}
-          </Link>
-        )}
-          {!p2pEscrowDetails?.others?.hash && (
-          <img src={processingHash} width={150}/>
+          {transactionHash ? (
+            <Link href={transactionHash} style={{ color: "#12B76A" }}>
+              {t("blc_pw_27")}
+            </Link>
+          ) : (
+            <img src={processingHash} width={150} />
           )}
         </Box>
         <Box
@@ -309,8 +346,10 @@ export default function P2pPaymentDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {p2pEscrowDetails?.pay?.date_processed &&
-              formatDate(p2pEscrowDetails?.pay?.date_processed)}
+            {/* {p2pEscrowDetails?.pay?.date_processed &&
+              formatDate( */}
+            {formatDate(date)}
+            {/* // )} */}
           </Typography>
         </Box>
         <Box
