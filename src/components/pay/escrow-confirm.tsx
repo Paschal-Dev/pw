@@ -66,9 +66,9 @@ export default function EscrowConfirm(): React.JSX.Element {
       "PaymentWindow",
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
     );
+    dispatch(setCurrentPage("p2p-payment"));
     const checkPaymentStatus = setInterval(() => {
 
-      dispatch(setCurrentPage("p2p-payment"));
 
 
       const body = {
@@ -85,20 +85,20 @@ export default function EscrowConfirm(): React.JSX.Element {
             if (resp.data?.pay?.payment_status === 1) {
               // console.log("Status Check", resp.data?.pay?.payment_status);
               // console.log("Payment Successful, rendering success page");
-              if (paymentWindow && !paymentWindow.closed) {
-                paymentWindow.close();
-              }
-              
+              // if (paymentWindow && !paymentWindow.closed) {
+              //   paymentWindow.close();
+              // }
+
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));
 
-              const url = `https://pay.pwat.net/?v=${resp.data.data.unique_id}`;
+              const url = `https://pay.peerwallet.com/?v=${resp.data.data.unique_id}`;
 
               const RedirectUrl = resp.data.data.redirect_url;
 
-              if (resp.data?.data.redirect_url === url){
+              if (resp.data?.data.redirect_url === url) {
                 dispatch(setCurrentPage("p2p-payment"));
-              }else {
+              } else {
                 console.log("Payment Successful, rendering success page", RedirectUrl);
                 window.location.assign(RedirectUrl);
               }
@@ -131,7 +131,7 @@ export default function EscrowConfirm(): React.JSX.Element {
 
       if (paymentWindow && paymentWindow.closed) {
         console.log("Payment window closed by the user.");
-        dispatch(setCurrentPage("p2p-payment"));
+        // dispatch(setCurrentPage("p2p-payment"));
       }
       // if (paymentWindow.close()) {
 

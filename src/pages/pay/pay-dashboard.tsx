@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Avatar,
   Backdrop,
@@ -14,10 +14,12 @@ import P2pCard from "../../components/pay/p2p-card";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Gif from "../../components/pay/gif";
 // import { PageProps } from "../../utils/myUtils";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useTranslation } from "react-i18next";
 import loader from "../../assets/images/loader.gif";
+import APIService from "../../services/api-service";
+import { setButtonClicked, setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
 
 export default function PayDashboard(): React.JSX.Element{
   const [deviceType, setDeviceType] = React.useState("mobile");
@@ -26,8 +28,8 @@ export default function PayDashboard(): React.JSX.Element{
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
 
   const { t } = useTranslation();
-
-  const { paymentDetails } = useSelector((state: RootState) => state.pay);
+const dispatch = useDispatch();
+  const { paymentDetails, payId } = useSelector((state: RootState) => state.pay);
 
   const currency_sign = paymentDetails?.data?.currency_sign;
   const { isButtonBackdrop } = useSelector((state: RootState) => state.button);
@@ -47,6 +49,45 @@ export default function PayDashboard(): React.JSX.Element{
       setDeviceType("pc");
     }
   }, [mobile, tablet]);
+
+   useEffect(() => {
+      const Pay = async () => {
+       
+  
+        const sendOtpPayload = {
+          call_type: "pay",
+          ip: "192.168.0.0",
+          lang: "en",
+          pay_id: payId,
+        };
+  
+        try {
+          const resp = await APIService.sendOTP(sendOtpPayload);
+          console.log("API Response from Send OTP:", resp.data);
+  
+          if (resp.data?.escrow_status === 1) {
+            // console.log("Already redirected, displaying escrow page.");
+            dispatch(setButtonClicked(true));
+            dispatch(setCurrentPage("escrow-page"));
+            dispatch(setP2PEscrowDetails(resp.data));
+  
+  
+          } else {
+            dispatch(setButtonClicked(false));
+            console.log("No checkout link or escrow status not 1.");
+          }
+        } catch (error) {
+          console.error("Error during Send OTP:", error);
+        } 
+        // finally {
+        //   setHasCheckedEscrow(true);
+        // }
+      };
+  
+      // if (!hasCheckedEscrow) {
+        Pay();
+      // }
+    }, [dispatch, payId]);
 
   return (
     <>

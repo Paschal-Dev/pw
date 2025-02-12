@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Container } from "@mui/material";
-import React, { useState, useEffect , useMemo} from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Footer from "../../layouts/footers/pay/footer";
 import Disclaimer from "../../layouts/sections/pay/disclaimer";
 import background from "../../assets/images/bg.png";
@@ -24,7 +24,7 @@ import ErrorPage from "./error_page";
 import EscrowPage from "./escrow-page";
 import { RootState } from "../../redux/store";
 import { Helmet } from "react-helmet";
-import { setButtonClicked, setCurrentPage, setApiResponse } from "../../redux/reducers/pay";
+import { setCurrentPage, setApiResponse } from "../../redux/reducers/pay";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import P2PPayment from "./p2p-payment";
 
@@ -32,7 +32,7 @@ export default function Pay(): React.JSX.Element {
   const [errorResponse, setErrorResponse] = useState(null);
   const [errorPage, setErrorPage] = useState(false);
   const [isRedirecting] = useState(false);
-  const [hasCheckedEscrow, setHasCheckedEscrow] = useState(false); // Ensure only one check
+  // const [hasCheckedEscrow, setHasCheckedEscrow] = useState(false); // Ensure only one check
   const { paymentDetails, currentPage } = useSelector(
     (state: RootState) => state.pay
   );
@@ -85,31 +85,30 @@ export default function Pay(): React.JSX.Element {
       try {
         const resp = await APIService.sendOTP(sendOtpPayload);
         console.log("API Response from Send OTP:", resp.data);
+        handleNonEscrowResponse(resp.data);
+        //   if (resp.data?.escrow_status === 1) {
+        //     // console.log("Already redirected, displaying escrow page.");
+        //     dispatch(setButtonClicked(true));
+        //     dispatch(setCurrentPage("escrow-page"));
+        //     dispatch(setP2PEscrowDetails(resp.data));
 
-        if (resp.data?.escrow_status === 1) {
 
-          // console.log("Already redirected, displaying escrow page.");
-          dispatch(setButtonClicked(true));
-          dispatch(setCurrentPage("escrow-page"));
-          dispatch(setP2PEscrowDetails(resp.data));
-
-
-        } else {
-          console.log("No checkout link or escrow status not 1.");
-          handleNonEscrowResponse(resp.data);
-        }
+        //   } else {
+        //     console.log("No checkout link or escrow status not 1.");
+        //   }
       } catch (error) {
         console.error("Error during Send OTP:", error);
         setErrorPage(true);
-      } finally {
-        setHasCheckedEscrow(true);
       }
+      // finally {
+      //   setHasCheckedEscrow(true);
+      // }
     };
 
-    if (!hasCheckedEscrow) {
-      initializePayment();
-    }
-  }, [dispatch, hasCheckedEscrow]);
+    // if (!hasCheckedEscrow) {
+    initializePayment();
+    // }
+  }, []);
 
 
 
@@ -143,7 +142,7 @@ export default function Pay(): React.JSX.Element {
               dispatch(setCurrentPage("wallet-payment"));
             } else if (data?.pay?.payment_status === 1) {
 
-              const url = `https://pay-ten-psi.vercel.app/?v=${data.data.unique_id}`;
+              const url = `https://pay.peerwallet.com/?v=${data.data.unique_id}`;
 
               const RedirectUrl = data.data.redirect_url;
 
@@ -205,13 +204,13 @@ export default function Pay(): React.JSX.Element {
       <Helmet>
         <title>
           {paymentDetails?.data
-            ? `Payment || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+            ? `Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
             : "Payment Page"}
         </title>
         <meta
           property="og:description"
           content={paymentDetails?.data
-            ? `Payment || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+            ? `Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
             : "Payment Page"}
         />
         <meta

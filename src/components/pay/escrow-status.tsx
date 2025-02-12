@@ -92,27 +92,27 @@ export default function EscrowStatus(){
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
 
       
-      // send-otp request
-      const sendOtpPayload = {
-        call_type: "pay",
-        ip: "192.168.0.0",
-        lang: "en",
-        pay_id: payId,
-      };
+      // // send-otp request
+      // const sendOtpPayload = {
+      //   call_type: "pay",
+      //   ip: "192.168.0.0",
+      //   lang: "en",
+      //   pay_id: payId,
+      // };
       
-      // eslint-disable-next-line prefer-const
-      let intervalId: number | undefined;
-      const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
-        try {
-          const resp = await APIService.sendOTP(sendOtpPayload);
-          console.log(
-            "API RESPONSE FROM PAGE_RELOAD SEND OTP =>>> ",
-            resp.data
-          );
+      // // eslint-disable-next-line prefer-const
+      // let intervalId: number | undefined;
+      // const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
+      //   try {
+      //     const resp = await APIService.sendOTP(sendOtpPayload);
+      //     console.log(
+      //       "API RESPONSE FROM PAGE_RELOAD SEND OTP =>>> ",
+      //       resp.data
+      //     );
           
-          if (resp.data?.escrow_status === 1) {
-            // Do nothing, let the interval continue
-          } else {
+          // if (resp.data?.escrow_status === 1) {
+          //   // Do nothing, let the interval continue
+          // } else {
             // const formData = new FormData();
             // formData.append("call_type", "get_key");
             // const response1 = await APIService.getToken(formData);
@@ -146,7 +146,7 @@ export default function EscrowStatus(){
             );
 
             dispatch(setP2PVendorsDetails(respo2.data));
-            clearInterval(intervalId);
+            // clearInterval(intervalId);
             dispatch(setConfirmButtonBackdrop(false));
 
             
@@ -154,15 +154,15 @@ export default function EscrowStatus(){
 
             dispatch(setCurrentPage("p2p"));
             return;
-          }
-        } catch (error) {
-          console.log("ERROR ::::::: ", error);
-        }
-      };
-      intervalId = setInterval(
-        () => checkPaymentStatusAndRun(sendOtpPayload),
-        3000
-      );
+      //     }
+      //   } catch (error) {
+      //     console.log("ERROR ::::::: ", error);
+      //   }
+      // };
+      // intervalId = setInterval(
+      //   () => checkPaymentStatusAndRun(sendOtpPayload),
+      //   3000
+      // );
     } catch (error) {
       console.error("Error Cancelling Escrow:", error);
     }

@@ -1,6 +1,7 @@
 import {
   Box,
   Grid,
+  IconButton,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -9,7 +10,7 @@ import VideoThumb from "../../components/pay/video-thumb";
 import { theme } from "../../assets/themes/theme";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../redux/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import P2pProcessingDetails from "../../components/pay/p2p-payment-processing-details";
 import PaymentProcessingLoader from "../../components/pay/payment-processing-loader";
 import Gif from "../../components/pay/gif";
@@ -20,13 +21,16 @@ import WrongPayment from "../../components/pay/wrong-payment";
 import P2pPaymentFailedDetails from "../../components/pay/p2p-payment-failed-details ";
 import P2pPaymentWrongDetails from "../../components/pay/p2p-payment-wrong-details";
 import P2pPaymentDetails from "../../components/pay/p2ppayment-details";
+import { Icon } from "@iconify/react/dist/iconify.js";
+// import APIService from "../../services/api-service";
+import {setCurrentPage} from "../../redux/reducers/pay";
 
 export default function P2PPayment(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [isLoading, setIsLoading] = useState(true);
   // const [p2pEscrowDetails?.pay?.payment_status, setp2pEscrowDetails?.pay?.payment_status] = useState<number>();
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
-
+  const { p2pEscrowDetails} = useSelector((state: RootState) => state.pay);
+  const dispatch = useDispatch();
 
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -86,6 +90,37 @@ export default function P2PPayment(): React.JSX.Element {
 
   }, [p2pEscrowDetails?.pay?.payment_status]);
 
+  const backButtonClicked = async () => {
+
+dispatch(setCurrentPage("escrow-page"));
+    // const sendOtpPayload = {
+    //   call_type: "pay",
+    //   ip: "192.168.0.0",
+    //   lang: "en",
+    //   pay_id: payId,
+    // };
+
+    // try {
+    //   const resp = await APIService.sendOTP(sendOtpPayload);
+    //   console.log("API Response from Back Button Click:", resp.data);
+
+    //   if (resp.data?.escrow_status === 1) {
+
+    //     // console.log("Already redirected, displaying escrow page.");
+    //     dispatch(setButtonClicked(true));
+    //     dispatch(setP2PEscrowDetails(resp.data));
+    //     dispatch(setCurrentPage("escrow-page"));
+
+    //   } else {
+    //     console.log("Escrow status is 0.");
+    //     dispatch(setButtonClicked(false));
+    //     dispatch(setCurrentPage("pay"));
+    //   }
+    // } catch (error) {
+    //   console.error("Error during Back Button Click:", error);
+    // }
+  }
+
 
   return (
     <Box pt={1} flex={1}>
@@ -117,37 +152,51 @@ export default function P2PPayment(): React.JSX.Element {
           <Box flex={1} display={"flex"} flexDirection={"column"} gap={1}>
             <Box
               bgcolor={theme.palette.primary.dark}
-              p={1}
+              p={2}
               flex={1}
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent={"center"}
               style={{ borderRadius: "8px 8px 0 0" }}
             >
+              <IconButton onClick={backButtonClicked}>
+                <Icon
+                  icon="ion:arrow-back"
+                  fontSize={35}
+                  color={'#fff'}
+                />
+              </IconButton>
               <Box
+                p={1}
                 display={"flex"}
                 flexDirection={"column"}
-                alignItems={"center"}
-                color={"#fff"}
-              >
-                <Typography
-                  variant="h6"
-                  fontWeight={700}
-                  fontSize={deviceType === "mobile" ? 18 : 20}
-                  textAlign={"center"}
-                  textTransform={"uppercase"}
+                justifyContent={"center"}
+                style={{ borderRadius: "8px 8px 0 0" }}>
+
+
+
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  alignItems={"center"}
+                  color={"#fff"}
                 >
-                  {t("payment-status")}
-                </Typography>
-                <Typography
-                  variant={deviceType === "mobile" ? "caption" : "h6"}
-                  color={theme.palette.secondary.light}
-                  border={"1px solid white"}
-                  borderRadius={2}
-                  px={2}
-                >
-                  #{p2pEscrowDetails?.pay?.unique_id}
-                </Typography>
+                  <Typography
+                    variant="h5"
+                    fontWeight={700}
+                    fontSize={deviceType === "mobile" ? 18 : 25}
+                    textAlign={"center"}
+                    textTransform={"uppercase"}
+                  >
+                    {t("payment-status")}
+                  </Typography>
+                  <Typography
+                    variant={deviceType === "mobile" ? "caption" : "h6"}
+                    color={theme.palette.secondary.light}
+                    border={"1px solid white"}
+                    borderRadius={2}
+                    px={2}
+                  >
+                    #{p2pEscrowDetails?.pay?.unique_id}
+                  </Typography>
+                </Box>
               </Box>
             </Box>
             <Box

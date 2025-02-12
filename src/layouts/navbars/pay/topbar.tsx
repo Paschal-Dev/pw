@@ -30,9 +30,11 @@ import bengali from "../../../assets/images/flag_bengali.jpeg";
 // import { setCurrentPage } from "../../../redux/reducers/pay";
 import { useDispatch } from "react-redux";
 // import { RootState } from "../../../redux/store";
-import { setButtonClicked, setCurrentPage } from "../../../redux/reducers/pay";
+import { setCurrentPage } from "../../../redux/reducers/pay";
+// import { RootState } from "../../../redux/store";
+// import APIService from "../../../services/api-service";
 // import { PageProps } from "../../../utils/myUtils";
-export default function Topbar(): React.JSX.Element{
+export default function Topbar(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -43,12 +45,10 @@ export default function Topbar(): React.JSX.Element{
   // const dispatch = useDispatch();
   // const { payId } = useSelector((state: RootState) => state.pay);
 
-//  function ClickableImage({ payId }) {
-  const handleClick = () => {
-    // sessionStorage.removeItem("redirectHandled");
-    // window.location.href = `https://pay.pwat.net/?v=${payId}`;
-    dispatch(setButtonClicked(false));
-    dispatch(setCurrentPage("pay/v"));
+  //  function ClickableImage({ payId }) {
+  const handleClick = async () => {
+    // dispatch(setButtonClicked(false));
+    dispatch(setCurrentPage("pay"));
   };
 
   const { i18n } = useTranslation();
@@ -83,7 +83,7 @@ export default function Topbar(): React.JSX.Element{
             justifyContent: "space-between",
           }}
         >
-            <img  src={Logo} onClick={handleClick} style={{cursor: 'pointer'}}/>
+          <img src={Logo} onClick={handleClick} style={{ cursor: 'pointer' }} />
           <FormControl
             variant="standard"
             size="small"
@@ -203,7 +203,7 @@ export default function Topbar(): React.JSX.Element{
                   alt="CH"
                   style={{ width: 20, marginRight: 10 }}
                 />{" "}
-               Chinese
+                Chinese
               </MenuItem>
               <MenuItem value={"be"}>
                 <img
