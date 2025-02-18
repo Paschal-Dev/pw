@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  Modal,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Button, Modal, Typography, useMediaQuery } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -14,10 +8,13 @@ import APIService from "../../services/api-service";
 import danger from "../../assets/images/danger.svg";
 import close from "../../assets/images/close-icon.svg";
 import { theme } from "../../assets/themes/theme";
-import { setConfirmButtonBackdrop, setCurrentPage, setP2PVendorsDetails } from "../../redux/reducers/pay";
+import {
+  setConfirmButtonBackdrop,
+  setCurrentPage,
+  setP2PVendorsDetails,
+} from "../../redux/reducers/pay";
 
-
-export default function EscrowStatus(){
+export default function EscrowStatus() {
   const [deviceType, setDeviceType] = useState("mobile");
   const [open, setOpen] = useState(false);
 
@@ -34,7 +31,6 @@ export default function EscrowStatus(){
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [countdown, setCountdown] = React.useState("");
-
 
   useEffect(() => {
     if (mobile) {
@@ -54,7 +50,7 @@ export default function EscrowStatus(){
     setIsConfirming(true);
     setOpen(true);
     dispatch(setConfirmButtonBackdrop(true));
-    localStorage.removeItem('checkout_link');
+    localStorage.removeItem("checkout_link");
     localStorage.clear();
     try {
       // const formData = new FormData();
@@ -91,7 +87,6 @@ export default function EscrowStatus(){
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
 
-      
       // // send-otp request
       // const sendOtpPayload = {
       //   call_type: "pay",
@@ -99,7 +94,7 @@ export default function EscrowStatus(){
       //   lang: "en",
       //   pay_id: payId,
       // };
-      
+
       // // eslint-disable-next-line prefer-const
       // let intervalId: number | undefined;
       // const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
@@ -109,51 +104,45 @@ export default function EscrowStatus(){
       //       "API RESPONSE FROM PAGE_RELOAD SEND OTP =>>> ",
       //       resp.data
       //     );
-          
-          // if (resp.data?.escrow_status === 1) {
-          //   // Do nothing, let the interval continue
-          // } else {
-            // const formData = new FormData();
-            // formData.append("call_type", "get_key");
-            // const response1 = await APIService.getToken(formData);
-            // console.log(
-            //   "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
-            //   response1.data
-            // );
 
-            // const payload = {
-            //   call_type: "encode_key",
-            //   token: response1.data?.data?.token,
-            //   key: response1.data?.data?.key,
-            //   timestamp: Math.floor(Date.now() / 1000),
-            // };
-            // const response3 = await APIService.encodeKey(payload);
-            // console.log(
-            //   "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
-            //   response3.data
-            // );
-            // dispatch(setHeaderKey(response3.data?.data?.header_key));
-            // localStorage.setItem("headerKey", response3.data?.data?.header_key);
-            const p2pPayload = {
-              call_type: "p2p_vendors",
-              ip: "192.168.0.0",
-              pay_id: payId,
-            };
-            const respo2 = await APIService.p2pVendors(p2pPayload);
-            console.log(
-              "API RESPONSE FROM P2P VENDORS FETCH =>>> ",
-              respo2.data
-            );
+      // if (resp.data?.escrow_status === 1) {
+      //   // Do nothing, let the interval continue
+      // } else {
+      // const formData = new FormData();
+      // formData.append("call_type", "get_key");
+      // const response1 = await APIService.getToken(formData);
+      // console.log(
+      //   "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
+      //   response1.data
+      // );
 
-            dispatch(setP2PVendorsDetails(respo2.data));
-            // clearInterval(intervalId);
-            dispatch(setConfirmButtonBackdrop(false));
+      // const payload = {
+      //   call_type: "encode_key",
+      //   token: response1.data?.data?.token,
+      //   key: response1.data?.data?.key,
+      //   timestamp: Math.floor(Date.now() / 1000),
+      // };
+      // const response3 = await APIService.encodeKey(payload);
+      // console.log(
+      //   "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
+      //   response3.data
+      // );
+      // dispatch(setHeaderKey(response3.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
+      const p2pPayload = {
+        call_type: "p2p_vendors",
+        ip: "192.168.0.0",
+        pay_id: payId,
+      };
+      const respo2 = await APIService.p2pVendors(p2pPayload);
+      console.log("API RESPONSE FROM P2P VENDORS FETCH =>>> ", respo2.data);
 
-            
-            
+      dispatch(setP2PVendorsDetails(respo2.data));
+      // clearInterval(intervalId);
+      dispatch(setConfirmButtonBackdrop(false));
 
-            dispatch(setCurrentPage("p2p"));
-            return;
+      dispatch(setCurrentPage("p2p"));
+      return;
       //     }
       //   } catch (error) {
       //     console.log("ERROR ::::::: ", error);
@@ -236,8 +225,8 @@ export default function EscrowStatus(){
           width={deviceType === "mobile" ? 300 : 350}
           p={1}
           pb={deviceType === "mobile" ? 2 : 0}
-          textAlign={'center'}
-          alignItems={'center'}
+          textAlign={"center"}
+          alignItems={"center"}
         >
           <Typography variant="caption" color="#F04438" textAlign="center">
             {t("need-to-cancel")}
@@ -432,7 +421,7 @@ export default function EscrowStatus(){
                 variant="body2"
                 id="modal-modal-description"
                 sx={{ mt: 1 }}
-                textAlign={'center'}
+                textAlign={"center"}
               >
                 {t("blc_pw_14")}
               </Typography>
@@ -445,22 +434,8 @@ export default function EscrowStatus(){
                 gap={2}
               >
                 <Button
-                  variant="contained"
-                  onClick={handleClose}
-                  disabled={isConfirming}
-                  sx={{
-                    width: "50%",
-                    p: 2,
-                    borderRadius: 2,
-                    ":hover": { background: "#D92D20" },
-                    bgcolor: "#D92D20",
-                  }}
-                >
-                  {t("blc_pw_15")}
-                </Button>
-                <Button
                   variant="outlined"
-                  onClick={handleConfirm}
+                  onClick={handleClose}
                   disabled={isConfirming}
                   sx={{
                     width: "50%",
@@ -470,13 +445,28 @@ export default function EscrowStatus(){
                     ":hover": { background: "none" },
                   }}
                 >
+                  {t("blc_pw_15")}
+                </Button>
+                <Button
+                  variant="contained"
+                  
+
+                  onClick={handleConfirm}
+                  disabled={isConfirming}
+                  sx={{
+                    width: "50%",
+                    p: 2,
+                    borderRadius: 2,
+                    ":hover": { background: "#D92D20" },
+                    bgcolor: "#D92D20",
+                  }}
+                >
                   {t("blc_pw_16")}
                 </Button>
               </Box>
             </Box>
           </Modal>
         )}
-
       </Box>
     </Box>
   );

@@ -10,26 +10,22 @@ import PayDashboard from "./pay-dashboard";
 import PayP2P from "./pay-p2p";
 import WalletConfirm from "./wallet-confirm";
 import WalletPayment from "./wallet-payment";
-import APIService from "../../services/api-service";
+// import APIService from "../../services/api-service";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setOTPVerified,
   setPayId,
-  setPaymentDetails,
-  setWalletPaymentDetails,
-  setP2PEscrowDetails,
   // setP2PVendorsDetails,
 } from "../../redux/reducers/pay";
 import ErrorPage from "./error_page";
 import EscrowPage from "./escrow-page";
 import { RootState } from "../../redux/store";
 import { Helmet } from "react-helmet";
-import { setCurrentPage, setApiResponse } from "../../redux/reducers/pay";
+// import { setCurrentPage, setApiResponse } from "../../redux/reducers/pay";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import P2PPayment from "./p2p-payment";
 
 export default function Pay(): React.JSX.Element {
-  const [errorResponse, setErrorResponse] = useState(null);
+  const [errorResponse] = useState(null);
   const [errorPage, setErrorPage] = useState(false);
   const [isRedirecting] = useState(false);
   // const [hasCheckedEscrow, setHasCheckedEscrow] = useState(false); // Ensure only one check
@@ -75,31 +71,31 @@ export default function Pay(): React.JSX.Element {
         return;
       }
 
-      const sendOtpPayload = {
-        call_type: "pay",
-        ip: "192.168.0.0",
-        lang: "en",
-        pay_id: payId,
-      };
+      // const sendOtpPayload = {
+      //   call_type: "pay",
+      //   ip: "192.168.0.0",
+      //   lang: "en",
+      //   pay_id: payId,
+      // };
 
-      try {
-        const resp = await APIService.sendOTP(sendOtpPayload);
-        console.log("API Response from Send OTP:", resp.data);
-        handleNonEscrowResponse(resp.data);
-        //   if (resp.data?.escrow_status === 1) {
-        //     // console.log("Already redirected, displaying escrow page.");
-        //     dispatch(setButtonClicked(true));
-        //     dispatch(setCurrentPage("escrow-page"));
-        //     dispatch(setP2PEscrowDetails(resp.data));
+      // try {
+      //   const resp = await APIService.sendOTP(sendOtpPayload);
+      //   console.log("API Response from Send OTP:", resp.data);
+      //   // handleNonEscrowResponse(resp.data);
+      //   //   if (resp.data?.escrow_status === 1) {
+      //   //     // console.log("Already redirected, displaying escrow page.");
+      //   //     dispatch(setButtonClicked(true));
+      //   //     dispatch(setCurrentPage("escrow-page"));
+      //   //     dispatch(setP2PEscrowDetails(resp.data));
 
 
-        //   } else {
-        //     console.log("No checkout link or escrow status not 1.");
-        //   }
-      } catch (error) {
-        console.error("Error during Send OTP:", error);
-        setErrorPage(true);
-      }
+      //   //   } else {
+      //   //     console.log("No checkout link or escrow status not 1.");
+      //   //   }
+      // } catch (error) {
+      //   console.error("Error during Send OTP:", error);
+      //   setErrorPage(true);
+      // }
       // finally {
       //   setHasCheckedEscrow(true);
       // }
@@ -112,59 +108,59 @@ export default function Pay(): React.JSX.Element {
 
 
 
-  const handleNonEscrowResponse = (data: any) => {
-    if (data?.message?.toLowerCase()?.includes("verified")) {
-      console.log("Message >>>", data?.message);
-      dispatch(setOTPVerified(true));
-    }
+  // const handleNonEscrowResponse = (data: any) => {
+  //   if (data?.message?.toLowerCase()?.includes("verified")) {
+  //     console.log("Message >>>", data?.message);
+  //     dispatch(setOTPVerified(true));
+  //   }
 
-    if (data?.error_code === 400) {
-      setErrorPage(true);
-      setErrorResponse(data);
-    } else {
-      dispatch(setApiResponse(data));
-      dispatch(setPaymentDetails(data));
+  //   if (data?.error_code === 400) {
+  //     setErrorPage(true);
+  //     setErrorResponse(data);
+  //   } else {
+  //     dispatch(setApiResponse(data));
+  //     dispatch(setPaymentDetails(data));
 
-      if (data?.otp_modal === 0 || !data?.otp_modal) {
-        dispatch(setOTPVerified(true));
-        const body = {
-          call_type: "pay",
-          ip: "192.168.0.0",
-          lang: "en",
-          pay_id: data?.pay_id,
-        };
-        APIService.sendOTP(body)
-          .then(() => {
-            console.log("Wallet Payment Status >>>", data?.wallet_pay?.payment_status);
-            console.log("P2P Payment Status >>>", data?.pay?.payment_status);
-            if ([0, 1, 2, 3, 5].includes(data?.wallet_pay?.payment_status)) {
-              dispatch(setWalletPaymentDetails(data));
-              dispatch(setCurrentPage("wallet-payment"));
-            } else if (data?.pay?.payment_status === 1) {
+  //     if (data?.otp_modal === 0 || !data?.otp_modal) {
+  //       dispatch(setOTPVerified(true));
+  //       const body = {
+  //         call_type: "pay",
+  //         ip: "192.168.0.0",
+  //         lang: "en",
+  //         pay_id: data?.pay_id,
+  //       };
+  //       APIService.sendOTP(body)
+  //         .then(() => {
+  //           console.log("Wallet Payment Status >>>", data?.wallet_pay?.payment_status);
+  //           console.log("P2P Payment Status >>>", data?.pay?.payment_status);
+  //           if ([0, 1, 2, 3, 5].includes(data?.wallet_pay?.payment_status)) {
+  //             dispatch(setWalletPaymentDetails(data));
+  //             dispatch(setCurrentPage("wallet-payment"));
+  //           } else if (data?.pay?.payment_status === 1) {
 
-              const url = `https://pay.peerwallet.com/?v=${data.data.unique_id}`;
+  //             const url = `https://pay.peerwallet.com/?v=${data.data.unique_id}`;
 
-              const RedirectUrl = data.data.redirect_url;
+  //             const RedirectUrl = data.data.redirect_url;
 
-              if (data?.data.redirect_url === url) {
-                // console.log("Message >>>", RedirectUrl);
-                dispatch(setP2PEscrowDetails(data));
-                dispatch(setCurrentPage("p2p-payment"));
-              } else {
-                console.log("Rendering success page", RedirectUrl);
-                window.location.assign(RedirectUrl);
-              }
+  //             if (data?.data.redirect_url === url) {
+  //               // console.log("Message >>>", RedirectUrl);
+  //               dispatch(setP2PEscrowDetails(data));
+  //               dispatch(setCurrentPage("p2p-payment"));
+  //             } else {
+  //               console.log("Rendering success page", RedirectUrl);
+  //               window.location.assign(RedirectUrl);
+  //             }
 
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        dispatch(setOTPVerified(false));
-      }
-    }
-  };
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           console.error(error);
+  //         });
+  //     } else {
+  //       dispatch(setOTPVerified(false));
+  //     }
+  //   }
+  // };
 
   const renderActivePage = () => {
     if (isRedirecting) {

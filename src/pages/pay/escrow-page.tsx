@@ -1,11 +1,5 @@
-import {
-  Backdrop,
-  Box,
-  Grid,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
-import React, { useState, useMemo } from "react";
+import { Backdrop, Box, Grid, Typography, useMediaQuery } from "@mui/material";
+import React, { useState, useMemo, useEffect } from "react";
 import VideoThumb from "../../components/pay/video-thumb";
 import { theme } from "../../assets/themes/theme";
 import menu from "../../assets/images/menu.svg";
@@ -19,35 +13,53 @@ import loader from "../../assets/images/loader.gif";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
-export default function EscrowPage(): React.JSX.Element{
+export default function EscrowPage(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
 
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pEscrowDetails, paymentDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails, paymentDetails } = useSelector(
+    (state: RootState) => state.pay
+  );
   const { isConfirmButtonBackdrop } = useSelector(
     (state: RootState) => state.button
   );
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-    // Function to decode HTML entities
-    const decodeHtmlEntity = (entity: string) => {
-      const txt = document.createElement("textarea");
-      txt.innerHTML = entity;
-      return txt.value;
-    };
-  
-    // Currency mapping
-    const currencyMap: { [key: string]: string } = {
-      "$": "USD", "€": "EUR", "£": "GBP", "₦": "NGN",
-      "₹": "INR", "¥": "JPY", "₿": "BTC", "₩": "KRW",
-      "₽": "RUB", "₮": "MNT", "₴": "UAH", "₪": "ILS", "₫": "VND"
-    };
-  
-    // Get the decoded currency symbol
-    const currencySign = useMemo(() => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""), [paymentDetails]);
-  
-    // Convert symbol to currency code if available
-    const displayCurrency = currencyMap[currencySign] || currencySign;
+  // Function to decode HTML entities
+  const decodeHtmlEntity = (entity: string) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = entity;
+    return txt.value;
+  };
+
+  // Currency mapping
+  const currencyMap: { [key: string]: string } = {
+    $: "USD",
+    "€": "EUR",
+    "£": "GBP",
+    "₦": "NGN",
+    "₹": "INR",
+    "¥": "JPY",
+    "₿": "BTC",
+    "₩": "KRW",
+    "₽": "RUB",
+    "₮": "MNT",
+    "₴": "UAH",
+    "₪": "ILS",
+    "₫": "VND",
+  };
+
+  // Get the decoded currency symbol
+  const currencySign = useMemo(
+    () => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""),
+    [paymentDetails]
+  );
+
+  // Convert symbol to currency code if available
+  const displayCurrency = currencyMap[currencySign] || currencySign;
 
   // eslint-disable-next-line no-empty-pattern
   const [] = useState(false);
@@ -64,7 +76,7 @@ export default function EscrowPage(): React.JSX.Element{
 
   return (
     <>
-     <Helmet>
+      <Helmet>
         <title>
           {paymentDetails?.data
             ? `Escrow || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
@@ -72,9 +84,11 @@ export default function EscrowPage(): React.JSX.Element{
         </title>
         <meta
           property="og:description"
-          content={paymentDetails?.data
-            ? `Escrow || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
-            : "Escrow Page"}
+          content={
+            paymentDetails?.data
+              ? `Escrow || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+              : "Escrow Page"
+          }
         />
         <meta
           property="og:image"
@@ -141,8 +155,7 @@ export default function EscrowPage(): React.JSX.Element{
                     fontSize={deviceType === "mobile" ? 16 : "4vh"}
                     fontWeight={700}
                   >
-                    {t("blc_pw_3")} #
-                    {p2pEscrowDetails?.pay?.unique_id}
+                    {t("blc_pw_3")} #{p2pEscrowDetails?.pay?.unique_id}
                   </Typography>
                 </Box>
               </Box>

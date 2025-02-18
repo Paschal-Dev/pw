@@ -7,11 +7,12 @@ import { useTranslation } from "react-i18next";
 import APIService from "../../services/api-service";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import close from "../../assets/images/close-icon.svg";
-import { setConfirmButtonBackdrop, setCurrentPage, setP2PVendorsDetails } from "../../redux/reducers/pay";
+import {
+  setConfirmButtonBackdrop,
+  setCurrentPage,
+  setP2PVendorsDetails,
+} from "../../redux/reducers/pay";
 // import background from "../../assets/images/background.png";
-
-
-
 
 export default function EscrowConfirmDetails() {
   const [deviceType, setDeviceType] = React.useState("mobile");
@@ -50,7 +51,7 @@ export default function EscrowConfirmDetails() {
     setIsConfirming(true);
     setOpen(true);
     dispatch(setConfirmButtonBackdrop(true));
-    localStorage.removeItem('checkout_link');
+    localStorage.removeItem("checkout_link");
     try {
       // const formData = new FormData();
       // formData.append("call_type", "get_key");
@@ -85,7 +86,7 @@ export default function EscrowConfirmDetails() {
 
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
-      
+
       // // send-otp request
       // const sendOtpPayload = {
       //   call_type: "pay",
@@ -107,29 +108,26 @@ export default function EscrowConfirmDetails() {
       //     if (resp.data?.escrow_status === 1) {
       //       // Do nothing, let the interval continue
       //     } else {
-            const p2pPayload = {
-              call_type: "p2p_vendors",
-              ip: "192.168.0.0",
-              pay_id: payId,
-            };
-            const respo2 = await APIService.p2pVendors(p2pPayload);
-            console.log(
-              "API RESPONSE FROM P2P VENDORS FETCH =>>> ",
-              respo2.data
-            );
-            dispatch(setP2PVendorsDetails(respo2.data));
-            // clearInterval(intervalId);
-            dispatch(setConfirmButtonBackdrop(false));
-            dispatch(setCurrentPage("p2p"));
-    //       }
-    //     } catch (error) {
-    //       console.log("ERROR ::::::: ", error);
-    //     }
-    //   };
-    //   intervalId = setInterval(
-    //     () => checkPaymentStatusAndRun(sendOtpPayload),
-    //     3000
-    //   );
+      const p2pPayload = {
+        call_type: "p2p_vendors",
+        ip: "192.168.0.0",
+        pay_id: payId,
+      };
+      const respo2 = await APIService.p2pVendors(p2pPayload);
+      console.log("API RESPONSE FROM P2P VENDORS FETCH =>>> ", respo2.data);
+      dispatch(setP2PVendorsDetails(respo2.data));
+      // clearInterval(intervalId);
+      dispatch(setConfirmButtonBackdrop(false));
+      dispatch(setCurrentPage("p2p"));
+      //       }
+      //     } catch (error) {
+      //       console.log("ERROR ::::::: ", error);
+      //     }
+      //   };
+      //   intervalId = setInterval(
+      //     () => checkPaymentStatusAndRun(sendOtpPayload),
+      //     3000
+      //   );
     } catch (error) {
       console.error("Error Cancelling Escrow:", error);
     }
@@ -512,7 +510,7 @@ export default function EscrowConfirmDetails() {
                 marginTop={1}
                 fontSize={15}
               >
-               {t("blc_pw_13")}
+                {t("blc_pw_13")}
               </Typography>
               <Typography
                 variant="body2"
@@ -532,22 +530,8 @@ export default function EscrowConfirmDetails() {
                 gap={2}
               >
                 <Button
-                  variant="contained"
-                  onClick={handleClose}
-                  disabled={isConfirming}
-                  sx={{
-                    width: "50%",
-                    p: 2,
-                    borderRadius: 2,
-                    ":hover": { background: "#D92D20" },
-                    bgcolor: "#D92D20",
-                  }}
-                >
-                  {t("blc_pw_15")}
-                </Button>
-                <Button
                   variant="outlined"
-                  onClick={handleConfirm}
+                  onClick={handleClose}
                   disabled={isConfirming}
                   sx={{
                     width: "50%",
@@ -557,13 +541,26 @@ export default function EscrowConfirmDetails() {
                     ":hover": { background: "none" },
                   }}
                 >
+                  {t("blc_pw_15")}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleConfirm}
+                  disabled={isConfirming}
+                  sx={{
+                    width: "50%",
+                    p: 2,
+                    borderRadius: 2,
+                    ":hover": { background: "#D92D20" },
+                    bgcolor: "#D92D20",
+                  }}
+                >
                   {t("blc_pw_16")}
                 </Button>
               </Box>
             </Box>
           </Modal>
         )}
-
       </Box>
       <Box borderRadius={2} bgcolor={theme.palette.primary.light} mt={1}>
         <Box p={2}>
@@ -655,7 +652,6 @@ export default function EscrowConfirmDetails() {
               textAlign="center"
               justifyContent={"end"}
             >
-
               {p2pEscrowDetails?.vendor?.use_name}
             </Typography>
           </Box>

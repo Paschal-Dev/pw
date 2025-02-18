@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Backdrop,
@@ -19,20 +19,23 @@ import { RootState } from "../../redux/store";
 import { useTranslation } from "react-i18next";
 import loader from "../../assets/images/loader.gif";
 import APIService from "../../services/api-service";
-import { setButtonClicked, setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
+import { setApiResponse, setButtonClicked, setCurrentPage, setOTPVerified, setP2PEscrowDetails, setPaymentDetails, setWalletPaymentDetails } from "../../redux/reducers/pay";
 
-export default function PayDashboard(): React.JSX.Element{
+export default function PayDashboard(): React.JSX.Element {
+  const { paymentDetails, payId } = useSelector((state: RootState) => state.pay);
+  const { isButtonBackdrop } = useSelector((state: RootState) => state.button);
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [isloading, setIsLoading] = React.useState(true);
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
+  const [, setErrorResponse] = useState(null);
+  const [, setErrorPage] = useState(false);
+
 
   const { t } = useTranslation();
-const dispatch = useDispatch();
-  const { paymentDetails, payId } = useSelector((state: RootState) => state.pay);
+  const dispatch = useDispatch();
 
   const currency_sign = paymentDetails?.data?.currency_sign;
-  const { isButtonBackdrop } = useSelector((state: RootState) => state.button);
 
   React.useEffect(() => {
     if (paymentDetails) {
@@ -50,44 +53,101 @@ const dispatch = useDispatch();
     }
   }, [mobile, tablet]);
 
-   useEffect(() => {
-      const Pay = async () => {
-       
-  
-        const sendOtpPayload = {
+  useEffect(() => {
+    const Pay = async () => {
+
+      const sendOtpPayload = {
+        call_type: "pay",
+        ip: "192.168.0.0",
+        lang: "en",
+        pay_id: payId,
+      };
+
+      try {
+        const resp = await APIService.sendOTP(sendOtpPayload);
+        console.log("API Response from PayDashboard OTP:", resp.data);
+
+
+        if (resp.data?.escrow_status === 1) {
+          // console.log("Already redirected, displaying escrow page.");
+          dispatch(setButtonClicked(true));
+          dispatch(setCurrentPage("escrow-page"));
+          dispatch(setP2PEscrowDetails(resp.data));
+
+
+        } else {
+          dispatch(setButtonClicked(false));
+          console.log("No checkout link or escrow status not 1.");
+          handleNonEscrowResponse(resp.data);
+        }
+      } catch (error) {
+        console.error("Error during Send OTP:", error);
+      }
+      // finally {
+      //   setHasCheckedEscrow(true);
+      // }
+    };
+
+    // if (!hasCheckedEscrow) {
+    Pay();
+    // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, payId]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleNonEscrowResponse = (data: any) => {
+    if (data?.message?.toLowerCase()?.includes("verified")) {
+      console.log("Message >>>", data?.message);
+      dispatch(setOTPVerified(true));
+    }
+
+    if (data?.error_code === 400) {
+      setErrorPage(true);
+      setErrorResponse(data);
+    } else {
+      dispatch(setApiResponse(data));
+      dispatch(setPaymentDetails(data));
+
+      if (data?.otp_modal === 0 || !data?.otp_modal) {
+        dispatch(setOTPVerified(true));
+        const body = {
           call_type: "pay",
           ip: "192.168.0.0",
           lang: "en",
-          pay_id: payId,
+          pay_id: data?.pay_id,
         };
-  
-        try {
-          const resp = await APIService.sendOTP(sendOtpPayload);
-          console.log("API Response from Send OTP:", resp.data);
-  
-          if (resp.data?.escrow_status === 1) {
-            // console.log("Already redirected, displaying escrow page.");
-            dispatch(setButtonClicked(true));
-            dispatch(setCurrentPage("escrow-page"));
-            dispatch(setP2PEscrowDetails(resp.data));
-  
-  
-          } else {
-            dispatch(setButtonClicked(false));
-            console.log("No checkout link or escrow status not 1.");
-          }
-        } catch (error) {
-          console.error("Error during Send OTP:", error);
-        } 
-        // finally {
-        //   setHasCheckedEscrow(true);
-        // }
-      };
-  
-      // if (!hasCheckedEscrow) {
-        Pay();
-      // }
-    }, [dispatch, payId]);
+        APIService.sendOTP(body)
+          .then(() => {
+            console.log("Wallet Payment Status >>>", data?.wallet_pay?.payment_status);
+            console.log("P2P Payment Status >>>", data?.pay?.payment_status);
+            if ([0, 1, 2, 3, 5].includes(data?.wallet_pay?.payment_status)) {
+              dispatch(setWalletPaymentDetails(data));
+              dispatch(setCurrentPage("wallet-payment"));
+            } else if (data?.pay?.payment_status === 1) {
+
+              const url = `https://pay.peerwallet.com/?v=${data.data.unique_id}`;
+
+              const RedirectUrl = data.data.redirect_url;
+
+              if (data?.data.redirect_url === url) {
+                // console.log("Message >>>", RedirectUrl);
+                dispatch(setP2PEscrowDetails(data));
+                dispatch(setCurrentPage("p2p-payment"));
+              } else {
+                console.log("Rendering success page", RedirectUrl);
+                window.location.assign(RedirectUrl);
+              }
+
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        dispatch(setOTPVerified(false));
+      }
+    }
+  };
 
   return (
     <>
@@ -120,7 +180,7 @@ const dispatch = useDispatch();
                     }}
                     zIndex={2}
                   >
-                    <Otp deviceType={deviceType}/>
+                    <Otp deviceType={deviceType} />
                   </Box>
                 )}
                 {isloading ? (

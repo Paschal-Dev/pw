@@ -97,7 +97,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
         flexDirection="column"
         borderRadius={2}
         bgcolor="#FFF"
-        width="auto"
+        width={deviceType === "mobile" ? 140 : 'auto'}
         border={1}
         borderColor="#B2E2F5"
         title={`Load your wallet with ${item.payment_method}`}
@@ -115,7 +115,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
           src={item.logo}
           alt={item.payment_method}
           style={{ borderRadius: 8 }}
-          width={190}
+          width={deviceType === "mobile" ? 120 : 190}
         />
         <Box borderRadius={8} p={0.5} display="flex" flexDirection="column">
           <Box
@@ -123,7 +123,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
             borderRadius={1}
             px={deviceType === "mobile" ? 1 : 0.5}
           >
-            <Typography color="black" variant="caption" fontWeight="bold">
+            <Typography color="black" variant="caption" fontSize={deviceType === "mobile" ? 8 : "auto"} fontWeight="bold">
               {item.payment_method}
             </Typography>
             <Box
@@ -137,7 +137,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
                 color="#757575"
                 flex={1}
                 variant="body2"
-                fontSize={deviceType === "mobile" ? 12 : "1.2vh"}
+                fontSize={deviceType === "mobile" ? 6 : "1.2vh"}
                 fontWeight={600}
                 style={{ flex: 1 }}
               >
@@ -148,7 +148,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
                   <Typography
                     color="#6CE9A6"
                     variant="body2"
-                    fontSize={deviceType === "mobile" ? 12 : 8}
+                    fontSize={deviceType === "mobile" ? 6 : 8}
                     fontWeight={800}
                     bgcolor="#D1FADF"
                     borderRadius={1}
@@ -161,7 +161,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
                 )}
                 <Typography
                   variant="body2"
-                  fontSize={deviceType === "mobile" ? 12 : 8}
+                  fontSize={deviceType === "mobile" ? 6 : 8}
                   fontWeight={600}
                   px={1}
                   py={0.3}

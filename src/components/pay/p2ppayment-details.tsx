@@ -4,18 +4,14 @@ import { theme } from "../../assets/themes/theme";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
-import processingHash from '../../assets/images/processing-hash.gif';
+import processingHash from "../../assets/images/processing-hash.gif";
 export default function P2pPaymentDetails(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useTranslation();
-  const { p2pEscrowDetails } = useSelector(
-    (state: RootState) => state.pay
-  );
-
-
+  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
 
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const shouldDisplayBox1 = p2pEscrowDetails?.data?.payment_status === 1;
@@ -23,15 +19,16 @@ export default function P2pPaymentDetails(): React.JSX.Element {
   const date = p2pEscrowDetails?.pay?.date_processed;
 
   const formatDate = (timestamp: number) => {
-    const formattedDate = new Date(timestamp * 1000).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    const formattedDate = new Date(timestamp * 1000).toLocaleDateString(
+      "en-US",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }
+    );
     return formattedDate;
   };
-
-
 
   // Function to format Unix timestamp to a human-readable date string with time
   // const formatDate = (timestamp: number) => {
@@ -50,7 +47,6 @@ export default function P2pPaymentDetails(): React.JSX.Element {
   //   console.log("Current Date:", date);
 
   //   console.log("Successful Details:", p2pEscrowDetails);
-
 
   // };
   React.useEffect(() => {
@@ -71,6 +67,8 @@ export default function P2pPaymentDetails(): React.JSX.Element {
       }
     };
 
+    console.log("Transaction Hash Check", p2pEscrowDetails.others.hash);
+
     // Check immediately on mount
     checkHash();
 
@@ -81,7 +79,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
 
     // Cleanup interval when component unmounts
     return () => clearInterval(interval);
-  }, [p2pEscrowDetails]);
+  }, [p2pEscrowDetails, p2pEscrowDetails.others.hash]);
 
   return (
     <Box>

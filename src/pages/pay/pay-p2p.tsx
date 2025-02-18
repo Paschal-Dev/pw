@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Avatar,
   Box,
@@ -23,12 +23,17 @@ export default function PayP2P(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pVendorsDetails, paymentDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pVendorsDetails, paymentDetails } = useSelector(
+    (state: RootState) => state.pay
+  );
   const dispatch = useDispatch();
 
   const vendors = p2pVendorsDetails?.p2p;
   const currency_sign = p2pVendorsDetails?.data?.currency_sign;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Function to decode HTML entities
   const decodeHtmlEntity = (entity: string) => {
@@ -39,23 +44,34 @@ export default function PayP2P(): React.JSX.Element {
 
   // Currency mapping
   const currencyMap: { [key: string]: string } = {
-    "$": "USD", "€": "EUR", "£": "GBP", "₦": "NGN",
-    "₹": "INR", "¥": "JPY", "₿": "BTC", "₩": "KRW",
-    "₽": "RUB", "₮": "MNT", "₴": "UAH", "₪": "ILS", "₫": "VND"
+    $: "USD",
+    "€": "EUR",
+    "£": "GBP",
+    "₦": "NGN",
+    "₹": "INR",
+    "¥": "JPY",
+    "₿": "BTC",
+    "₩": "KRW",
+    "₽": "RUB",
+    "₮": "MNT",
+    "₴": "UAH",
+    "₪": "ILS",
+    "₫": "VND",
   };
 
   // Get the decoded currency symbol
-  const currencySign = useMemo(() => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""), [paymentDetails]);
+  const currencySign = useMemo(
+    () => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""),
+    [paymentDetails]
+  );
 
   // Convert symbol to currency code if available
   const displayCurrency = currencyMap[currencySign] || currencySign;
 
   const backButtonClicked = () => {
-    
-
     dispatch(setButtonClicked(false));
     dispatch(setCurrentPage("pay"));
-  }
+  };
   const { t } = useTranslation();
 
   React.useEffect(() => {
@@ -78,22 +94,22 @@ export default function PayP2P(): React.JSX.Element {
         </title>
         <meta
           property="og:description"
-          content={paymentDetails?.data
-            ? `Vendors || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
-            : "Payment Page"} />
+          content={
+            paymentDetails?.data
+              ? `Vendors || Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+              : "Payment Page"
+          }
+        />
         <meta
           property="og:image"
-          content={paymentDetails?.seller?.image || ""} />
-      </Helmet><Box flex={1}>
+          content={paymentDetails?.seller?.image || ""}
+        />
+      </Helmet>
+      <Box flex={1}>
         <Grid container spacing={3} height={"60%"}>
           <Grid item xs={12} sm={12} md={4} display={"flex"}>
             {deviceType !== "mobile" && deviceType !== "tablet" && (
-              <Box
-                flex={1}
-                display={"flex"}
-                flexDirection={"column"}
-                gap={2}
-              >
+              <Box flex={1} display={"flex"} flexDirection={"column"} gap={2}>
                 <VideoThumb />
                 <Gif />
               </Box>
@@ -121,7 +137,8 @@ export default function PayP2P(): React.JSX.Element {
                     style={{
                       background: theme.palette.primary.light,
                       borderRadius: "50%",
-                    }} />
+                    }}
+                  />
                 </IconButton>
                 <Box
                   display={"flex"}
@@ -144,17 +161,22 @@ export default function PayP2P(): React.JSX.Element {
                     <img
                       src={p2pVendorsDetails?.seller?.image}
                       alt=""
-                      width={40} />
+                      width={40}
+                    />
                   </Avatar>
 
                   <Box>
-                    <Typography textAlign={"center"} variant={deviceType === "mobile" ? 'body1' : "h5"} fontWeight={800}>
+                    <Typography
+                      textAlign={"center"}
+                      variant={deviceType === "mobile" ? "body1" : "h5"}
+                      fontWeight={800}
+                    >
                       {p2pVendorsDetails?.seller?.name}
                     </Typography>
                   </Box>
                 </Box>
                 <Typography
-                  variant={deviceType === "mobile" ? 'body1' : "h4"}
+                  variant={deviceType === "mobile" ? "body1" : "h4"}
                   color={theme.palette.success.main}
                   bgcolor={theme.palette.success.light}
                   fontWeight={800}
@@ -184,8 +206,8 @@ export default function PayP2P(): React.JSX.Element {
                     {t("blc_pw_5")}
                   </Typography>
                   <Typography variant="body2">
-                    {t("blc_pw_6")}{" "}
-                    {p2pVendorsDetails?.seller?.name} {t("blc_pw_7")}
+                    {t("blc_pw_6")} {p2pVendorsDetails?.seller?.name}{" "}
+                    {t("blc_pw_7")}
                   </Typography>
                 </Box>
               </Box>
@@ -196,24 +218,25 @@ export default function PayP2P(): React.JSX.Element {
                 borderRadius={2}
                 alignItems={"center"}
                 display="grid"
-                gridTemplateColumns={deviceType === "tablet"
-                  ? "repeat(4, 1fr)"
-                  : deviceType === "mobile"
+                gridTemplateColumns={
+                  deviceType === "tablet"
+                    ? "repeat(4, 1fr)"
+                    : deviceType === "mobile"
                     ? "repeat(2, 1fr)"
-                    : "repeat(4, 1fr)"}
+                    : "repeat(4, 1fr)"
+                }
                 gap={1}
                 p={1}
                 overflow={"auto"}
               >
                 {vendors?.map((item: Vendor, index: number) => (
-                  <Vendors
-                    item={item}
-                    key={index} />
+                  <Vendors item={item} key={index} />
                 ))}
               </Box>
             </Box>
           </Grid>
         </Grid>
-      </Box></>
+      </Box>
+    </>
   );
 }
