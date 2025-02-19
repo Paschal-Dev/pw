@@ -3,20 +3,23 @@ import React, { useEffect, useState } from "react";
 import { theme } from "../../assets/themes/theme";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../redux/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import processingHash from "../../assets/images/processing-hash.gif";
+import APIService from "../../services/api-service";
+import { setP2PEscrowDetails } from "../../redux/reducers/pay";
 export default function P2pPaymentDetails(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useTranslation();
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails, payId } = useSelector((state: RootState) => state.pay);
 
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const shouldDisplayBox1 = p2pEscrowDetails?.data?.payment_status === 1;
 
   const date = p2pEscrowDetails?.pay?.date_processed;
+  const dispatch = useDispatch();
 
   const formatDate = (timestamp: number) => {
     const formattedDate = new Date(timestamp * 1000).toLocaleDateString(
@@ -61,10 +64,34 @@ export default function P2pPaymentDetails(): React.JSX.Element {
 
   useEffect(() => {
     // Function to check for the transaction hash update
-    const checkHash = () => {
-      if (p2pEscrowDetails?.others?.hash) {
-        setTransactionHash(p2pEscrowDetails.others.hash);
+    const checkHash = async () => {
+
+      const sendOtpPayload = {
+        call_type: "pay",
+        ip: "192.168.0.0",
+        lang: "en",
+        pay_id: payId,
+      };
+
+      try {
+        const resp = await APIService.sendOTP(sendOtpPayload);
+        console.log("API Response from PayDashboard OTP:", resp.data);
+
+
+        dispatch(setP2PEscrowDetails(resp.data));
+
+
+        if (resp?.data?.others?.hash) {
+          setTransactionHash(p2pEscrowDetails.others.hash);
+        }
+        console.log("Transaction Hash Check1", resp?.data?.others?.hash);
+
+      } catch (error) {
+        console.error("Error during Hash Check:", error);
       }
+      
+
+
     };
 
     console.log("Transaction Hash Check", p2pEscrowDetails.others.hash);
@@ -79,7 +106,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
 
     // Cleanup interval when component unmounts
     return () => clearInterval(interval);
-  }, [p2pEscrowDetails, p2pEscrowDetails.others.hash]);
+  }, [dispatch, p2pEscrowDetails, p2pEscrowDetails.others.hash, payId]);
 
   return (
     <Box>
