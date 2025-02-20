@@ -158,6 +158,10 @@ export default function WalletCard(): React.JSX.Element{
               "API ERROR RESPONSE FROM WALLET SEND OTP =>>> ",
               respo.data
             );
+          } else if (respo.data.seller.seller_status === 0) {
+            setAlertMessage('Selling account is not active, please contact support');
+            setAlertSeverity('error');
+            console.log('API RESPONSE FROM P2P VENDORS FETCH =>>> ', respo.data.seller.seller_status);
           } else {
             APIService.walletPay(walletPayload)
               .then((respo) => {
