@@ -47,7 +47,7 @@ import {
 //   p: 4,
 // };
 
-export default function WalletCard(): React.JSX.Element{
+export default function WalletCard(): React.JSX.Element {
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -264,7 +264,10 @@ export default function WalletCard(): React.JSX.Element{
           {alertSeverity === "error" && !isSuccessAlertShown && (
             <Alert
               severity="error"
-              style={{ position: "absolute", width: deviceType === "mobile" ? "60%" : "20%" }}
+              sx={{
+                position: "absolute",
+                width: deviceType !== "mobile" ? "60%" : "20%"
+              }}
             >
               <AlertTitle>Error</AlertTitle>
               {alertMessage}
