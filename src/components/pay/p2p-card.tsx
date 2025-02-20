@@ -34,7 +34,7 @@ import { setButtonBackdrop, setButtonClicked, setCurrentPage, setP2PVendorsDetai
 
 
 
-interface P2pCardProps{
+interface P2pCardProps {
   otpVerified: boolean;
 }
 
@@ -44,7 +44,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
   const { isOTPVerified } = useSelector((state: RootState) => state.pay);
   const handleClose = () => setOpen(false);
   const { t } = useTranslation();
-  const { isButtonClicked} = useSelector((state: RootState) => state.button);
+  const { isButtonClicked } = useSelector((state: RootState) => state.button);
   const dispatch = useDispatch();
   const { payId: payId } = useSelector((state: RootState) => state.pay);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -134,6 +134,10 @@ const P2pCard: React.FC<P2pCardProps> = () => {
           setAlertMessage('No P2P Vendor Available');
           setAlertSeverity('error');
           console.log('API RESPONSE FROM P2P VENDORS FETCH =>>> ', respo.data);
+        } else if (respo.data.seller.seller_status === 0) {
+          setAlertMessage('Selling account is not active, please contact support');
+          setAlertSeverity('error');
+          console.log('API RESPONSE FROM P2P VENDORS FETCH =>>> ', respo.data.seller.seller_status);
         } else {
           APIService.p2pVendors(p2pPayload)
             .then((respo) => {
@@ -141,6 +145,8 @@ const P2pCard: React.FC<P2pCardProps> = () => {
                 "API RESPONSE FROM P2P VENDORS FETCH =>>> ",
                 respo.data
               );
+              console.log('SELLER STATUS =>>> ', respo.data.seller.seller_status);
+
               dispatch(setP2PVendorsDetails(respo.data));
               dispatch(setCurrentPage("p2p"));
             })
