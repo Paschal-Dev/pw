@@ -150,7 +150,9 @@
     "blc_pw_42": "OTP Resent. ",
     "blc_pw_43": "Success ",
     "blc_pw_44": " Error",
-    "blc_pw_45": " No P2P Vendor Available"
+    "blc_pw_45": " No P2P Vendor Available",
+    "blc_pw_46": " Selling account is not active, please contact support"
+
 
   }
 }

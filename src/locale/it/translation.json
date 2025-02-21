@@ -142,6 +142,7 @@
     "blc_pw_42": "OTP reinviato.",
     "blc_pw_43": "Riuscito.",
     "blc_pw_44": "Errore",
-    "blc_pw_45": "Nessun fornitore P2P disponibile"
+    "blc_pw_45": "Nessun fornitore P2P disponibile",
+    "blc_pw_46": "L'account di vendita non è attivo, contattare l'assistenza"
   }
 }
