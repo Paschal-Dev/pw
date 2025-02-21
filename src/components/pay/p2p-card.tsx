@@ -135,7 +135,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
           setAlertSeverity('error');
           console.log('API RESPONSE FROM P2P VENDORS FETCH =>>> ', respo.data);
         } else if (respo.data.seller.seller_status === 0) {
-          setAlertMessage('Selling account is not active, please contact support');
+          setAlertMessage(t("blc_pw_46"));
           setAlertSeverity('error');
           console.log('API RESPONSE FROM P2P VENDORS FETCH =>>> ', respo.data.seller.seller_status);
         } else {

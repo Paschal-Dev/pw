@@ -159,7 +159,7 @@ export default function WalletCard(): React.JSX.Element {
               respo.data
             );
           } else if (respo.data.seller.seller_status === 0) {
-            setAlertMessage('Selling account is not active, please contact support');
+            setAlertMessage(t("blc_pw_46"));
             setAlertSeverity('error');
             console.log('SELLER STATUS =>>> ', respo.data.seller.seller_status);
           } else {
@@ -269,7 +269,7 @@ export default function WalletCard(): React.JSX.Element {
                 width: deviceType !== "mobile" ? "60%" : "20%"
               }}
             >
-              <AlertTitle>Error</AlertTitle>
+              <AlertTitle>{t("blc_pw_44")}</AlertTitle>
               {alertMessage}
             </Alert>
           )}
@@ -394,3 +394,15 @@ export default function WalletCard(): React.JSX.Element {
     </Box>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
