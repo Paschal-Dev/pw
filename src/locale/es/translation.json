@@ -137,6 +137,11 @@
     "blc_pw_37": "Reenviar OTP en",
     "blc_pw_38": "Reenviar",
     "blc_pw_39": "Procesando",
-    "blc_pw_40": "Error"
+    "blc_pw_40": "Error",
+    "blc_pw_41": "Error al verificar OTP. Inténtelo nuevamente más tarde.",
+    "blc_pw_42": "OTP reenviado.",
+    "blc_pw_43": "Éxito",
+    "blc_pw_44": "Error",
+    "blc_pw_45": "No hay ningún proveedor P2P disponible"
   }
 }

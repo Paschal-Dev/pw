@@ -137,6 +137,11 @@
     "blc_pw_37": "OTP erneut senden in",
     "blc_pw_38": "Erneut senden",
     "blc_pw_39": "Wird verarbeitet",
-    "blc_pw_40": "Fehlgeschlagen"
+    "blc_pw_40": "Fehlgeschlagen",
+    "blc_pw_41": "Fehler beim Überprüfen des OTP. Bitte versuchen Sie es später erneut.",
+    "blc_pw_42": "OTP erneut gesendet.",
+    "blc_pw_43": "Erfolgreich",
+    "blc_pw_44": "Fehler",
+    "blc_pw_45": "Kein P2P-Anbieter verfügbar"
   }
 }

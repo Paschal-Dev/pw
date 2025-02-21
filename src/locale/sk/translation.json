@@ -137,6 +137,11 @@
     "blc_pw_37": "Znova odoslať jednorazové heslo v",
     "blc_pw_38": "Znova odoslať",
     "blc_pw_39": "Spracúva sa",
-    "blc_pw_40": "Neúspešné"
+    "blc_pw_40": "Neúspešné",
+    "blc_pw_41": "Chyba pri overovaní jednorazového hesla. Skúste to znova neskôr.",
+    "blc_pw_42": "Opakované OTP.",
+    "blc_pw_43": "Úspech",
+    "blc_pw_44": "Chyba",
+    "blc_pw_45": " Nie je dostupný žiadny predajca P2P"
   }
 }

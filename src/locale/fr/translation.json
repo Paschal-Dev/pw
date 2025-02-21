@@ -137,6 +137,11 @@
     "blc_pw_37": "Renvoyer le code OTP dans",
     "blc_pw_38": "Renvoyer",
     "blc_pw_39": "Traitement",
-    "blc_pw_40": "Échec"
+    "blc_pw_40": "Échec",
+    "blc_pw_41": "Erreur lors de la vérification de l'OTP. Veuillez réessayer plus tard.",
+    "blc_pw_42": "OTP renvoyé.",
+    "blc_pw_43": "Succès",
+    "blc_pw_44": "Erreur",
+    "blc_pw_45": "Aucun fournisseur P2P disponible"
   }
 }

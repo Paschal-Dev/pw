@@ -306,15 +306,15 @@ const Otp: React.FC<OtpProps> = ({
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
-      setAlertMessage("Error verifying OTP. Please try again later.");
+      setAlertMessage(t("blc_pw_41"));
       setAlertSeverity("error");
       setOtpValues(["", "", "", "", "", ""]);
       // onOtpVerification(false);
     }
-  }, [dispatch, otpValues, payId]);
+  }, [dispatch, otpValues, payId, t]);
 
   const handleResendClick = async () => {
-    setAlertMessage("OTP Resent.");
+    setAlertMessage(t("blc_pw_42"));
     setAlertSeverity("resend");
     setCountdown(120); // Reset countdown
     setResendDisabled(true); // Disable resend button

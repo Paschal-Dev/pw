@@ -131,7 +131,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
         const respo = await APIService.p2pVendors(p2pPayload);
         // Check if error_code is 400
         if (respo && respo.data && Array.isArray(respo.data.p2p) && respo.data.p2p.length === 0) {
-          setAlertMessage('No P2P Vendor Available');
+          setAlertMessage(t("blc_pw_45"));
           setAlertSeverity('error');
           console.log('API RESPONSE FROM P2P VENDORS FETCH =>>> ', respo.data);
         } else if (respo.data.seller.seller_status === 0) {

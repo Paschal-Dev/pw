@@ -144,6 +144,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
   const [countdown, setCountdown] = useState(120);
   const { payId: payId } = useSelector((state: RootState) => state.pay);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { walletSendPaymentDetails } = useSelector(
     (state: RootState) => state.pay
   );
@@ -295,13 +296,13 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
     } catch (error) {
       console.error("Error verifying OTP:", error);
       // Handle error if API request fails
-      setAlertMessage("Error verifying OTP. Please try again later.");
+      setAlertMessage(t("blc_pw_41"));
       setAlertSeverity("error");
       setOtpValues(["", "", "", "", "", ""]);
       // onOtpVerification(false);
       setShowVideoThumb(false);
     }
-  }, [dispatch, getHash, otpValues, payId]);
+  }, [dispatch, getHash, otpValues, payId, t]);
 
 
   const handleResendClick = async () => {
@@ -357,7 +358,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
       handleButtonClick();
     }
   }, [handleButtonClick, isButtonDisabled]);
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   return (
     <>

@@ -137,6 +137,11 @@
     "blc_pw_37": "Kirim ulang OTP dalam",
     "blc_pw_38": "Kirim ulang",
     "blc_pw_39": "Sedang diproses",
-    "blc_pw_40": "Gagal"
+    "blc_pw_40": "Gagal",
+    "blc_pw_41": "Terjadi kesalahan saat memverifikasi OTP. Silakan coba lagi nanti.",
+    "blc_pw_42": "OTP Dikirim Ulang.",
+    "blc_pw_43": "Berhasil",
+    "blc_pw_44": "Terjadi Kesalahan",
+    "blc_pw_45": "Tidak Ada Vendor P2P yang Tersedia"
   }
 }
