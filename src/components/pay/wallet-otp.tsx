@@ -27,7 +27,7 @@ interface WalletOtpInputProps {
 
 const WalletOtpInput = React.forwardRef<HTMLInputElement, WalletOtpInputProps>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ({ value, onChange, index, focus, setValue }, _ref) => {
+  ({ value, onChange, index, focus,  }, _ref) => {
     const inputRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
       if (focus && inputRef.current) {
@@ -65,39 +65,34 @@ const WalletOtpInput = React.forwardRef<HTMLInputElement, WalletOtpInputProps>(
       }
     };
 
-    const handlePaste = (ev: {
-      target: any;
-      preventDefault: () => void;
-      clipboardData: any;
-    }) => {
-      if (ev.target.localName !== "input") return;
-
-      ev.preventDefault();
-
-      const paste = (ev.clipboardData || window.Clipboard).getData("text");
-      console.log("PASTE LOGGED ::: ", typeof paste);
-
-      const inputs = document.querySelectorAll<HTMLInputElement>(".otp-input");
-      if (paste.length !== inputs.length) return;
-
-      inputs.forEach((input, index) => {
-        input.focus();
-        input.value = paste[index];
-        console.log("INDEX ::: ", index);
-
-        if (index === 5) {
-          console.log("ENTERED LAST ELEM !!!");
-          console.log("To AT+RRAY ::: ", [...paste]);
-          setValue([...paste]);
-        }
-      });
-
-      if (index + paste.length <= 5) {
-        inputs[index + paste.length - 1].dispatchEvent(
-          new Event("input", { bubbles: true })
-        );
-      }
-    };
+     const handlePaste = async (ev: React.ClipboardEvent<HTMLInputElement>) => {
+          ev.preventDefault(); // Prevent default paste behavior
+        
+          try {
+            const paste = await navigator.clipboard.readText(); // Get clipboard text
+            console.log("PASTE LOGGED ::: ", paste);
+        
+            const inputs = document.querySelectorAll<HTMLInputElement>(".otp-input");
+        
+            if (paste.length > inputs.length) return; // Ensure paste length doesn't exceed inputs
+        
+            [...paste].forEach((char, idx) => {
+              if (inputs[idx]) {
+                inputs[idx].value = char;
+                onChange(idx, char);
+              }
+            });
+        
+            // Move focus to the last entered input
+            const lastInputIndex = Math.min(paste.length - 1, inputs.length - 1);
+            inputs[lastInputIndex]?.focus();
+        
+            // Trigger input event to update state properly
+            inputs[lastInputIndex]?.dispatchEvent(new Event("input", { bubbles: true }));
+          } catch (error) {
+            console.error("Error reading clipboard: ", error);
+          }
+        };
 
     return (
       <input
@@ -109,7 +104,7 @@ const WalletOtpInput = React.forwardRef<HTMLInputElement, WalletOtpInputProps>(
         value={value}
         onInput={handleInput}
         onKeyDown={handleKeyDown}
-        onPaste={handlePaste}
+        onPaste={(e) => handlePaste(e)}
         ref={inputRef}
         id={`otp-input-${index}`}
         className="otp-input"
