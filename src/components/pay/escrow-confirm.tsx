@@ -66,6 +66,14 @@ export default function EscrowConfirm(): React.JSX.Element {
       "PaymentWindow",
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
     );
+    
+    if (!paymentWindow || paymentWindow.closed || typeof paymentWindow.closed === "undefined") {
+      // Pop-up blocked, open in a new tab instead
+      window.location.href = p2pEscrowDetails?.payment_link;
+    } else {
+      console.log("Popup opened successfully");
+    }
+
     dispatch(setCurrentPage("p2p-payment"));
     const checkPaymentStatus = setInterval(() => {
 
