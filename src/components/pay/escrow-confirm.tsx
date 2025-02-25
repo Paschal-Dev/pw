@@ -72,9 +72,11 @@ export default function EscrowConfirm(): React.JSX.Element {
       popup.location.href = p2pEscrowDetails?.payment_link;
       popup.focus();
       console.log("Popup opened successfully");
+      console.log("PopUP Is Not Disabled");
     } else {
       // Pop-up blocked, open in a new tab
       window.location.href = p2pEscrowDetails?.payment_link;
+      console.log("PopUp Is Disabled");
     }
 
     dispatch(setCurrentPage("p2p-payment"));
