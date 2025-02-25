@@ -67,7 +67,7 @@ export default function EscrowConfirm(): React.JSX.Element {
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
     );
     
-    if (popup) {
+    if (popup && !popup.closed) {
       // Pop-up successfully created, now set the URL
       popup.location.href = p2pEscrowDetails?.payment_link;
       popup.focus();
