@@ -61,17 +61,20 @@ export default function EscrowConfirm(): React.JSX.Element {
     const left = (window.innerWidth - width) / 2;
     const top = (window.innerHeight - height) / 2;
 
-    const paymentWindow = window.open(
+    const popup = window.open(
       `${p2pEscrowDetails?.vendor?.payment_link}`,
       "PaymentWindow",
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
     );
     
-    if (!paymentWindow || paymentWindow.closed || typeof paymentWindow.closed === "undefined") {
-      // Pop-up blocked, open in a new tab instead
-      window.location.href = p2pEscrowDetails?.payment_link;
-    } else {
+    if (popup) {
+      // Pop-up successfully created, now set the URL
+      popup.location.href = p2pEscrowDetails?.payment_link;
+      popup.focus();
       console.log("Popup opened successfully");
+    } else {
+      // Pop-up blocked, open in a new tab
+      window.location.href = p2pEscrowDetails?.payment_link;
     }
 
     dispatch(setCurrentPage("p2p-payment"));
@@ -113,8 +116,8 @@ export default function EscrowConfirm(): React.JSX.Element {
             } else if (resp.data?.pay?.payment_status === 5) {
               console.log("Status Check", resp.data?.pay?.payment_status);
               console.log("Payment failed, rendering error page");
-              if (paymentWindow && !paymentWindow.closed) {
-                paymentWindow.close();
+              if (popup && !popup.closed) {
+                popup.close();
               }
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));
@@ -122,8 +125,8 @@ export default function EscrowConfirm(): React.JSX.Element {
             } else if (resp.data?.pay?.payment_status === 3) {
               console.log("Status Check", resp.data?.pay?.payment_status);
               console.log("Wrong Payment");
-              if (paymentWindow && !paymentWindow.closed) {
-                paymentWindow.close();
+              if (popup && !popup.closed) {
+                popup.close();
               }
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));
@@ -137,7 +140,7 @@ export default function EscrowConfirm(): React.JSX.Element {
         });
 
 
-      if (paymentWindow && paymentWindow.closed) {
+      if (popup && popup.closed) {
         console.log("Payment window closed by the user.");
         // dispatch(setCurrentPage("p2p-payment"));
       }
