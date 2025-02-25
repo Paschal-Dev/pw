@@ -15,6 +15,7 @@ interface PayI {
     isButtonBackdrop: boolean;
     isConfirmButtonBackdrop: boolean;
     shouldRedirectEscrow: boolean;
+    errorPage: boolean;
 }
 
 const initialState: PayI = {
@@ -31,6 +32,7 @@ const initialState: PayI = {
     isButtonBackdrop: false,
     isConfirmButtonBackdrop: false,
     shouldRedirectEscrow: false,
+    errorPage: false,
 }
 
 const paySlice = createSlice({
@@ -76,10 +78,13 @@ const paySlice = createSlice({
         setShouldRedirectEscrow: (state, action: PayloadAction<boolean>) => {
             state.shouldRedirectEscrow = action.payload;
         },
+        setErrorPage: (state, action: PayloadAction<boolean>) => {
+            state.errorPage = action.payload;
+        },
 
     }
 })
 
-export const { setPayId, setPaymentDetails, setWalletPaymentDetails, setOTPVerified, setWalletSendPaymentDetails, setP2PVendorsDetails, setP2PEscrowDetails, setButtonClicked, setButtonBackdrop, setConfirmButtonBackdrop, setShouldRedirectEscrow, setCurrentPage, setApiResponse } = paySlice.actions
+export const { setPayId, setPaymentDetails, setWalletPaymentDetails, setOTPVerified, setWalletSendPaymentDetails, setP2PVendorsDetails, setP2PEscrowDetails, setButtonClicked, setButtonBackdrop, setConfirmButtonBackdrop, setShouldRedirectEscrow, setCurrentPage, setApiResponse, setErrorPage } = paySlice.actions
 
 export default paySlice.reducer

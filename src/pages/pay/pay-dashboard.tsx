@@ -22,7 +22,7 @@ import APIService from "../../services/api-service";
 import { setApiResponse, setButtonClicked, setCurrentPage, setOTPVerified, setP2PEscrowDetails, setPaymentDetails, setWalletPaymentDetails } from "../../redux/reducers/pay";
 
 export default function PayDashboard(): React.JSX.Element {
-  const { paymentDetails, payId } = useSelector((state: RootState) => state.pay);
+  const { paymentDetails, payId} = useSelector((state: RootState) => state.pay);
   const { isButtonBackdrop } = useSelector((state: RootState) => state.button);
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [isloading, setIsLoading] = React.useState(true);
@@ -82,6 +82,7 @@ export default function PayDashboard(): React.JSX.Element {
         }
       } catch (error) {
         console.error("Error during Send OTP:", error);
+        setErrorPage(true);
       }
       // finally {
       //   setHasCheckedEscrow(true);

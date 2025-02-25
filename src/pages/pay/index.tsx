@@ -14,6 +14,7 @@ import WalletPayment from "./wallet-payment";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setPayId,
+  setErrorPage,
   // setP2PVendorsDetails,
 } from "../../redux/reducers/pay";
 import ErrorPage from "./error_page";
@@ -26,10 +27,10 @@ import P2PPayment from "./p2p-payment";
 
 export default function Pay(): React.JSX.Element {
   const [errorResponse] = useState(null);
-  const [errorPage, setErrorPage] = useState(false);
+  // const [errorPage, setErrorPage] = useState(false);
   const [isRedirecting] = useState(false);
   // const [hasCheckedEscrow, setHasCheckedEscrow] = useState(false); // Ensure only one check
-  const { paymentDetails, currentPage } = useSelector(
+  const { paymentDetails, currentPage, errorPage } = useSelector(
     (state: RootState) => state.pay
   );
 
