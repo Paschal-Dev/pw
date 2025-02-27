@@ -60,23 +60,28 @@ export default function EscrowConfirm(): React.JSX.Element {
     const height = window.innerHeight * 0.6;
     const left = (window.innerWidth - width) / 2;
     const top = (window.innerHeight - height) / 2;
+    const paymentLink = p2pEscrowDetails?.vendor?.payment_link;
 
+    if (!paymentLink) {
+      console.log("No payment link provided");
+      return;
+    }
+  
+    // Attempt to open the popup
     const popup = window.open(
-      `${p2pEscrowDetails?.vendor?.payment_link}`,
+      paymentLink,
       "PaymentWindow",
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
     );
-    
-    if (popup && !popup.closed) {
-      // Pop-up successfully created, now set the URL
-      popup.location.href = p2pEscrowDetails?.payment_link;
+  
+    if (popup) {
+      // Popup was allowed
       popup.focus();
       console.log("Popup opened successfully");
-      console.log("PopUP Is Not Disabled");
     } else {
-      // Pop-up blocked, open in a new tab
-      window.location.href = p2pEscrowDetails?.payment_link;
-      console.log("PopUp Is Disabled");
+      // Popup was blocked, open in a new tab
+      window.open(paymentLink, "_blank");
+      console.log("Popup was blocked, opening in a new tab");
     }
 
     dispatch(setCurrentPage("p2p-payment"));
