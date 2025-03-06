@@ -38,98 +38,116 @@ export default function NotYetPaidLoader(): React.JSX.Element {
     return () => clearTimeout(preloaderTimeout);
   }, []);
 
-  const handlePaymentClick = () => {
-    const width = window.innerWidth * 0.5;
-    const height = window.innerHeight * 0.6;
-    const left = (window.innerWidth - width) / 2;
-    const top = (window.innerHeight - height) / 2;
-
-    const paymentWindow = window.open(
-      `${p2pEscrowDetails?.vendor?.payment_link}`,
-      "PaymentWindow",
-      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-    );
-    const checkPaymentStatus = setInterval(() => {
-
-      dispatch(setCurrentPage("p2p-payment"));
-
-
-      const body = {
-        call_type: "pay",
-        ip: "192.168.0.0",
-        lang: "en",
-        pay_id: payId,
-      };
-      APIService.sendOTP(body)
-        .then((resp) => {
-          if ([0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)) {
-            console.log("Status Check", resp.data?.pay?.payment_status);
-            dispatch(setP2PEscrowDetails(resp.data));
-            if (resp.data?.pay?.payment_status === 1) {
-              // console.log("Status Check", resp.data?.pay?.payment_status);
-              // console.log("Payment Successful, rendering success page");
-              if (paymentWindow && !paymentWindow.closed) {
-                paymentWindow.close();
-              }
-
-              clearInterval(checkPaymentStatus);
-              dispatch(setP2PEscrowDetails(resp.data));
-
-              const url = `https://pay.pwat.net/?v=${resp.data.data.unique_id}`;
-
-              const RedirectUrl = resp.data.data.redirect_url;
-
-              if (resp.data?.data.redirect_url === url) {
-                dispatch(setCurrentPage("p2p-payment"));
-              } else {
-                console.log("Payment Successful, rendering success page", RedirectUrl);
-                window.location.assign(RedirectUrl);
-              }
-            } else if (resp.data?.pay?.payment_status === 5) {
-              console.log("Status Check", resp.data?.pay?.payment_status);
-              console.log("Payment failed, rendering error page");
-              if (paymentWindow && !paymentWindow.closed) {
-                paymentWindow.close();
-              }
-              clearInterval(checkPaymentStatus);
-              dispatch(setP2PEscrowDetails(resp.data));
-              dispatch(setCurrentPage("p2p-payment"));
-            } else if (resp.data?.pay?.payment_status === 3) {
-              console.log("Status Check", resp.data?.pay?.payment_status);
-              console.log("Wrong Payment");
-              if (paymentWindow && !paymentWindow.closed) {
-                paymentWindow.close();
-              }
-              clearInterval(checkPaymentStatus);
-              dispatch(setP2PEscrowDetails(resp.data));
-              dispatch(setCurrentPage("p2p-payment"));
-            }
-
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-
-      if (paymentWindow && paymentWindow.closed) {
-        console.log("Payment window closed by the user.");
-        dispatch(setCurrentPage("p2p-payment"));
+   const handlePaymentClick = () => {
+      const width = window.innerWidth * 0.5;
+      const height = window.innerHeight * 0.6;
+      const left = (window.innerWidth - width) / 2;
+      const top = (window.innerHeight - height) / 2;
+      const paymentLink = p2pEscrowDetails?.vendor?.payment_link;
+  
+      if (!paymentLink) {
+        console.log("No payment link provided");
+        return;
       }
-      // if (paymentWindow.close()) {
-
-      //   clearInterval(checkWindowClosed);
-
-      //   setTimeout(() => {
-      //     dispatch(setCurrentPage("p2p-payment"));
-      //   }, 2000);
-
-      //   console.log("Payment Window Closed =>>> ");
-      //   dispatch(setShouldRedirectEscrow(true));
-
-      // }
-    }, 5000);
-  };
+    
+      // Attempt to open the popup
+      const popup = window.open(
+        paymentLink,
+        "PaymentWindow",
+        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+      );
+    
+      if (popup) {
+        // Popup was allowed
+        popup.focus();
+        console.log("Popup opened successfully");
+      } else {
+        // Popup was blocked, open in a new tab
+        window.open(paymentLink, "_blank");
+        console.log("Popup was blocked, opening in a new tab");
+      }
+  
+      dispatch(setCurrentPage("p2p-payment"));
+      const checkPaymentStatus = setInterval(() => {
+  
+  
+  
+        const body = {
+          call_type: "pay",
+          ip: "192.168.0.0",
+          lang: "en",
+          pay_id: payId,
+        };
+        APIService.sendOTP(body)
+          .then((resp) => {
+            if ([0, 1, 2, 3, 5].includes(resp.data?.pay?.payment_status)) {
+              console.log("Status Check", resp.data?.pay?.payment_status);
+              dispatch(setP2PEscrowDetails(resp.data));
+              if (resp.data?.pay?.payment_status === 1) {
+                // console.log("Status Check", resp.data?.pay?.payment_status);
+                // console.log("Payment Successful, rendering success page");
+                // if (paymentWindow && !paymentWindow.closed) {
+                //   paymentWindow.close();
+                // }
+  
+                clearInterval(checkPaymentStatus);
+                dispatch(setP2PEscrowDetails(resp.data));
+  
+                const url = `https://pay.peerwallet.com/?v=${resp.data.data.unique_id}`;
+  
+                const RedirectUrl = resp.data.data.redirect_url;
+  
+                if (resp.data?.data.redirect_url === url) {
+                  dispatch(setCurrentPage("p2p-payment"));
+                } else {
+                  console.log("Payment Successful, rendering success page", RedirectUrl);
+                  window.location.assign(RedirectUrl);
+                }
+              } else if (resp.data?.pay?.payment_status === 5) {
+                console.log("Status Check", resp.data?.pay?.payment_status);
+                console.log("Payment failed, rendering error page");
+                if (popup && !popup.closed) {
+                  popup.close();
+                }
+                clearInterval(checkPaymentStatus);
+                dispatch(setP2PEscrowDetails(resp.data));
+                dispatch(setCurrentPage("p2p-payment"));
+              } else if (resp.data?.pay?.payment_status === 3) {
+                console.log("Status Check", resp.data?.pay?.payment_status);
+                console.log("Wrong Payment");
+                if (popup && !popup.closed) {
+                  popup.close();
+                }
+                clearInterval(checkPaymentStatus);
+                dispatch(setP2PEscrowDetails(resp.data));
+                dispatch(setCurrentPage("p2p-payment"));
+              }
+  
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+  
+  
+        if (popup && popup.closed) {
+          console.log("Payment window closed by the user.");
+          // dispatch(setCurrentPage("p2p-payment"));
+        }
+        // if (paymentWindow.close()) {
+  
+        //   clearInterval(checkWindowClosed);
+  
+        //   setTimeout(() => {
+        //     dispatch(setCurrentPage("p2p-payment"));
+        //   }, 2000);
+  
+        //   console.log("Payment Window Closed =>>> ");
+        //   dispatch(setShouldRedirectEscrow(true));
+  
+        // }
+      }, 5000);
+    };
 
   return (
     <Box
