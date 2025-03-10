@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Typography, Backdrop, useMediaQuery } from "@mui/material";
+import { Box, Typography, Backdrop, useMediaQuery, Alert, AlertTitle } from "@mui/material";
 import { theme } from "../../assets/themes/theme";
 import APIService from "../../services/api-service";
 import { Vendor } from "../../data/pay/vendors-data";
@@ -8,6 +8,7 @@ import { RootState } from "../../redux/store";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import { setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
 import loader from "../../assets/images/loader.gif";
+import { t } from "i18next";
 
 // import { PageProps } from "../../utils/myUtils";
 
@@ -19,6 +20,9 @@ const Vendors: React.FC<Props> = ({ item, }) => {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertSeverity, setAlertSeverity] = useState<"error" | null>(null);
+  const [isSuccessAlertShown] = useState(false);
   const dispatch = useDispatch();
   const { payId: payId } = useSelector((state: RootState) => state.pay);
   const [isClicked, setIsClicked] = useState(false);
@@ -73,12 +77,26 @@ const Vendors: React.FC<Props> = ({ item, }) => {
       // localStorage.setItem('checkout_link', checkoutLink);
       // localStorage.setItem("redirectHandled", "true");
 
-      
+
       // window.location.href = checkoutLink; // Redirect after 5 seconds
       // }, 5000);
-      dispatch(setCurrentPage("escrow-page"));
+      const errorMessage = respo.data?.message?.toLowerCase()?.includes("Daily");
+      const limitMessage = respo.data?.message;
+      if (errorMessage) {
+        setAlertMessage(limitMessage);
+        setAlertSeverity("error");
+        // setIsButtonClicked(false);
 
-      console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
+        console.log(
+          "API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ",
+          limitMessage
+        );
+      } else {
+
+        dispatch(setCurrentPage("escrow-page"));
+        console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
+      }
+
 
     } catch (error) {
       console.error("Error Getting Escrow:", error);
@@ -180,6 +198,18 @@ const Vendors: React.FC<Props> = ({ item, }) => {
         <Backdrop open={isClicked}>
           <img src={loader} alt="Loader" />
         </Backdrop>
+      )}
+      {alertSeverity === "error" && !isSuccessAlertShown && (
+        <Alert
+          severity="error"
+          sx={{
+            position: "absolute",
+            width: deviceType !== "mobile" ? "60%" : "20%"
+          }}
+        >
+          <AlertTitle>{t("blc_pw_44")}</AlertTitle>
+          {alertMessage}
+        </Alert>
       )}
     </>
   );
