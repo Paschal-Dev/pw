@@ -66,6 +66,7 @@ export default function PayDashboard(): React.JSX.Element {
       try {
         const resp = await APIService.sendOTP(sendOtpPayload);
         console.log("API Response from PayDashboard OTP:", resp.data);
+        console.log("Payment For This ID Failed >>>>>", resp.data.payment_status);
 
 
         if (resp.data?.escrow_status === 1) {
@@ -124,10 +125,14 @@ export default function PayDashboard(): React.JSX.Element {
             if ([0, 1, 2, 3, 5].includes(data?.wallet_pay?.payment_status)) {
               dispatch(setWalletPaymentDetails(data));
               dispatch(setCurrentPage("wallet-payment"));
-            } else if (data?.payment_status === 5) {
-              dispatch(setP2PEscrowDetails(data));
-              dispatch(setCurrentPage("p2p-payment"));
-            } else if (data?.payment_status === 1) {
+            } 
+            // else if (data?.payment_status === 5) {
+            //   dispatch(setP2PEscrowDetails(data));
+            //   dispatch(setCurrentPage("p2p-payment"));
+
+            //   console.log("Payment For This ID Failed >>>>>", data?.payment_status);
+            // } 
+            else if (data?.payment_status === 1) {
 
               const url = `https://pay.peerwallet.com/?v=${data.data.unique_id}`;
 
