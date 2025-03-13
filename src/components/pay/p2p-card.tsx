@@ -297,7 +297,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
               severity="error"
               sx={{
                 position: "absolute",
-                width: deviceType !== "mobile" ? "60%" : "20%"
+                width: deviceType !== "mobile" ? "60%" : "80%"
               }}
             >
               <AlertTitle>Error</AlertTitle>

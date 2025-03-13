@@ -22,7 +22,7 @@ import APIService from "../../services/api-service";
 import { setApiResponse, setButtonClicked, setCurrentPage, setOTPVerified, setP2PEscrowDetails, setPaymentDetails, setWalletPaymentDetails } from "../../redux/reducers/pay";
 
 export default function PayDashboard(): React.JSX.Element {
-  const { paymentDetails, payId} = useSelector((state: RootState) => state.pay);
+  const { paymentDetails, payId } = useSelector((state: RootState) => state.pay);
   const { isButtonBackdrop } = useSelector((state: RootState) => state.button);
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [isloading, setIsLoading] = React.useState(true);
@@ -92,7 +92,7 @@ export default function PayDashboard(): React.JSX.Element {
     // if (!hasCheckedEscrow) {
     Pay();
     // }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, payId]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -124,6 +124,9 @@ export default function PayDashboard(): React.JSX.Element {
             if ([0, 1, 2, 3, 5].includes(data?.wallet_pay?.payment_status)) {
               dispatch(setWalletPaymentDetails(data));
               dispatch(setCurrentPage("wallet-payment"));
+            } else if (data?.pay?.payment_status === 5) {
+              dispatch(setP2PEscrowDetails(data));
+              dispatch(setCurrentPage("p2p-payment"));
             } else if (data?.pay?.payment_status === 1) {
 
               const url = `https://pay.peerwallet.com/?v=${data.data.unique_id}`;

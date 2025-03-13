@@ -15,21 +15,19 @@ export default function P2pPaymentFailedDetails(): React.JSX.Element {
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const shouldDisplayBox4 = p2pEscrowDetails?.pay?.payment_status === 5;
   // Function to format Unix timestamp to a human-readable date string with time
+  const date = p2pEscrowDetails?.pay?.date_processed;
+  // const dispatch = useDispatch();
+
   const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp * 1000); // Convert timestamp to milliseconds
-    const options = {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-    
-    console.log("Options:", options);
-    
-    console.log("Current Date:", date);
-  
+    const formattedDate = new Date(timestamp * 1000).toLocaleDateString(
+      "en-US",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }
+    );
+    return formattedDate;
   };
   React.useEffect(() => {
     if (mobile) {
@@ -277,8 +275,7 @@ export default function P2pPaymentFailedDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {p2pEscrowDetails?.pay?.date_processed &&
-              formatDate(p2pEscrowDetails.pay.date_processed)}
+            {formatDate(date)}
           </Typography>
         </Box>
         <Box
