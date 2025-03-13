@@ -124,10 +124,10 @@ export default function PayDashboard(): React.JSX.Element {
             if ([0, 1, 2, 3, 5].includes(data?.wallet_pay?.payment_status)) {
               dispatch(setWalletPaymentDetails(data));
               dispatch(setCurrentPage("wallet-payment"));
-            } else if (data?.pay?.payment_status === 5) {
+            } else if (data?.payment_status === 5) {
               dispatch(setP2PEscrowDetails(data));
               dispatch(setCurrentPage("p2p-payment"));
-            } else if (data?.pay?.payment_status === 1) {
+            } else if (data?.payment_status === 1) {
 
               const url = `https://pay.peerwallet.com/?v=${data.data.unique_id}`;
 
