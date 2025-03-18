@@ -266,7 +266,7 @@ export default function WalletCard(): React.JSX.Element {
               severity="error"
               sx={{
                 position: "absolute",
-                width: deviceType !== "mobile" ? "60%" : "80%"
+                width: deviceType !== "mobile" ? "60%" : "20%"
               }}
             >
               <AlertTitle>{t("blc_pw_44")}</AlertTitle>

@@ -14,10 +14,8 @@ export default function P2pPaymentFailedDetails(): React.JSX.Element {
   const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const shouldDisplayBox4 = p2pEscrowDetails?.pay?.payment_status === 5;
-  // Function to format Unix timestamp to a human-readable date string with time
   const date = p2pEscrowDetails?.pay?.date_processed;
-  // const dispatch = useDispatch();
-
+  // Function to format Unix timestamp to a human-readable date string with time
   const formatDate = (timestamp: number) => {
     const formattedDate = new Date(timestamp * 1000).toLocaleDateString(
       "en-US",
@@ -185,7 +183,7 @@ export default function P2pPaymentFailedDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {p2pEscrowDetails?.others?.pwat_value}
+            {p2pEscrowDetails?.data?.pwat_value}
           </Typography>
         </Box>
         <Box
@@ -215,7 +213,7 @@ export default function P2pPaymentFailedDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {p2pEscrowDetails?.others?.pwat_rate}
+            {p2pEscrowDetails?.data?.pwat_exchange_rate}
           </Typography>
         </Box>
         <Box

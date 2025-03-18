@@ -29,7 +29,7 @@ export default function PaymentFailed(): React.JSX.Element {
       flexDirection={"column"}
       position={"relative"}
       width={"100%"}
-      height={"50%"}
+      height={"auto"}
     >
       <Box
         top={0}
