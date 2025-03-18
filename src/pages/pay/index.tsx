@@ -17,7 +17,7 @@ import {
   setErrorPage,
   // setP2PVendorsDetails,
 } from "../../redux/reducers/pay";
-import ErrorPage from "./error_page";
+import ErrorPage, { ErrorProps } from "./error_page";
 import EscrowPage from "./escrow-page";
 import { RootState } from "../../redux/store";
 import { Helmet } from "react-helmet";
@@ -25,8 +25,8 @@ import { Helmet } from "react-helmet";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import P2PPayment from "./p2p-payment";
 
-export default function Pay(): React.JSX.Element {
-  const [errorResponse] = useState(null);
+export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
+
   // const [errorPage, setErrorPage] = useState(false);
   const [isRedirecting] = useState(false);
   // const [hasCheckedEscrow, setHasCheckedEscrow] = useState(false); // Ensure only one check
@@ -61,15 +61,16 @@ export default function Pay(): React.JSX.Element {
   useEffect(() => {
     const initializePayment = async () => {
       const url = new URL(window.location.href);
-
       // Extract "v" parameter from URL
       const payId = url.searchParams.get("v") || "";
-      dispatch(setPayId(payId));
+
 
       if (!payId) {
         console.log("Invalid or missing Pay ID");
         setErrorPage(true);
         return;
+      } else {
+        dispatch(setPayId(payId));
       }
 
       // const sendOtpPayload = {

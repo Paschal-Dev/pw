@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import loader from "../../assets/images/loader.gif";
 import APIService from "../../services/api-service";
 import { setApiResponse, setButtonClicked, setCurrentPage, setOTPVerified, setP2PEscrowDetails, setPaymentDetails, setWalletPaymentDetails } from "../../redux/reducers/pay";
+import ErrorPage from "./error_page";
 
 export default function PayDashboard(): React.JSX.Element {
   const { paymentDetails, payId } = useSelector((state: RootState) => state.pay);
@@ -28,8 +29,8 @@ export default function PayDashboard(): React.JSX.Element {
   const [isloading, setIsLoading] = React.useState(true);
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const [, setErrorResponse] = useState(null);
-  const [, setErrorPage] = useState(false);
+  const [errorResponse, setErrorResponse] = useState(null);
+  const [errorPage, setErrorPage] = useState(false);
 
 
   const { t } = useTranslation();
@@ -54,6 +55,7 @@ export default function PayDashboard(): React.JSX.Element {
   }, [mobile, tablet]);
 
   useEffect(() => {
+    if(!payId) return;
     const Pay = async () => {
 
       const sendOtpPayload = {
@@ -90,6 +92,7 @@ export default function PayDashboard(): React.JSX.Element {
     };
 
     // if (!hasCheckedEscrow) {
+    
     Pay();
     // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,6 +106,7 @@ export default function PayDashboard(): React.JSX.Element {
     }
 
     if (data?.error_code === 400) {
+      setIsLoading(false);
       setErrorPage(true);
       setErrorResponse(data);
     } else {
@@ -160,7 +164,7 @@ export default function PayDashboard(): React.JSX.Element {
           {/* <CircularProgress size={80} color="primary" /> */}
           <img src={loader} alt="Loader" />
         </Backdrop>
-      ) : (
+      ) : !errorPage ? (
         <Box flex={1}>
           <Grid container spacing={2} height={"100%"}>
             <Grid item xs={12} sm={12} md={4} lg={4} display={"flex"}>
@@ -399,7 +403,7 @@ export default function PayDashboard(): React.JSX.Element {
             </Grid>
           </Grid>
         </Box>
-      )}
+      ) : <ErrorPage errorResponse={errorResponse} /> }
       {isButtonBackdrop && (
         <Backdrop open={isButtonBackdrop} sx={{ zIndex: 1000 }}>
           <img src={loader} alt="Loader" />

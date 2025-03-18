@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 
 
-interface ErrorProps {
+export interface ErrorProps {
   errorResponse: any;
 }
 
@@ -54,13 +54,21 @@ const ErrorPage: React.FC<ErrorProps> = ({ errorResponse }) => {
               </Box>
             </Box>
           </Box>
-          <Typography
+          {/* <Typography
             variant="h4"
             textTransform={"uppercase"}
             color={"red"}
             fontWeight={600}
           >
             {t("blc_pw_1")}
+          </Typography> */}
+          <Typography
+            variant="h4"
+            textTransform={"uppercase"}
+            color={"red"}
+            fontWeight={600}
+          >
+            {errorResponse?.title}
           </Typography>
           <Typography variant="h6" fontWeight={500}>
             {errorResponse?.message}
