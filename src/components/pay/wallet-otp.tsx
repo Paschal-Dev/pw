@@ -131,7 +131,7 @@ interface OtpProps extends MediaProps {
   // apiResponse: any;
 }
 
-const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
+const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
   const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<
@@ -191,46 +191,46 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
   const handleChange = (index: number, value: string) => {
     const newOtpValues = [...otpValues];
     newOtpValues[index] = value;
-    
+
     setOtpValues(newOtpValues);
   };
 
-  const getHash = React.useCallback(() => {
-    const interval = setInterval(async function () {
-      console.log(interval);
-      
-      
-      try {
-        // const formData = new FormData();
-        // formData.append("call_type", "get_key");
-        // const response1 = await APIService.getToken(formData);
-  
-        // const payload = {
-        //   call_type: "encode_key",
-        //   token: response1.data?.data?.token,
-        //   key: response1.data?.data?.key,
-        //   timestamp: Math.floor(Date.now() / 1000),
-        // };
-        // const response3 = await APIService.encodeKey(payload);
-  
-        // dispatch(setHeaderKey(response3.data?.data?.header_key));
-        // localStorage.setItem("headerKey", response3.data?.data?.header_key);
-        // const enteredPin = otpValues.join("");
-        const formData2 = new FormData();
-        formData2.append("call_type", "wallet_pay_validate");
-        formData2.append("ip", "192.168.0.0");
-        formData2.append("lang", "en");
-        formData2.append("pay_id", payId);
-        formData2.append("otp", '123456');
-        console.log('GET PAYLOAD', formData2);
-        const res = await APIService.walletPayValidate(formData2);
-        console.log("API RESPONSE TO GET HASH=>>> ", res.data);
-      } catch (error) {
-        console.error("ERROR GETTING HASH:", error);
-      }
-      }, 30000);
-    
-  },[payId]);
+  // const getHash = React.useCallback(() => {
+  //   const interval = setInterval(async function () {
+  //     console.log(interval);
+
+
+  //     try {
+  //       // const formData = new FormData();
+  //       // formData.append("call_type", "get_key");
+  //       // const response1 = await APIService.getToken(formData);
+
+  //       // const payload = {
+  //       //   call_type: "encode_key",
+  //       //   token: response1.data?.data?.token,
+  //       //   key: response1.data?.data?.key,
+  //       //   timestamp: Math.floor(Date.now() / 1000),
+  //       // };
+  //       // const response3 = await APIService.encodeKey(payload);
+
+  //       // dispatch(setHeaderKey(response3.data?.data?.header_key));
+  //       // localStorage.setItem("headerKey", response3.data?.data?.header_key);
+  //       // const enteredPin = otpValues.join("");
+  //       const formData2 = new FormData();
+  //       formData2.append("call_type", "wallet_pay_validate");
+  //       formData2.append("ip", "192.168.0.0");
+  //       formData2.append("lang", "en");
+  //       formData2.append("pay_id", payId);
+  //       formData2.append("otp", '123456');
+  //       console.log('GET PAYLOAD', formData2);
+  //       const res = await APIService.walletPayValidate(formData2);
+  //       console.log("API RESPONSE TO GET HASH=>>> ", res.data);
+  //     } catch (error) {
+  //       console.error("ERROR GETTING HASH:", error);
+  //     }
+  //     }, 30000);
+
+  // },[payId]);
 
   const handleButtonClick = React.useCallback(async () => {
     // e.preventDefault();
@@ -274,7 +274,8 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
       // formData2.append("otp", enteredPin);
       const res = await APIService.walletPayValidate(verifyWalletOtpPayload);
       console.log("API RESPONSE FROM VERIFY WALLET OTP =>>> ", res.data);
-      if (res.data && res.data.status === "success") {
+      if (res.data?.pay?.payment_status === 1) {
+
         // OTP verification successful
         setAlertMessage(res.data?.message);
         setAlertSeverity("success");
@@ -283,8 +284,42 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
         setShowVideoThumb(true); // Show video thumbnail
         dispatch(setWalletPaymentDetails(res.data));
 
+        const url = `https://pay.peerwallet.com/?v=${res.data.data.unique_id}`;
+
+        const RedirectUrl = res.data.data.redirect_url;
+
+        if (RedirectUrl === url) {
+          dispatch(setCurrentPage("wallet-payment"));
+        } else {
+          console.log("Payment Successful, rendering success page", RedirectUrl);
+          window.location.assign(RedirectUrl);
+        }
+      } else if (res.data?.pay?.payment_status === 5) {
+        console.log("Status Check", res.data?.pay?.payment_status);
+        console.log("Payment failed, rendering error page");
+        // OTP verification successful
+        setAlertMessage(res.data?.message);
+        setAlertSeverity("error");
+        setOtpValues(["", "", "", "", "", ""]); // Clear OTP input values
+        // onOtpVerification(true); // Execute callback for OTP verification
+        setShowVideoThumb(true); // Show video thumbnail
+        dispatch(setWalletPaymentDetails(res.data));
         dispatch(setCurrentPage("wallet-payment"));
-        getHash();
+
+      } else if (res.data?.pay?.payment_status === 3) {
+        console.log("Status Check", res.data?.pay?.payment_status);
+        console.log("Wrong Payment");
+        console.log("Status Check", res.data?.pay?.payment_status);
+        console.log("Payment failed, rendering error page");
+
+        // OTP verification successful
+        setAlertMessage(res.data?.message);
+        setAlertSeverity("error");
+        setOtpValues(["", "", "", "", "", ""]); // Clear OTP input values
+        // onOtpVerification(true); // Execute callback for OTP verification
+        setShowVideoThumb(true); // Show video thumbnail
+        dispatch(setWalletPaymentDetails(res.data));
+        dispatch(setCurrentPage("wallet-payment"));
       } else {
         // Incorrect OTP or other error
         setAlertMessage(res.data?.message);
@@ -302,13 +337,13 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
       // onOtpVerification(false);
       setShowVideoThumb(false);
     }
-  }, [dispatch, getHash, otpValues, payId, t]);
+  }, [dispatch, otpValues, payId, t]);
 
 
   const handleResendClick = async () => {
     setCountdown(120); // Reset countdown
     setResendDisabled(true); // Disable resend button
-    try { 
+    try {
       // const formData = new FormData();
       // formData.append("call_type", "get_key");
       // const response1 = await APIService.getToken(formData);
@@ -478,7 +513,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType}) => {
       )}
 
       {showVideoThumb && (
-        <Box>{deviceType !== "mobile" && <VideoThumb/>}</Box>
+        <Box>{deviceType !== "mobile" && <VideoThumb />}</Box>
       )}
     </>
   );

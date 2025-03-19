@@ -1,10 +1,9 @@
-import { Box, Typography, Link, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
 import { theme } from "../../assets/themes/theme";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../redux/store";
 import { useSelector } from "react-redux";
-import processingHash from '../../assets/images/processing-hash.gif';
 export default function WalletPaymentDetails(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -25,11 +24,11 @@ export default function WalletPaymentDetails(): React.JSX.Element {
       hour: "numeric",
       minute: "numeric",
     };
-    
+
     console.log("Options:", options);
-    
+
     console.log("Current Date:", date);
-  
+
   };
   React.useEffect(() => {
     if (mobile) {
@@ -126,7 +125,7 @@ export default function WalletPaymentDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {walletPaymentDetails?.pay?.payment_method}
+            {walletPaymentDetails?.pay?.mode}
           </Typography>
         </Box>
         <Box
@@ -238,14 +237,17 @@ export default function WalletPaymentDetails(): React.JSX.Element {
           >
             {t("transaction-hash")}
           </Typography>
-          {walletPaymentDetails?.others?.hash && (
-          <Link href={walletPaymentDetails?.others?.hash} style={{ color: "#12B76A" }}>
-            view hash
-          </Link>
-        )}
-          {!walletPaymentDetails?.others?.hash && (
-          <img src={processingHash} width={150}/>
-          )}
+          <Typography
+            color="#000"
+            variant="caption"
+            fontSize={deviceType === "mobile" ? 12 : 14}
+            fontWeight={400}
+            borderRadius={1}
+            textAlign="center"
+            justifyContent={"end"}
+          >
+            {walletPaymentDetails?.others?.pwat_rate}
+          </Typography>
         </Box>
         <Box
           display="flex"
