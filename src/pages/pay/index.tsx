@@ -55,13 +55,11 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
   // Get the decoded currency symbol
   const currencySign = useMemo(() => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""), [paymentDetails]);
 
-  // Convert symbol to currency code if available
   const displayCurrency = currencyMap[currencySign] || currencySign;
 
   useEffect(() => {
     const initializePayment = async () => {
       const url = new URL(window.location.href);
-      // Extract "v" parameter from URL
       const payId = url.searchParams.get("v") || "";
 
 
