@@ -16,7 +16,7 @@ function App(): React.JSX.Element {
     i18n.changeLanguage(savedLang ?? "en")
   }, [i18n])
 
-  return <Pay />;
+  return <Pay errorResponse={undefined} />;
 }
 
 export default App;
