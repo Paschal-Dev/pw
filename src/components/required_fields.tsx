@@ -8,6 +8,7 @@ import { RootState } from '../redux/store';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css'; // Import default styles
 import { setCurrentPage, setP2PEscrowDetails } from '../redux/reducers/pay';
+import { Vendor } from '../data/pay/vendors-data';
 
 // Custom CSS to style PhoneInput like MUI TextField
 const phoneInputStyles = `
@@ -69,8 +70,13 @@ const styleSheet = document.createElement('style');
 styleSheet.innerText = phoneInputStyles;
 document.head.appendChild(styleSheet);
 
-export default function RequiredFields(): React.JSX.Element {
-    const { payId, clickedId } = useSelector((state: RootState) => state.pay);
+interface Props {
+  item: Vendor;
+}
+
+const RequiredFields: React.FC<Props> = ({ item, }) => {
+// export default function RequiredFields(): React.JSX.Element {
+    const { payId } = useSelector((state: RootState) => state.pay);
     const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
     const dispatch = useDispatch();
     const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
@@ -80,9 +86,9 @@ export default function RequiredFields(): React.JSX.Element {
         setFormValues((prev) => ({ ...prev, [fieldName]: value }));
     };
 
+    console.log('Clicked ID >>>', item.id);
     // Handle form submission
     const handleConfirm = async () => {
-        // console.log('Clicked ID >>>', clickedId);
         try {
             const fields = p2pEscrowDetails?.fields || [];
             const userDetails: { [key: string]: string } = {};
@@ -107,7 +113,7 @@ export default function RequiredFields(): React.JSX.Element {
                     call_type: "p2p_vendors_escrow",
                     ip: "192.168.0.0",
                     pay_id: payId,
-                    vendor_id: clickedId,
+                    vendor_id: item.id,
                 };
                 const resp = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
                 console.log("API Response From Vendor's Escrow", resp.data);
@@ -193,4 +199,4 @@ export default function RequiredFields(): React.JSX.Element {
     );
 }
 
-
+export default RequiredFields;

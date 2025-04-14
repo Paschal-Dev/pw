@@ -6,7 +6,7 @@ import { Vendor } from "../../data/pay/vendors-data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 // import { setHeaderKey } from "../../redux/reducers/auth";
-import {setCurrentPage, setP2PEscrowDetails, setClickedId } from "../../redux/reducers/pay";
+import {setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
 import loader from "../../assets/images/loader.gif";
 import { t } from "i18next";
 import close from "../../assets/images/close-icon.svg";
@@ -46,9 +46,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
   }, [mobile, tablet]);
 
   const handleOpen = async () => {
-    if (isClicked){
-      dispatch(setClickedId(item.id));
-    }
+    if (isClicked)
     setIsClicked(true);
     try {
       // const formData = new FormData();
@@ -240,7 +238,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
             </Box>
           </Box>
           <Typography variant="h5" fontSize={'20px'} fontWeight={600}>Input The Following Details :</Typography>  
-          <RequiredFields/>
+          <RequiredFields item={item}/>
         </Box>
       </Modal>
       {isClicked && (
