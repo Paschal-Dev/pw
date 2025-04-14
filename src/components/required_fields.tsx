@@ -14,47 +14,52 @@ export default function RequiredFields(): React.JSX.Element {
     const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
     const dispatch = useDispatch();
 
-    // State to store form values dynamically
     const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
     const [countryCode, setCountryCode] = useState<string>('+1');
 
-   // Handle input change for text fields
-   const handleInputChange = (fieldName: string, value: string) => {
-    setFormValues((prev) => ({ ...prev, [fieldName]: value }));
-  };
+    // Handle input change for text fields
+    const handleInputChange = (fieldName: string, value: string) => {
+        setFormValues((prev) => ({ ...prev, [fieldName]: value }));
+    };
 
-  // Handle country code change with correct typing
-  const handleCountryCodeChange = (event: SelectChangeEvent<string>) => {
-    setCountryCode(event.target.value as string);
-  };
+    // Handle country code change
+    const handleCountryCodeChange = (event: SelectChangeEvent<string>) => {
+        setCountryCode(event.target.value as string);
+    };
 
     // Handle form submission
     const handleConfirm = async () => {
         try {
             const fields = p2pEscrowDetails?.fields || [];
-            for (const field of fields) {
+            // Create a single object with all field values
+            const userDetails: { [key: string]: string } = {};
+
+            fields.forEach((field: { name: string }) => {
                 const fieldName = field.name;
                 let fieldValue = formValues[fieldName] || '';
 
                 // If the field is phone_number, prepend the country code
                 if (fieldName === 'phone_number' && fieldValue) {
-                    fieldValue = `${countryCode}${fieldValue}`; // Merges country code and phone number
+                    fieldValue = `${countryCode}${fieldValue}`;
                 }
 
-                const updateUserPayload = {
-                    call_type: 'update_profile',
-                    pay_id: payId,
-                    field: fieldName,
-                    value: fieldValue,
-                };
+                userDetails[fieldName] = fieldValue;
+            });
 
-                const respo = await APIService.updateUser(updateUserPayload);
-                console.log('Payload Sent', updateUserPayload);
-                console.log(`Updated ${fieldName}:`, respo);
-                if (respo.data.status === 'success') {
-                    dispatch(setCurrentPage("escrow-page"));
+            // Prepare the payload with users_details as a single object
+            const updateUserPayload = {
+                call_type: 'update_profile',
+                pay_id: payId,
+                users_details: userDetails, // Single object, not an array
+            };
 
-                }
+            // Send a single API request
+            const respo = await APIService.updateUser(updateUserPayload);
+            console.log('Payload Sent', updateUserPayload);
+            console.log('Updated:', respo);
+            if (respo.data.status === 'success') {
+                dispatch(setCurrentPage("escrow-page"));
+
             }
         } catch (error) {
             console.log('Submit Error:', error);
