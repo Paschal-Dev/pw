@@ -5,6 +5,7 @@ import success from "../../assets/images/check.svg";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+
 export default function PaymentSuccessful(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -22,9 +23,7 @@ export default function PaymentSuccessful(): React.JSX.Element {
   }, [mobile, tablet]);
   return (
     <Box
-      boxShadow={
-        "0px 1.3486182689666748px 5.394473075866699px  0px  rgba(0, 0, 0, 0.15)"
-      }
+      boxShadow={"0px 1.3486182689666748px 5.394473075866699px  0px  rgba(0, 0, 0, 0.15)"}
       alignItems={"center"}
       p={4}
       borderRadius={3}
@@ -32,7 +31,7 @@ export default function PaymentSuccessful(): React.JSX.Element {
       flexDirection={"column"}
       position={"relative"}
       width={"100%"}
-      height={deviceType === "mobile" ? '22vh' : "37vh"}
+      height={deviceType === "mobile" ? "22vh" : "37vh"}
     >
       <Box
         marginTop={deviceType === "mobile" ? 0 : 5}
@@ -67,11 +66,7 @@ export default function PaymentSuccessful(): React.JSX.Element {
         >
           {t("payment-successful")}
         </Typography>
-        <Typography
-          variant="caption"
-          color={"black"}
-          pb={deviceType === "mobile" ? 2 : 3}
-        >
+        <Typography variant="caption" color={"black"} pb={deviceType === "mobile" ? 2 : 3}>
           {t("payment-received")}
         </Typography>
       </Box>
@@ -82,24 +77,18 @@ export default function PaymentSuccessful(): React.JSX.Element {
         alignItems={"center"}
         gap={deviceType === "mobile" ? 1 : 3}
       >
-
-
-
         {!walletPaymentDetails?.others?.seller_receipt && (
           <Button
             variant="contained"
             sx={{
-              width: '116%',
+              width: "116%",
               paddingY: 0.6,
               borderRadius: 2,
-              ':hover': { background: theme.palette.primary.main },
+              ":hover": { background: theme.palette.primary.main },
             }}
           >
-            <Link
-              href="#"
-              style={{ width: '100%', textDecoration: 'none', color: '#FFF' }}
-            >
-              {t('load-receipt')}
+            <Link href="#" style={{ width: "100%", textDecoration: "none", color: "#FFF" }}>
+              {t("load-receipt")}
             </Link>
           </Button>
         )}
@@ -108,17 +97,17 @@ export default function PaymentSuccessful(): React.JSX.Element {
           <Button
             variant="outlined"
             sx={{
-              width: '116%',
+              width: "116%",
               paddingY: 0.6,
               borderRadius: 2,
-              ':hover': { background: 'none' },
+              ":hover": { background: "none" },
             }}
           >
             <Link
               href={walletPaymentDetails?.others?.seller_receipt}
-              style={{ width: '100%', textDecoration: 'none', color: '#009FDD' }}
+              style={{ width: "100%", textDecoration: "none", color: "#009FDD" }}
             >
-              {t('loading')}
+              {t("loading")}
             </Link>
           </Button>
         )}

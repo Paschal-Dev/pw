@@ -126,7 +126,7 @@ export default function P2pPaymentWrongDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {p2pEscrowDetails?.pay?.payment_method}
+            {p2pEscrowDetails?.pay?.mode}
           </Typography>
         </Box>
         <Box

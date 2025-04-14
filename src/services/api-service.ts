@@ -25,5 +25,7 @@ export default class APIService {
     axiosInstance.post('/pay/p2p-vendors-escrow.php', encryptPayload(payload));
   static p2pCancelEscrow = (payload: any) =>
     axiosInstance.post('/pay/cancel-escrow.php', encryptPayload(payload));
+  static updateUser = (payload: any) =>
+    axiosInstance.post('/pay/update-users-profile.php', encryptPayload(payload));
 }
 

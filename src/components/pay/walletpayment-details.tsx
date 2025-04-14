@@ -13,22 +13,18 @@ export default function WalletPaymentDetails(): React.JSX.Element {
   const currency_sign = walletPaymentDetails?.data?.currency_sign;
   const shouldDisplayBox1 = walletPaymentDetails?.pay?.payment_status === 1;
 
+  const date = walletPaymentDetails?.pay?.date_processed;
   // Function to format Unix timestamp to a human-readable date string with time
   const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp * 1000); // Convert timestamp to milliseconds
-    const options = {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-
-    console.log("Options:", options);
-
-    console.log("Current Date:", date);
-
+    const formattedDate = new Date(timestamp * 1000).toLocaleDateString(
+      "en-US",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }
+    );
+    return formattedDate;
   };
   React.useEffect(() => {
     if (mobile) {
@@ -306,8 +302,7 @@ export default function WalletPaymentDetails(): React.JSX.Element {
             textAlign="center"
             justifyContent={"end"}
           >
-            {walletPaymentDetails?.pay?.date_processed &&
-              formatDate(walletPaymentDetails.pay.date_processed)}
+            {formatDate(date)}
           </Typography>
         </Box>
         <Box

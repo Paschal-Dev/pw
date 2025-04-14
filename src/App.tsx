@@ -5,16 +5,15 @@ import "./App.css";
 import Pay from "./pages/pay";
 import { useTranslation } from "react-i18next";
 
-
 function App(): React.JSX.Element {
   // const dispatch = useDispatch();
-  
+
   const { i18n } = useTranslation();
 
   React.useEffect(() => {
-    const savedLang = localStorage.getItem('language');
-    i18n.changeLanguage(savedLang ?? "en")
-  }, [i18n])
+    const savedLang = localStorage.getItem("language");
+    i18n.changeLanguage(savedLang ?? "en");
+  }, [i18n]);
 
   return <Pay errorResponse={undefined} />;
 }

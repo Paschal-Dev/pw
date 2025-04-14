@@ -87,6 +87,8 @@ export default function EscrowConfirm(): React.JSX.Element {
     dispatch(setCurrentPage("p2p-payment"));
     const checkPaymentStatus = setInterval(() => {
 
+
+
       const body = {
         call_type: "pay",
         ip: "192.168.0.0",
@@ -99,6 +101,11 @@ export default function EscrowConfirm(): React.JSX.Element {
             console.log("Status Check", resp.data?.pay?.payment_status);
             dispatch(setP2PEscrowDetails(resp.data));
             if (resp.data?.pay?.payment_status === 1) {
+              // console.log("Status Check", resp.data?.pay?.payment_status);
+              // console.log("Payment Successful, rendering success page");
+              // if (paymentWindow && !paymentWindow.closed) {
+              //   paymentWindow.close();
+              // }
 
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));
@@ -107,7 +114,7 @@ export default function EscrowConfirm(): React.JSX.Element {
 
               const RedirectUrl = resp.data.data.redirect_url;
 
-              if (RedirectUrl === url) {
+              if (resp.data?.data.redirect_url === url) {
                 dispatch(setCurrentPage("p2p-payment"));
               } else {
                 console.log("Payment Successful, rendering success page", RedirectUrl);

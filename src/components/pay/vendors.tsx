@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Box, Typography, Backdrop, useMediaQuery, Alert, AlertTitle } from "@mui/material";
+import { Box, Typography, Backdrop, useMediaQuery, Alert, AlertTitle, Modal } from "@mui/material";
 import { theme } from "../../assets/themes/theme";
 import APIService from "../../services/api-service";
 import { Vendor } from "../../data/pay/vendors-data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 // import { setHeaderKey } from "../../redux/reducers/auth";
-import { setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
+import {setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
 import loader from "../../assets/images/loader.gif";
 import { t } from "i18next";
-
+import close from "../../assets/images/close-icon.svg";
+import RequiredFields from "../required_fields";
 // import { PageProps } from "../../utils/myUtils";
 
 interface Props {
@@ -26,6 +27,12 @@ const Vendors: React.FC<Props> = ({ item, }) => {
   const dispatch = useDispatch();
   const { payId: payId } = useSelector((state: RootState) => state.pay);
   const [isClicked, setIsClicked] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () =>{
+   setOpen(false);
+   setIsClicked(false);
+  } 
 
   React.useEffect(() => {
     if (mobile) {
@@ -91,8 +98,12 @@ const Vendors: React.FC<Props> = ({ item, }) => {
           "API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ",
           limitMessage
         );
-      } else {
-
+      }
+       else if(respo.data?.input?.toLowerCase()?.includes("required")){
+        setOpen(true);
+        console.log("API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
+      }
+      else {
         dispatch(setCurrentPage("escrow-page"));
         console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
       }
@@ -105,6 +116,18 @@ const Vendors: React.FC<Props> = ({ item, }) => {
 
 
     console.log(item.id);
+  };
+
+  const style = {
+    position: "absolute" as const,
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    borderRadius: 5,
+    boxShadow: 24,
+    p: 4,
   };
 
   return (
@@ -194,6 +217,29 @@ const Vendors: React.FC<Props> = ({ item, }) => {
           </Box>
         </Box>
       </Box>
+      <Modal
+        open={open}
+        // onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Box
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            gap={2}
+          >
+            <Box></Box>
+            <Box onClick={handleClose} sx={{cursor: 'pointer'}}>
+              <img src={close} alt="" width={50} />
+            </Box>
+          </Box>
+          <Typography variant="h5" fontSize={'20px'} fontWeight={600}>Input The Following Details :</Typography>  
+          <RequiredFields/>
+        </Box>
+      </Modal>
       {isClicked && (
         <Backdrop open={isClicked}>
           <img src={loader} alt="Loader" />

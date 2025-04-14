@@ -195,42 +195,6 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
     setOtpValues(newOtpValues);
   };
 
-  // const getHash = React.useCallback(() => {
-  //   const interval = setInterval(async function () {
-  //     console.log(interval);
-
-
-  //     try {
-  //       // const formData = new FormData();
-  //       // formData.append("call_type", "get_key");
-  //       // const response1 = await APIService.getToken(formData);
-
-  //       // const payload = {
-  //       //   call_type: "encode_key",
-  //       //   token: response1.data?.data?.token,
-  //       //   key: response1.data?.data?.key,
-  //       //   timestamp: Math.floor(Date.now() / 1000),
-  //       // };
-  //       // const response3 = await APIService.encodeKey(payload);
-
-  //       // dispatch(setHeaderKey(response3.data?.data?.header_key));
-  //       // localStorage.setItem("headerKey", response3.data?.data?.header_key);
-  //       // const enteredPin = otpValues.join("");
-  //       const formData2 = new FormData();
-  //       formData2.append("call_type", "wallet_pay_validate");
-  //       formData2.append("ip", "192.168.0.0");
-  //       formData2.append("lang", "en");
-  //       formData2.append("pay_id", payId);
-  //       formData2.append("otp", '123456');
-  //       console.log('GET PAYLOAD', formData2);
-  //       const res = await APIService.walletPayValidate(formData2);
-  //       console.log("API RESPONSE TO GET HASH=>>> ", res.data);
-  //     } catch (error) {
-  //       console.error("ERROR GETTING HASH:", error);
-  //     }
-  //     }, 30000);
-
-  // },[payId]);
 
   const handleButtonClick = React.useCallback(async () => {
     // e.preventDefault();

@@ -125,7 +125,10 @@ export default function PayDashboard(): React.JSX.Element {
           .then(() => {
             console.log("Wallet Payment Status >>>", data?.wallet_pay?.payment_status);
             console.log("P2P Payment Status >>>", data?.pay?.payment_status);
-            if ([0, 1, 2, 3, 5].includes(data?.wallet_pay?.payment_status)) {
+            if (data?.data?.payment_status === 1 && data?.pay?.mode === 'wallet') {
+              dispatch(setWalletPaymentDetails(data));
+              dispatch(setCurrentPage("wallet-payment"));
+            } else  if (data?.data?.payment_status === 5 && data?.pay?.mode === 'wallet') {
               dispatch(setWalletPaymentDetails(data));
               dispatch(setCurrentPage("wallet-payment"));
             } else if (data?.pay?.payment_status === 5) {
