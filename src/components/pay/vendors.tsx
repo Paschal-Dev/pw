@@ -6,7 +6,7 @@ import { Vendor } from "../../data/pay/vendors-data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 // import { setHeaderKey } from "../../redux/reducers/auth";
-import {setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
+import {setCurrentPage, setP2PEscrowDetails, setClickedId } from "../../redux/reducers/pay";
 import loader from "../../assets/images/loader.gif";
 import { t } from "i18next";
 import close from "../../assets/images/close-icon.svg";
@@ -26,6 +26,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
   const [isSuccessAlertShown] = useState(false);
   const dispatch = useDispatch();
   const { payId: payId } = useSelector((state: RootState) => state.pay);
+  const { clickedId } = useSelector((state: RootState) => state.pay);
   const [isClicked, setIsClicked] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -45,26 +46,28 @@ const Vendors: React.FC<Props> = ({ item, }) => {
   }, [mobile, tablet]);
 
   const handleOpen = async () => {
-    if (isClicked) return;
+    if (isClicked){
+      dispatch(setClickedId(item.id));
+    }
     setIsClicked(true);
     try {
       // const formData = new FormData();
       // formData.append("call_type", "get_key");
       // const response1 = await APIService.getToken(formData);
       // console.log(
-      //   "API RESPONSE FROM P2P VENDORS ESCROW GET TOKEN =>>> ",
-      //   response1.data
-      // );
-
-      // const payload = {
-      //   call_type: "encode_key",
-      //   token: response1.data?.data?.token,
-      //   key: response1.data?.data?.key,
-      //   timestamp: Math.floor(Date.now() / 1000),
-      // };
-
-      // const response3 = await APIService.encodeKey(payload);
-      // console.log(
+        //   "API RESPONSE FROM P2P VENDORS ESCROW GET TOKEN =>>> ",
+        //   response1.data
+        // );
+        
+        // const payload = {
+          //   call_type: "encode_key",
+          //   token: response1.data?.data?.token,
+          //   key: response1.data?.data?.key,
+          //   timestamp: Math.floor(Date.now() / 1000),
+          // };
+          
+          // const response3 = await APIService.encodeKey(payload);
+          // console.log(
       //   "API RESPONSE FROM P2P VENDORS ESCROW ENCODE KEY =>>> ",
       //   response3.data
       // );
@@ -115,7 +118,7 @@ const Vendors: React.FC<Props> = ({ item, }) => {
 
 
 
-    console.log(item.id);
+    console.log(clickedId);
   };
 
   const style = {

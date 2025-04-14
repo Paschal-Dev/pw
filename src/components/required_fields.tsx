@@ -2,108 +2,144 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import APIService from '../services/api-service';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-import { setCurrentPage } from '../redux/reducers/pay';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css'; // Import default styles
+import { setCurrentPage, setP2PEscrowDetails } from '../redux/reducers/pay';
+
+// Custom CSS to style PhoneInput like MUI TextField
+const phoneInputStyles = `
+  .PhoneInput {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ced4da; /* Match MUI TextField border color */
+    border-radius: 8px; /* Match borderRadius: 2 from TextField */
+    padding: 10px 14px; /* Match TextField padding */
+    background-color: #fff;
+    transition: border-color 0.2s;
+  }
+
+  .PhoneInput:hover {
+    border-color: #1976d3; /* Match TextField hover state */
+  }
+
+  .PhoneInput:focus-within {
+    border-color: #1976d3; /* Match TextField focused state */
+    border-width: 2px;
+    padding: 9px 13px; /* Adjust padding to account for thicker border */
+  }
+
+  .PhoneInputInput {
+    border: none;
+    outline: none;
+    font-size: 16px; /* Match TextField font size */
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif; /* Match MUI font */
+    width: 100%;
+    background: transparent;
+  }
+
+  .PhoneInputCountry {
+    margin-right: 8px;
+  }
+
+  .PhoneInputCountrySelectArrow {
+    margin-left: 4px;
+  }
+
+  /* Optional: Style the label to float like MUI TextField */
+  .PhoneInputWrapper {
+    position: relative;
+  }
+
+  .PhoneInputLabel {
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    background: #fff;
+    padding: 0 4px;
+    font-size: 12px;
+    color: #666;
+  }
+`;
+
+// Inject the styles into the document
+const styleSheet = document.createElement('style');
+styleSheet.innerText = phoneInputStyles;
+document.head.appendChild(styleSheet);
 
 export default function RequiredFields(): React.JSX.Element {
-    const { payId } = useSelector((state: RootState) => state.pay);
+    const { payId, clickedId } = useSelector((state: RootState) => state.pay);
     const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
     const dispatch = useDispatch();
-
     const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
-    const [countryCode, setCountryCode] = useState<string>('+1');
 
-    // Handle input change for text fields
+    // Handle input change for text fields and phone number
     const handleInputChange = (fieldName: string, value: string) => {
         setFormValues((prev) => ({ ...prev, [fieldName]: value }));
     };
 
-    // Handle country code change
-    const handleCountryCodeChange = (event: SelectChangeEvent<string>) => {
-        setCountryCode(event.target.value as string);
-    };
-
     // Handle form submission
     const handleConfirm = async () => {
+        // console.log('Clicked ID >>>', clickedId);
         try {
             const fields = p2pEscrowDetails?.fields || [];
-            // Create a single object with all field values
             const userDetails: { [key: string]: string } = {};
 
             fields.forEach((field: { name: string }) => {
                 const fieldName = field.name;
-                let fieldValue = formValues[fieldName] || '';
-
-                // If the field is phone_number, prepend the country code
-                if (fieldName === 'phone_number' && fieldValue) {
-                    fieldValue = `${countryCode}${fieldValue}`;
-                }
-
+                const fieldValue = formValues[fieldName] || '';
                 userDetails[fieldName] = fieldValue;
             });
 
-            // Prepare the payload with users_details as a single object
             const updateUserPayload = {
                 call_type: 'update_profile',
                 pay_id: payId,
-                users_details: userDetails, // Single object, not an array
+                users_details: userDetails,
             };
 
-            // Send a single API request
             const respo = await APIService.updateUser(updateUserPayload);
-            console.log('Payload Sent', updateUserPayload);
             console.log('Updated:', respo);
-            if (respo.data.status === 'success') {
-                dispatch(setCurrentPage("escrow-page"));
 
+            if (respo.data?.status?.toLowerCase()?.includes("success")) {
+                const p2pEscrowPayload = {
+                    call_type: "p2p_vendors_escrow",
+                    ip: "192.168.0.0",
+                    pay_id: payId,
+                    vendor_id: clickedId,
+                };
+                const resp = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
+                console.log("API Response From Vendor's Escrow", resp.data);
+                dispatch(setP2PEscrowDetails(resp.data));
+                dispatch(setCurrentPage("escrow-page"));
             }
         } catch (error) {
             console.log('Submit Error:', error);
         }
     };
 
-    // Dynamically render fields based on API response
+    // Render input fields dynamically
     const renderField = (field: { name: string; title: string; type: string }) => {
         const { name, title, type } = field;
 
         if (name === 'phone_number') {
             return (
-                <Box key={name} display="flex" gap={1}>
-                    <Select
-                        value={countryCode}
-                        onChange={handleCountryCodeChange}
-                        sx={{ borderRadius: 2, minWidth: 100 }}
-                        required
-                    >
-                        <MenuItem value="+1">+1 (US)</MenuItem>
-                        <MenuItem value="+234">+234 (NG)</MenuItem>
-                        <MenuItem value="+44">+44 (UK)</MenuItem>
-                        <MenuItem value="+91">+91 (IN)</MenuItem>
-                        <MenuItem value="+81">+81 (JP)</MenuItem>
-                        <MenuItem value="+1CA">+1 (CA)</MenuItem>
-                        <MenuItem value="+61">+61 (AU)</MenuItem>
-                        <MenuItem value="+49">+49 (DE)</MenuItem>
-                        <MenuItem value="+55">+55 (BR)</MenuItem>
-                    </Select>
-                    <TextField
-                        label={title}
-                        type={type}
-                        variant="outlined"
-                        fullWidth
-                        required
+                <Box key={name} className="PhoneInputWrapper">
+                    <label className="PhoneInputLabel">{title}</label>
+                    <PhoneInput
+                        placeholder=""
                         value={formValues[name] || ''}
-                        onChange={(e) => handleInputChange(name, e.target.value)}
-                        InputProps={{ sx: { borderRadius: 2 } }}
+                        onChange={(value: string | undefined) => handleInputChange(name, value || '')}
+                        defaultCountry="US"
+                        international
+                        countryCallingCodeEditable={false}
+                        style={{ width: '100%' }}
                     />
                 </Box>
             );
         }
 
-        // Default rendering for other field types (e.g., first_name, last_name)
         return (
             <TextField
                 key={name}
@@ -142,7 +178,6 @@ export default function RequiredFields(): React.JSX.Element {
                 <Button
                     variant="contained"
                     onClick={handleConfirm}
-                    // disabled={isConfirming}
                     sx={{
                         width: '100%',
                         p: 2,
@@ -151,9 +186,11 @@ export default function RequiredFields(): React.JSX.Element {
                         bgcolor: '#009FDD',
                     }}
                 >
-                    Update
+                    Update & Continue
                 </Button>
             </Box>
         </>
     );
 }
+
+
