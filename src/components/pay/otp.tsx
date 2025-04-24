@@ -143,7 +143,16 @@ const Otp: React.FC<OtpProps> = ({
   const [isSuccessAlertShown, setIsSuccessAlertShown] = useState(false);
   const [resendDisabled, setResendDisabled] = useState(false);
   const [countdown, setCountdown] = useState(120);
-
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
   const {
     payId: payId,
     paymentDetails,
@@ -228,10 +237,15 @@ const Otp: React.FC<OtpProps> = ({
   const handleButtonClick = React.useCallback(async () => {
     // e.preventDefault();
     const enteredPin = otpValues.join("");
-
+    const userIP = await fetchUserIP();
+    console.log('User IP at first', userIP);
+    if (!userIP) {
+      console.error("Could not fetch IP");
+      return;
+    }
     const verifyOtpPayload = {
       call_type: "verify_pay_otp",
-      ip: "192.168.0.0",
+      ip: userIP,
       lang: "en",
       pay_id: payId,
       otp: enteredPin,
@@ -274,7 +288,7 @@ const Otp: React.FC<OtpProps> = ({
 
       // const verifyOtpPayload = {
       //   call_type: "verify_pay_otp",
-      //   ip: "192.168.0.0",
+      //   ip: userIP,
       //   lang: "en",
       //   pay_id: payId,
       //   otp: enteredPin,
@@ -320,6 +334,12 @@ const Otp: React.FC<OtpProps> = ({
     setResendDisabled(true); // Disable resend button
 
     try {
+      const userIP = await fetchUserIP();
+      console.log('User IP at first', userIP);
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
       // const formData = new FormData();
       // formData.append("call_type", "get_key");
 
@@ -348,7 +368,7 @@ const Otp: React.FC<OtpProps> = ({
       // resend-otp request
       const resendOtpPayload = {
         call_type: "resend_pay_otp",
-        ip: "192.168.0.0",
+        ip: userIP,
         lang: "en",
         pay_id: payId,
       };

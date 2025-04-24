@@ -44,7 +44,16 @@ export default function NotYetPaidLoader(): React.JSX.Element {
       const left = (window.innerWidth - width) / 2;
       const top = (window.innerHeight - height) / 2;
       const paymentLink = p2pEscrowDetails?.vendor?.payment_link;
-  
+      const fetchUserIP = async () => {
+        try {
+          const response = await fetch("https://api.ipify.org?format=json");
+          const data = await response.json();
+          return data.ip;
+        } catch (error) {
+          console.error("Error fetching IP:", error);
+          return null;
+        }
+      };
       if (!paymentLink) {
         console.log("No payment link provided");
         return;
@@ -68,13 +77,18 @@ export default function NotYetPaidLoader(): React.JSX.Element {
       }
   
       dispatch(setCurrentPage("p2p-payment"));
-      const checkPaymentStatus = setInterval(() => {
+      const checkPaymentStatus = setInterval(async () => {
   
-  
+        const userIP = await fetchUserIP();
+        console.log('User IP at first', userIP);
+        if (!userIP) {
+          console.error("Could not fetch IP");
+          return;
+        }
   
         const body = {
           call_type: "pay",
-          ip: "192.168.0.0",
+          ip: userIP,
           lang: "en",
           pay_id: payId,
         };

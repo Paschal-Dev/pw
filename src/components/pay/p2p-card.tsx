@@ -52,7 +52,16 @@ const P2pCard: React.FC<P2pCardProps> = () => {
   const [isSuccessAlertShown] = useState(false);
   const { paymentDetails } = useSelector((state: RootState) => state.pay);
   const [deviceType] = React.useState("mobile");
-
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
   // React.useEffect(() => {
   //   if (mobile) {
   //     setDeviceType("mobile");
@@ -102,7 +111,14 @@ const P2pCard: React.FC<P2pCardProps> = () => {
       dispatch(setButtonBackdrop(true));
 
       try {
+        const userIP = await fetchUserIP();
+        console.log('User IP at first', userIP);
+        if (!userIP) {
+          console.error("Could not fetch IP");
+          return;
+        }
         // const formData = new FormData();
+
         // formData.append("call_type", "get_key");
         // const response1 = await APIService.getToken(formData);
         // console.log(
@@ -125,7 +141,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
         // localStorage.setItem("headerKey", response3.data?.data?.header_key);
         const p2pPayload = {
           call_type: "p2p_vendors",
-          ip: "192.168.0.0",
+          ip: userIP,
           pay_id: payId,
         };
         const respo = await APIService.p2pVendors(p2pPayload);

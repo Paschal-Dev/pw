@@ -61,7 +61,16 @@ export default function WalletCard(): React.JSX.Element {
   const { isButtonClicked } = useSelector((state: RootState) => state.button);
   const [deviceType] = React.useState("mobile");
   const { t } = useTranslation();
-
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
   const style = {
     position: "absolute" as const,
     top: "50%",
@@ -100,6 +109,12 @@ export default function WalletCard(): React.JSX.Element {
       dispatch(setButtonBackdrop(true));
 
       try {
+        const userIP = await fetchUserIP();
+        console.log('User IP at first', userIP);
+        if (!userIP) {
+          console.error("Could not fetch IP");
+          return;
+        }
         // const formData = new FormData();
         // formData.append("call_type", "get_key");
 
@@ -128,7 +143,7 @@ export default function WalletCard(): React.JSX.Element {
         // send-otp request
         const sendOtpPayload = {
           call_type: "pay",
-          ip: "192.168.0.0",
+          ip: userIP,
           lang: "en",
           pay_id: payId,
         };
@@ -144,7 +159,7 @@ export default function WalletCard(): React.JSX.Element {
           // resend-otp request
           const walletPayload = {
             call_type: "wallet_pay",
-            ip: "192.168.0.0",
+            ip: userIP,
             pay_id: payId,
           };
           const respo = await APIService.walletPay(walletPayload);

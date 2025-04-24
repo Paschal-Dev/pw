@@ -46,7 +46,16 @@ export default function EscrowConfirmDetails() {
   };
 
   const handleClose = () => setOpen(false);
-
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
   const handleConfirm = async () => {
     setIsConfirming(true);
     setOpen(true);
@@ -77,10 +86,15 @@ export default function EscrowConfirmDetails() {
 
       // dispatch(setHeaderKey(response3.data?.data?.header_key));
       // localStorage.setItem("headerKey", response3.data?.data?.header_key);
-
+      const userIP = await fetchUserIP();
+      console.log('User IP at first', userIP);
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
       const cancelPayload = {
         call_type: "cancel_escrow",
-        ip: "192.168.0.0",
+        ip: userIP,
         pay_id: payId,
       };
 
@@ -90,7 +104,7 @@ export default function EscrowConfirmDetails() {
       // // send-otp request
       // const sendOtpPayload = {
       //   call_type: "pay",
-      //   ip: "192.168.0.0",
+      //   ip: userIP,
       //   lang: "en",
       //   pay_id: payId,
       // };
@@ -110,7 +124,7 @@ export default function EscrowConfirmDetails() {
       //     } else {
       const p2pPayload = {
         call_type: "p2p_vendors",
-        ip: "192.168.0.0",
+        ip: userIP,
         pay_id: payId,
       };
       const respo2 = await APIService.p2pVendors(p2pPayload);

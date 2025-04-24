@@ -148,6 +148,16 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
   const { walletSendPaymentDetails } = useSelector(
     (state: RootState) => state.pay
   );
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     if (alertSeverity === "success") {
@@ -199,10 +209,15 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
   const handleButtonClick = React.useCallback(async () => {
     // e.preventDefault();
     const enteredPin = otpValues.join("");
-
+    const userIP = await fetchUserIP();
+    console.log('User IP at first', userIP);
+    if (!userIP) {
+      console.error("Could not fetch IP");
+      return;
+    }
     const verifyWalletOtpPayload = {
       call_type: "wallet_pay_validate",
-      ip: "192.168.0.0",
+      ip: userIP,
       lang: "en",
       pay_id: payId,
       otp: enteredPin,
@@ -308,6 +323,12 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
     setCountdown(120); // Reset countdown
     setResendDisabled(true); // Disable resend button
     try {
+      const userIP = await fetchUserIP();
+      console.log('User IP at first', userIP);
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
       // const formData = new FormData();
       // formData.append("call_type", "get_key");
       // const response1 = await APIService.getToken(formData);
@@ -331,7 +352,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
       // resend-otp request
       const walletResendOtpPayload = {
         call_type: "resend_wallet_otp",
-        ip: "192.168.0.0",
+        ip: userIP,
         lang: "en",
         pay_id: payId,
       };

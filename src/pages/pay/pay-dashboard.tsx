@@ -38,6 +38,17 @@ export default function PayDashboard(): React.JSX.Element {
 
   const currency_sign = paymentDetails?.data?.currency_sign;
 
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
+
   React.useEffect(() => {
     if (paymentDetails) {
       setIsLoading(false);
@@ -58,9 +69,17 @@ export default function PayDashboard(): React.JSX.Element {
     if(!payId) return;
     const Pay = async () => {
 
+      const userIP = await fetchUserIP();
+      console.log('User IP at first', userIP);
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        setErrorPage(true);
+        return;
+      }
+  
       const sendOtpPayload = {
         call_type: "pay",
-        ip: "192.168.0.0",
+        ip: userIP, 
         lang: "en",
         pay_id: payId,
       };
@@ -99,7 +118,7 @@ export default function PayDashboard(): React.JSX.Element {
   }, [dispatch, payId]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleNonEscrowResponse = (data: any) => {
+  const handleNonEscrowResponse = async (data: any) => {
     if (data?.message?.toLowerCase()?.includes("verified")) {
       console.log("Message >>>", data?.message);
       dispatch(setOTPVerified(true));
@@ -113,11 +132,19 @@ export default function PayDashboard(): React.JSX.Element {
       dispatch(setApiResponse(data));
       dispatch(setPaymentDetails(data));
 
+      const userIP = await fetchUserIP(); 
+      console.log('User IP', userIP);
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        setErrorPage(true);
+        return;
+      }
+
       if (data?.otp_modal === 0 || !data?.otp_modal) {
         dispatch(setOTPVerified(true));
         const body = {
           call_type: "pay",
-          ip: "192.168.0.0",
+          ip: userIP,
           lang: "en",
           pay_id: data?.pay_id,
         };

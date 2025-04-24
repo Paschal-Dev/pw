@@ -85,7 +85,16 @@ const RequiredFields: React.FC<Props> = ({ item, }) => {
     const handleInputChange = (fieldName: string, value: string) => {
         setFormValues((prev) => ({ ...prev, [fieldName]: value }));
     };
-
+    const fetchUserIP = async () => {
+        try {
+          const response = await fetch("https://api.ipify.org?format=json");
+          const data = await response.json();
+          return data.ip;
+        } catch (error) {
+          console.error("Error fetching IP:", error);
+          return null;
+        }
+      };
     console.log('Clicked ID >>>', item.id);
     // Handle form submission
     const handleConfirm = async () => {
@@ -108,10 +117,16 @@ const RequiredFields: React.FC<Props> = ({ item, }) => {
             const respo = await APIService.updateUser(updateUserPayload);
             console.log('Updated:', respo);
 
+            const userIP = await fetchUserIP();
+            console.log('User IP at first', userIP);
+            if (!userIP) {
+              console.error("Could not fetch IP");
+              return;
+            }
             if (respo.data?.status?.toLowerCase()?.includes("success")) {
                 const p2pEscrowPayload = {
                     call_type: "p2p_vendors_escrow",
-                    ip: "192.168.0.0",
+                    ip: userIP,
                     pay_id: payId,
                     vendor_id: item.id,
                 };

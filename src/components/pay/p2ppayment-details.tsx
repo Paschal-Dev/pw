@@ -14,7 +14,16 @@ export default function P2pPaymentDetails(): React.JSX.Element {
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useTranslation();
   const { p2pEscrowDetails, payId } = useSelector((state: RootState) => state.pay);
-
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const shouldDisplayBox1 = p2pEscrowDetails?.data?.payment_status === 1;
 
@@ -65,10 +74,15 @@ export default function P2pPaymentDetails(): React.JSX.Element {
   useEffect(() => {
     // Function to check for the transaction hash update
     const checkHash = async () => {
-
+      const userIP = await fetchUserIP();
+      console.log('User IP at first', userIP);
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
       const sendOtpPayload = {
         call_type: "pay",
-        ip: "192.168.0.0",
+        ip: userIP,
         lang: "en",
         pay_id: payId,
       };
