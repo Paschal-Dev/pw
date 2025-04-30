@@ -253,47 +253,6 @@ export default function P2PPayment(): React.JSX.Element {
               )}
 
               <Box
-                bgcolor={theme.palette.primary.dark}
-                p={2}
-                style={{ borderRadius: "8px 8px 0 0" }}
-              >
-                <IconButton onClick={backButtonClicked}>
-                </IconButton>
-                <Box
-                  p={1}
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent={"center"}
-                  style={{ borderRadius: "8px 8px 0 0" }}
-                >
-                  <Box
-                    display={"flex"}
-                    flexDirection={"column"}
-                    alignItems={"center"}
-                    color={"#fff"}
-                  >
-                    <Typography
-                      variant="h5"
-                      fontWeight={700}
-                      fontSize={deviceType === "mobile" ? 18 : 25}
-                      textAlign={"center"}
-                      textTransform={"uppercase"}
-                    >
-                      {t("payment-status")}
-                    </Typography>
-                    <Typography
-                      variant={deviceType === "mobile" ? "caption" : "h6"}
-                      color={theme.palette.secondary.light}
-                      border={"1px solid white"}
-                      borderRadius={2}
-                      px={2}
-                    >
-                      #{p2pEscrowDetails?.pay?.unique_id}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-              <Box
                 bgcolor={"#fff"}
                 style={{ borderRadius: "0 0 8px 8px" }}
                 display={"flex"}
