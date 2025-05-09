@@ -26,17 +26,12 @@ import { Helmet } from "react-helmet";
 import P2PPayment from "./p2p-payment";
 
 export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
-
   // const [errorPage, setErrorPage] = useState(false);
   const [isRedirecting] = useState(false);
   // const [hasCheckedEscrow, setHasCheckedEscrow] = useState(false); // Ensure only one check
-  const { paymentDetails, currentPage, errorPage } = useSelector(
-    (state: RootState) => state.pay
-  );
-
+  const { paymentDetails, currentPage, errorPage } = useSelector((state: RootState) => state.pay);
 
   const dispatch = useDispatch();
-
 
   // Function to decode HTML entities
   const decodeHtmlEntity = (entity: string) => {
@@ -47,13 +42,26 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
 
   // Currency mapping
   const currencyMap: { [key: string]: string } = {
-    "$": "USD", "€": "EUR", "£": "GBP", "₦": "NGN",
-    "₹": "INR", "¥": "JPY", "₿": "BTC", "₩": "KRW",
-    "₽": "RUB", "₮": "MNT", "₴": "UAH", "₪": "ILS", "₫": "VND"
+    $: "USD",
+    "€": "EUR",
+    "£": "GBP",
+    "₦": "NGN",
+    "₹": "INR",
+    "¥": "JPY",
+    "₿": "BTC",
+    "₩": "KRW",
+    "₽": "RUB",
+    "₮": "MNT",
+    "₴": "UAH",
+    "₪": "ILS",
+    "₫": "VND",
   };
 
   // Get the decoded currency symbol
-  const currencySign = useMemo(() => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""), [paymentDetails]);
+  const currencySign = useMemo(
+    () => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""),
+    [paymentDetails]
+  );
 
   // Convert symbol to currency code if available
   const displayCurrency = currencyMap[currencySign] || currencySign;
@@ -63,7 +71,6 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
       const url = new URL(window.location.href);
       // Extract "v" parameter from URL
       const payId = url.searchParams.get("v") || "";
-
 
       if (!payId) {
         console.log("Invalid or missing Pay ID");
@@ -90,7 +97,6 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
       //   //     dispatch(setCurrentPage("escrow-page"));
       //   //     dispatch(setP2PEscrowDetails(resp.data));
 
-
       //   //   } else {
       //   //     console.log("No checkout link or escrow status not 1.");
       //   //   }
@@ -107,8 +113,6 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
     initializePayment();
     // }
   }, []);
-
-
 
   // const handleNonEscrowResponse = (data: any) => {
   //   if (data?.message?.toLowerCase()?.includes("verified")) {
@@ -207,14 +211,13 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
         </title>
         <meta
           property="og:description"
-          content={paymentDetails?.data
-            ? `Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
-            : "Payment Page"}
+          content={
+            paymentDetails?.data
+              ? `Pay ${displayCurrency} ${paymentDetails.data.amount} to ${paymentDetails.seller.name}`
+              : "Payment Page"
+          }
         />
-        <meta
-          property="og:image"
-          content={paymentDetails?.seller?.image || ""}
-        />
+        <meta property="og:image" content={paymentDetails?.seller?.image || ""} />
       </Helmet>
       <Topbar />
       <Container
@@ -227,15 +230,10 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
           py: 1,
         }}
       >
-        {errorPage ? (
-          <ErrorPage errorResponse={errorResponse} />
-        ) : (
-          renderActivePage()
-        )}
+        {errorPage ? <ErrorPage errorResponse={errorResponse} /> : renderActivePage()}
         <Disclaimer />
         <Footer />
       </Container>
     </Box>
   );
 }
-

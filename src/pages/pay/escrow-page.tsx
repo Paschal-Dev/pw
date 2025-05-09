@@ -12,9 +12,13 @@ import { RootState } from "../../redux/store";
 import loader from "../../assets/images/loader.gif";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
+import EscrowManualConfirm from "../../components/pay/escrow-manual-confirm";
+import Chat from "../../components/pay/chat";
+// import Chat from "./chat";
 
 export default function EscrowPage(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -60,6 +64,14 @@ export default function EscrowPage(): React.JSX.Element {
 
   // Convert symbol to currency code if available
   const displayCurrency = currencyMap[currencySign] || currencySign;
+
+  const handleChatToggle = (chatOpen: boolean) => {
+    setIsChatOpen(chatOpen);
+  };
+
+  const handleChatClose = () => {
+    setIsChatOpen(false); // Close the chat
+  };
 
   // eslint-disable-next-line no-empty-pattern
   const [] = useState(false);
@@ -115,60 +127,69 @@ export default function EscrowPage(): React.JSX.Element {
               )}
             </Box>
           </Grid>
-          <Grid item sm={12} md={8} lg={8} display={"flex"}>
-            <Box flex={1} display={"flex"} flexDirection={"column"}>
-              <Box
-                bgcolor={theme.palette.primary.dark}
-                p={1}
-                borderRadius={2}
-                display={"flex"}
-                gap={deviceType === "mobile" ? 1 : 4}
-                flex={1}
-              >
+          {isChatOpen ? (
+            <Chat deviceType={deviceType} onClose={handleChatClose} />
+          ) : (
+            <Grid item sm={12} md={8} lg={8} display={"flex"}>
+              <Box flex={1} display={"flex"} flexDirection={"column"}>
                 <Box
+                  bgcolor={theme.palette.primary.dark}
+                  p={1}
+                  borderRadius={2}
                   display={"flex"}
                   alignItems={"center"}
-                  justifyContent={deviceType === "mobile" ? "center" : "none"}
-                  color={"#fff"}
-                  gap={1}
-                  px={1}
-                  textAlign={deviceType === "mobile" ? "center" : "start"}
+                  gap={deviceType === "mobile" ? 1 : 4}
+                  flex={1}
                 >
                   <Box
-                    borderRadius={"50%"}
-                    bgcolor={"white"}
-                    p={1}
-                    justifyContent="center"
-                    alignContent="center"
-                    textAlign="center"
-                    height={deviceType === "mobile" ? 16 : 20}
-                    display={deviceType === "mobile" ? "none" : "block"}
+                    display={"flex"}
+                    alignItems={"center"}
+                    justifyContent={deviceType === "mobile" ? "center" : "none"}
+                    color={"#fff"}
+                    gap={1}
+                    px={1}
+                    textAlign={deviceType === "mobile" ? "center" : "start"}
                   >
-                    <img
-                      src={menu}
-                      width={deviceType === "mobile" ? "16px" : "18px"}
-                      height={deviceType === "mobile" ? "12px" : "14px"}
-                      style={{ backgroundColor: "#009FDD", padding: "2px" }}
-                    />
+                    <Box
+                      borderRadius={"50%"}
+                      bgcolor={"white"}
+                      p={1}
+                      justifyContent="center"
+                      alignContent="center"
+                      textAlign="center"
+                      height={deviceType === "mobile" ? 16 : 20}
+                      display={deviceType === "mobile" ? "none" : "block"}
+                    >
+                      <img
+                        src={menu}
+                        width={deviceType === "mobile" ? "16px" : "18px"}
+                        height={deviceType === "mobile" ? "12px" : "14px"}
+                        style={{ backgroundColor: "#009FDD", padding: "2px" }}
+                      />
+                    </Box>
+                    <Typography
+                      fontSize={deviceType === "mobile" ? 16 : "4vh"}
+                      fontWeight={700}
+                    >
+                      {t("blc_pw_3")} #{p2pEscrowDetails?.pay?.unique_id}
+                    </Typography>
                   </Box>
-                  <Typography
-                    fontSize={deviceType === "mobile" ? 16 : "4vh"}
-                    fontWeight={700}
-                  >
-                    {t("blc_pw_3")} #{p2pEscrowDetails?.pay?.unique_id}
-                  </Typography>
                 </Box>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={5} lg={5} md={5} display={"flex"}>
+                    {p2pEscrowDetails?.p2p_type === "auto" ? (
+                      <EscrowConfirm />
+                    ) : p2pEscrowDetails?.p2p_type === "manual" ? (
+                      <EscrowManualConfirm onChatToggle={handleChatToggle} />
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={12} sm={7} lg={7} md={7}>
+                    <EscrowConfirmDetails />
+                  </Grid>
+                </Grid>
               </Box>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={5} lg={5} md={5} display={"flex"}>
-                  <EscrowConfirm />
-                </Grid>
-                <Grid item xs={12} sm={7} lg={7} md={7}>
-                  <EscrowConfirmDetails />
-                </Grid>
-              </Grid>
-            </Box>
-          </Grid>
+            </Grid>
+          )}
         </Grid>
       </Box>
       {isConfirmButtonBackdrop && (

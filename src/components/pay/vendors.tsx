@@ -124,7 +124,6 @@ const Vendors: React.FC<Props> = ({ item, }) => {
         console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
       }
 
-
     } catch (error) {
       console.error("Error Getting Escrow:", error);
     }
