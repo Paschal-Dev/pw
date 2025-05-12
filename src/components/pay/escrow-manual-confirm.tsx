@@ -10,7 +10,6 @@ import {
 import React, { useState } from "react";
 import background from "../../assets/images/background.png";
 import { theme } from "../../assets/themes/theme";
-// import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import Notch from "../../assets/images/notch.svg";
 import { RootState } from "../../redux/store";
@@ -18,26 +17,34 @@ import rating from "../../assets/images/rating.png";
 import emptyRating from "../../assets/images/empty-rating.svg";
 import { t } from "i18next";
 import { Icon } from "@iconify/react";
-// import { BiUpload } from "react-icons/bi";
-// import { PageProps } from "../../utils/myUtils";
-// import { setCurrentPage, setP2PEscrowDetails, setShouldRedirectEscrow } from "../../redux/reducers/pay";
-// import { setCurrentPage } from "../../redux/reducers/pay";
 import EscrowManualModal from "./escrow-manual-modal";
 import EscrowConfirmPaymentModal from "./escrow-confirm-payment-modal";
 
-export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (isChatOpen: boolean) => void }): React.JSX.Element {
+export default function EscrowManualConfirm({
+  onChatToggle,
+  onPaidToggle,
+}: {
+  onChatToggle: (isChatOpen: boolean) => void;
+  onPaidToggle: () => void;
+}): React.JSX.Element {
   const [open, setOpen] = useState(false);
+  const [manualConfirmOpen, setManualConfirmOpen] = useState(false); // Renamed for consistency
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const openPaymentClick = () => setManualConfirmOpen(true);
+  const closePaymentClick = () => setManualConfirmOpen(false);
 
-  const { p2pEscrowDetails, } = useSelector(
-    (state: RootState) => state.pay
-  );
-  // const resp = await APIService.sendOTP(sendOtpPayload);
-  // const { payId } = useSelector((state: RootState) => state.pay);
+  const handleChatToggle = () => {
+    const newChatState = !isChatOpen;
+    setIsChatOpen(newChatState);
+    onChatToggle(newChatState);
+  };
+
+  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
-  // const dispatch = useDispatch();
+
   const getRatingCounts = (rating: number) => {
     let fullStarsCount = 0;
     let emptyStarsCount = 0;
@@ -87,39 +94,11 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
       />
     );
   }
-  // const [copyText, setCopyText] = useState("Copy");
 
-  // const handleCopy = async () => {
-  //   const address = "0xc7061A......6F53c655";
-  //   try {
-  //     await navigator.clipboard.writeText(address);
-  //     setCopyText("Copied!");
-  //     setTimeout(() => setCopyText("Copy"), 2000); // Reset after 2 seconds
-  //   } catch (err) {
-  //     console.error("Failed to copy: ", err);
-  //     setCopyText("Error");
-  //   }
-  // };
-
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
-  const handleChatToggle = () => {
-    const newChatState = !isChatOpen;
-    setIsChatOpen(newChatState);
-    onChatToggle(newChatState); // Notify parent of state change
-  };
-
-  // ... existing code until the Chat function
-
-  const Chat = async () => {
+  const Chat = () => {
     handleChatToggle();
-    console.log('Display Chat');
+    console.log("Display Chat");
   };
-
-  const [manualConfirmOpen, setPaymentClickOpen] = useState(false);
-
-  const openPaymentClick = () => setPaymentClickOpen(true);
-  const closePaymentClick = () => setPaymentClickOpen(false);
 
   return (
     <Card
@@ -142,7 +121,6 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
         width={20}
         height={20}
         fontSize={11}
-        // p={0.1}
         bgcolor={"red"}
         color={"#fff"}
         fontWeight={600}
@@ -179,7 +157,6 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
         <IconButton
           sx={{
             color: "primary.main",
-            // backgroundColor: 'primary.main',
             padding: 0,
             "&:hover": { backgroundColor: "primary.main" },
           }}
@@ -201,7 +178,6 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
         pb={2}
         flex={1}
         mt={1}
-        // position={'relative'}
       >
         <Box
           py={2}
@@ -236,7 +212,7 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
           <div style={{ marginBottom: "10px" }}>{ratingImages}</div>
           <Typography variant="caption">
             {`${fullStarsCount}/5`} ({p2pEscrowDetails?.seller?.rating}%)
-          </Typography>{" "}
+          </Typography>
         </Box>
 
         <Box
@@ -246,7 +222,7 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
           p={1}
           boxShadow={"0px 2px 10px 0px rgba(0,0,0,0.15)"}
           bgcolor={"#ffffff"}
-          width={"70%"}
+          width={"80%"}
           borderRadius={3}
           position="relative"
           mb={1}
@@ -302,8 +278,8 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
             <Box
               display={"flex"}
               flexDirection={"row"}
-              gap={4}
-              alignItems="center"
+              alignItems={"center"}
+              justifyContent={"space-between"}
             >
               <Typography
                 color={"#28304E"}
@@ -311,69 +287,24 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
                 fontSize={"10px"}
                 fontWeight={700}
               >
-                Vendor’s Instructions
+                Payment Instructions
               </Typography>
               <Button
-                variant="outlined"
+                variant="contained"
                 sx={{
                   whiteSpace: "nowrap",
                   fontSize: "8px",
-                  padding: "4px 4px",
+                  padding: "6px 6px",
                   fontWeight: 600,
+                  bgcolor: "#D92D20",
+                  color: "#fff",
                 }}
                 onClick={handleOpen}
               >
-                Read Vendor’s Terms
+                Vendor’s Terms
               </Button>
               <EscrowManualModal open={open} onClose={handleClose} />
             </Box>
-            {/* <Box
-              bgcolor={theme.palette.secondary.light}
-              borderRadius={2}
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"space-between"}
-            >
-              <Typography
-                variant="body2"
-                fontWeight={600}
-                sx={{
-                  fontSize: 10,
-                  px: 1,
-                }}
-              >
-                Account Number : 2773777383
-              </Typography>
-              <Box
-                display={"flex"}
-                alignItems={"center"}
-                bgcolor={"primary.main"}
-                color={"#fff"}
-                px={1}
-                py={0.5}
-                borderRadius={2}
-                gap={0.5}
-              >
-                <IconButton
-                  onClick={handleCopy}
-                  sx={{
-                    padding: 0,
-                    "&:hover": { backgroundColor: "transparent" },
-                  }}
-                >
-                  <Icon icon="clarity:paste-solid" fontSize={16} color="#fff" />
-                </IconButton>
-                <Typography
-                  variant="body1"
-                  fontWeight={500}
-                  sx={{
-                    fontSize: 10,
-                  }}
-                >
-                  {copyText}
-                </Typography>
-              </Box>
-            </Box>
             <Box
               bgcolor={theme.palette.secondary.light}
               borderRadius={2}
@@ -385,102 +316,9 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
                 variant="body2"
                 fontWeight={600}
                 sx={{
-                  fontSize: 9,
+                  fontSize: 14,
                   px: 1,
-                }}
-              >
-                Account Name : John Joseph Abel
-              </Typography>
-              <Box
-                display={"flex"}
-                alignItems={"center"}
-                bgcolor={"primary.main"}
-                color={"#fff"}
-                px={1}
-                py={0.5}
-                borderRadius={2}
-                gap={0.5}
-              >
-                <IconButton
-                  onClick={handleCopy}
-                  sx={{
-                    padding: 0,
-                    "&:hover": { backgroundColor: "transparent" },
-                  }}
-                >
-                  <Icon icon="clarity:paste-solid" fontSize={16} color="#fff" />
-                </IconButton>
-                <Typography
-                  variant="body1"
-                  fontWeight={500}
-                  sx={{
-                    fontSize: 10,
-                  }}
-                >
-                  {copyText}
-                </Typography>
-              </Box>
-            </Box>
-            <Box
-              bgcolor={theme.palette.secondary.light}
-              borderRadius={2}
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"space-between"}
-            >
-              <Typography
-                variant="body2"
-                fontWeight={600}
-                sx={{
-                  fontSize: 10,
-                  px: 1,
-                }}
-              >
-                Bank Name : Providus
-              </Typography>
-              <Box
-                display={"flex"}
-                alignItems={"center"}
-                bgcolor={"primary.main"}
-                color={"#fff"}
-                px={1}
-                py={0.5}
-                borderRadius={2}
-                gap={0.5}
-              >
-                <IconButton
-                  onClick={handleCopy}
-                  sx={{
-                    padding: 0,
-                    "&:hover": { backgroundColor: "transparent" },
-                  }}
-                >
-                  <Icon icon="clarity:paste-solid" fontSize={16} color="#fff" />
-                </IconButton>
-                <Typography
-                  variant="body1"
-                  fontWeight={500}
-                  sx={{
-                    fontSize: 10,
-                  }}
-                >
-                  {copyText}
-                </Typography>
-              </Box>
-            </Box> */}
-            <Box
-              bgcolor={theme.palette.secondary.light}
-              borderRadius={2}
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"space-between"}
-            >
-              <Typography
-                variant="body2"
-                fontWeight={600}
-                sx={{
-                  fontSize: 12,
-                  px: 1,
+                  py: 1,
                 }}
               >
                 Please send the exact amount you see in this invoice to my
@@ -507,26 +345,15 @@ export default function EscrowManualConfirm({ onChatToggle }: { onChatToggle: (i
             gap: 1,
           }}
           onClick={openPaymentClick}
-          
         >
-          <IconButton
-            sx={{
-              color: "primary.main",
-              // backgroundColor: 'primary.main',
-              padding: 0,
-              "&:hover": { backgroundColor: "primary.main" },
-            }}
-            
-          >
-            <Icon
-              icon="ph:hand-deposit-fill"
-              fontSize={16}
-              color={theme.palette.primary.main}
-            />
-          </IconButton>
+          <Icon icon="ph:hand-deposit-fill" fontSize={20} color={"#fff"} />
           I Have Paid
         </Button>
-        <EscrowConfirmPaymentModal open={manualConfirmOpen} onClose={closePaymentClick} />
+        <EscrowConfirmPaymentModal
+          open={manualConfirmOpen}
+          onClose={closePaymentClick}
+          onPaidToggle={onPaidToggle} // Pass the prop from parent
+        />
       </Box>
     </Card>
   );

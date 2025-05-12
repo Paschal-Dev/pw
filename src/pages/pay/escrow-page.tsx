@@ -12,8 +12,9 @@ import { RootState } from "../../redux/store";
 import loader from "../../assets/images/loader.gif";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
-import EscrowManualConfirm from "../../components/pay/escrow-manual-confirm";
+// import EscrowManualConfirm from "../../components/pay/escrow-manual-confirm";
 import Chat from "../../components/pay/chat";
+import ManualEscrow from "../../components/pay/manual-escrow";
 // import Chat from "./chat";
 
 export default function EscrowPage(): React.JSX.Element {
@@ -176,11 +177,18 @@ export default function EscrowPage(): React.JSX.Element {
                   </Box>
                 </Box>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={5} lg={5} md={5} display={"flex"}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={5}
+                    lg={5}
+                    md={5}
+                    sx={{ display: "flex" }}
+                  >
                     {p2pEscrowDetails?.p2p_type === "auto" ? (
                       <EscrowConfirm />
                     ) : p2pEscrowDetails?.p2p_type === "manual" ? (
-                      <EscrowManualConfirm onChatToggle={handleChatToggle} />
+                      <ManualEscrow onChatToggle={handleChatToggle}/>
                     ) : null}
                   </Grid>
                   <Grid item xs={12} sm={7} lg={7} md={7}>

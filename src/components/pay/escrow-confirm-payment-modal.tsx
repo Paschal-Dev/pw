@@ -12,22 +12,29 @@ import {
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import APIService from "../../services/api-service";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 // import { useState, useEffect } from "react";
+import {
+  setConfirmPaymentDetails,
+  // setPaidClicked,
+} from "../../redux/reducers/pay";
 
 interface EscrowConfirmPaymentProps {
   open: boolean;
   onClose: () => void;
+  onPaidToggle: () => void;
 }
 
 export default function EscrowConfirmPaymentModal({
   open,
   onClose,
+  onPaidToggle,
 }: EscrowConfirmPaymentProps) {
   // const theme = useTheme();
   // const isMobile = useMediaQuery(theme.breakpoints.only("xs"));
   // const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+  const dispatch = useDispatch();
 
   // Simplify device type detection
   // const deviceType = isMobile ? "mobile" : isTablet ? "tablet" : "pc";
@@ -44,6 +51,8 @@ export default function EscrowConfirmPaymentModal({
   };
 
   const handleConfirm = async () => {
+    // dispatch(setPaidClicked(true));
+    onPaidToggle();
     try {
       const userIP = await fetchUserIP();
       console.log("User IP at first", userIP);
@@ -51,14 +60,19 @@ export default function EscrowConfirmPaymentModal({
         console.error("Could not fetch IP");
         return;
       }
-      const cancelPayload = {
+      const confirmPaymentPayload = {
         call_type: "p2p_manual_payment_confirm",
         ip: userIP,
         pay_id: payId,
       };
 
-      const respo = await APIService.manualPayment(cancelPayload);
-      console.log("API RESPONSE FROM CONFIRM PAYMEMT=>>> ", respo.data);
+      const respo = await APIService.manualPayment(confirmPaymentPayload);
+      if (respo.data.status === "success") {
+        dispatch(setConfirmPaymentDetails(respo.data));
+        console.log("API RESPONSE FROM CONFIRM PAYMEMT=>>> ", respo.data);
+        
+        // console.log("Check", isPaidClicked);
+      }
       onClose();
     } catch (error) {
       console.error("Error Confirming:", error);
