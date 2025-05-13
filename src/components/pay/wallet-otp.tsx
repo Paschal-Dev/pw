@@ -145,7 +145,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
   const { payId: payId } = useSelector((state: RootState) => state.pay);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { walletSendPaymentDetails } = useSelector(
+  const { walletSendPaymentDetails, lang } = useSelector(
     (state: RootState) => state.pay
   );
   const fetchUserIP = async () => {
@@ -218,7 +218,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
     const verifyWalletOtpPayload = {
       call_type: "wallet_pay_validate",
       ip: userIP,
-      lang: "en",
+      lang: lang,
       pay_id: payId,
       otp: enteredPin,
     }
@@ -316,7 +316,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
       // onOtpVerification(false);
       setShowVideoThumb(false);
     }
-  }, [dispatch, otpValues, payId, t]);
+  }, [dispatch, lang, otpValues, payId, t]);
 
 
   const handleResendClick = async () => {
@@ -353,7 +353,7 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
       const walletResendOtpPayload = {
         call_type: "resend_wallet_otp",
         ip: userIP,
-        lang: "en",
+        lang: lang,
         pay_id: payId,
       };
       setTimeout(() => {

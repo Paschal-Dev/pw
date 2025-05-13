@@ -30,9 +30,12 @@ import { RootState } from "../../redux/store";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import APIService from "../../services/api-service";
 import { useDispatch, useSelector } from "react-redux";
-import { setButtonBackdrop, setButtonClicked, setCurrentPage, setP2PVendorsDetails } from "../../redux/reducers/pay";
-
-
+import {
+  setButtonBackdrop,
+  setButtonClicked,
+  setCurrentPage,
+  setP2PVendorsDetails,
+} from "../../redux/reducers/pay";
 
 interface P2pCardProps {
   otpVerified: boolean;
@@ -50,7 +53,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<"error" | null>(null);
   const [isSuccessAlertShown] = useState(false);
-  const { paymentDetails } = useSelector((state: RootState) => state.pay);
+  const { paymentDetails,lang } = useSelector((state: RootState) => state.pay);
   const [deviceType] = React.useState("mobile");
   const fetchUserIP = async () => {
     try {
@@ -76,7 +79,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: deviceType === 'mobile' ? 300 : 400,
+    width: deviceType === "mobile" ? 300 : 400,
     bgcolor: "background.paper",
     borderRadius: 5,
     boxShadow: 24,
@@ -99,7 +102,6 @@ const P2pCard: React.FC<P2pCardProps> = () => {
     dispatch(setButtonClicked(true)); // Set button as clicked
     dispatch(setButtonBackdrop(true));
 
-
     if (!isOTPVerified) {
       dispatch(setButtonBackdrop(false));
 
@@ -112,7 +114,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
 
       try {
         const userIP = await fetchUserIP();
-        console.log('User IP at first', userIP);
+        console.log("User IP at first", userIP);
         if (!userIP) {
           console.error("Could not fetch IP");
           return;
@@ -142,18 +144,27 @@ const P2pCard: React.FC<P2pCardProps> = () => {
         const p2pPayload = {
           call_type: "p2p_vendors",
           ip: userIP,
+          lang: lang,
           pay_id: payId,
         };
         const respo = await APIService.p2pVendors(p2pPayload);
         // Check if error_code is 400
-        if (respo && respo.data && Array.isArray(respo.data.p2p) && respo.data.p2p.length === 0) {
+        if (
+          respo &&
+          respo.data &&
+          Array.isArray(respo.data.p2p) &&
+          respo.data.p2p.length === 0
+        ) {
           setAlertMessage(t("blc_pw_45"));
-          setAlertSeverity('error');
-          console.log('API RESPONSE FROM P2P VENDORS FETCH =>>> ', respo.data);
+          setAlertSeverity("error");
+          console.log("API RESPONSE FROM P2P VENDORS FETCH =>>> ", respo.data);
         } else if (respo.data.seller.seller_status === 0) {
           setAlertMessage(t("blc_pw_46"));
-          setAlertSeverity('error');
-          console.log('API RESPONSE FROM P2P VENDORS FETCH =>>> ', respo.data.seller.seller_status);
+          setAlertSeverity("error");
+          console.log(
+            "API RESPONSE FROM P2P VENDORS FETCH =>>> ",
+            respo.data.seller.seller_status
+          );
         } else {
           APIService.p2pVendors(p2pPayload)
             .then((respo) => {
@@ -161,7 +172,10 @@ const P2pCard: React.FC<P2pCardProps> = () => {
                 "API RESPONSE FROM P2P VENDORS FETCH =>>> ",
                 respo.data
               );
-              console.log('SELLER STATUS =>>> ', respo.data.seller.seller_status);
+              console.log(
+                "SELLER STATUS =>>> ",
+                respo.data.seller.seller_status
+              );
 
               dispatch(setP2PVendorsDetails(respo.data));
               dispatch(setCurrentPage("p2p"));
@@ -313,7 +327,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
               severity="error"
               sx={{
                 position: "absolute",
-                width: deviceType !== "mobile" ? "60%" : "20%"
+                width: deviceType !== "mobile" ? "60%" : "20%",
               }}
             >
               <AlertTitle>Error</AlertTitle>
@@ -330,7 +344,6 @@ const P2pCard: React.FC<P2pCardProps> = () => {
             }}
             onClick={handleContinueClick}
             disabled={isButtonClicked}
-
           >
             <span>{t("continue-payment")}</span>
             {isButtonClicked && (

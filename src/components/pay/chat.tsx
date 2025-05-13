@@ -1,57 +1,123 @@
-// components/chat/chat.tsx
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import { theme } from "../../assets/themes/theme";
 import menu from "../../assets/images/menu.svg";
 import { MediaProps } from "../../utils/myUtils";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Icon } from "@iconify/react";
 import ChatItem, { ChatItemProps } from "./chat-item";
-import pic from "../../assets/images/profile.jpg";
+import APIService from "../../services/api-service";
+import { setChatDetails } from "../../redux/reducers/pay";
 
 interface ChatProps extends MediaProps {
   onClose: () => void;
+  onChatOpen: () => void; // Notify parent when chat is opened
 }
 
-const dummyMessages: ChatItemProps[] = [
-  {
-    senderType: "admin",
-    name: "Peerwallet Admin",
-    profilePic: pic,
-    status: "Away",
-    localTime: "8:00 AM",
-    timeAgo: "10 Minutes ago",
-    message:
-      "To Make this process faster, please Upload all evidence that might be needed to resolve this. Thanks for your patience",
-  },
-  {
-    senderType: "self",
-    name: "Ejiro Malcolm",
-    profilePic: pic,
-    status: "Online",
-    localTime: "9:15 AM",
-    timeAgo: "5 Minutes ago",
-    message: "Are you active, I am about to pay.",
-  },
-  {
-    senderType: "other",
-    name: "SDS Resources",
-    profilePic: pic,
-    status: "Offline",
-    localTime: "7:30 AM",
-    timeAgo: "1 Hour ago",
-    message: "I am yet to receive your payment.",
-  },
-];
-
-export default function Chat({ deviceType, onClose }: ChatProps): React.JSX.Element {
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+export default function Chat({
+  deviceType,
+  onClose,
+  onChatOpen,
+}: ChatProps): React.JSX.Element {
+  const dispatch = useDispatch();
+  const { chatDetails, p2pEscrowDetails, payId, lang } = useSelector(
+    (state: RootState) => state.pay
+  );
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [message, setMessage] = useState("");
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
+  // Scroll to latest message and notify parent on chat open
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+    if (isFirstRender && chatDetails?.data) {
+      onChatOpen();
+      setIsFirstRender(false);
+    }
+  }, [chatDetails, onChatOpen, isFirstRender]);
+
+  // Transform chatDetails.data into ChatItemProps
+  interface ChatMessage {
+    sender_type: string;
+    use_name: string;
+    use_image: string;
+    online_status: number;
+    local_time: string;
+    date_sent: string;
+    translated_message: string;
+  }
+
+  const dummyMessages: ChatItemProps[] = chatDetails?.data?.map((msg: ChatMessage) => ({
+    senderType: msg.sender_type,
+    name: msg.use_name,
+    profilePic: msg.use_image,
+    status: msg.online_status === 0 ? "Offline" : msg.online_status === 1 ? "Online" : "Away",
+    localTime: msg.local_time,
+    timeAgo: msg.date_sent,
+    message: msg.translated_message,
+  })) || [];
+
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const userIP = await fetchUserIP();
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
+
+      const p2pChatPayload = {
+        call_type: "p2p_chat",
+        ip: userIP,
+        lang: lang,
+        pay_id: payId,
+      };
+
+      try {
+        const resp = await APIService.p2pChat(p2pChatPayload);
+        dispatch(setChatDetails(resp.data));
+      } catch (error) {
+        console.error("Error during Chat Payload:", error);
+      }
+    }, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(intervalId);
+  }, [dispatch, lang, payId]);
+
+  const handleSend = async () => {
+    try {
+      if (!message.trim()) return;
+      const userIP = await fetchUserIP();
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
+      const p2pChatPayload = {
+        call_type: "p2p_chat",
+        ip: userIP,
+        lang: lang,
+        pay_id: payId,
+        comment: message,
+      };
+
+      const resp = await APIService.p2pChat(p2pChatPayload);
+      dispatch(setChatDetails(resp.data));
+      setMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
 
   return (
     <Grid item sm={12} md={8} display="flex">
@@ -91,7 +157,10 @@ export default function Chat({ deviceType, onClose }: ChatProps): React.JSX.Elem
                 />
               </Box>
             )}
-            <Typography fontSize={deviceType === "mobile" ? 16 : "4vh"} fontWeight={700}>
+            <Typography
+              fontSize={deviceType === "mobile" ? 16 : "4vh"}
+              fontWeight={700}
+            >
               Chat For #{p2pEscrowDetails?.pay?.unique_id}
             </Typography>
           </Box>
@@ -113,8 +182,8 @@ export default function Chat({ deviceType, onClose }: ChatProps): React.JSX.Elem
             sx={{
               borderTopLeftRadius: "16px",
               borderTopRightRadius: "16px",
-              maxHeight: "400px", // or any fixed height you want
-              overflowY: "auto", // enables vertical scroll
+              maxHeight: "400px",
+              overflowY: "auto",
             }}
           >
             <Box display="flex" flexDirection="column" gap={1}>
@@ -122,12 +191,16 @@ export default function Chat({ deviceType, onClose }: ChatProps): React.JSX.Elem
                 const justifyContent: "center" | "flex-end" | "flex-start" =
                   msg.senderType === "admin"
                     ? "center"
-                    : msg.senderType === "self"
+                    : msg.senderType === "buyer"
                     ? "flex-end"
                     : "flex-start";
 
                 return (
-                  <Box key={index} display="flex" justifyContent={justifyContent}>
+                  <Box
+                    key={index}
+                    display="flex"
+                    justifyContent={justifyContent}
+                  >
                     <ChatItem {...msg} />
                   </Box>
                 );
@@ -137,7 +210,14 @@ export default function Chat({ deviceType, onClose }: ChatProps): React.JSX.Elem
           </Box>
 
           {/* Input Area */}
-          <Box display="flex" flexDirection="row" alignItems="center" gap={4} bgcolor="#fff" p={2}>
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            gap={4}
+            bgcolor="#fff"
+            p={2}
+          >
             <Box
               display="flex"
               alignItems="center"
@@ -154,6 +234,8 @@ export default function Chat({ deviceType, onClose }: ChatProps): React.JSX.Elem
                 <input
                   type="text"
                   placeholder="Type something"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   style={{
                     padding: 4,
                     border: "none",
@@ -167,6 +249,7 @@ export default function Chat({ deviceType, onClose }: ChatProps): React.JSX.Elem
               </Box>
             </Box>
             <Button
+              onClick={handleSend}
               variant="contained"
               sx={{
                 fontSize: "14px",

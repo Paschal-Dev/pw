@@ -23,7 +23,7 @@ import { setApiResponse, setButtonClicked, setCurrentPage, setOTPVerified, setP2
 import ErrorPage from "./error_page";
 
 export default function PayDashboard(): React.JSX.Element {
-  const { paymentDetails, payId } = useSelector((state: RootState) => state.pay);
+  const { paymentDetails, payId, lang } = useSelector((state: RootState) => state.pay);
   const { isButtonBackdrop } = useSelector((state: RootState) => state.button);
   const [deviceType, setDeviceType] = React.useState("mobile");
   const [isloading, setIsLoading] = React.useState(true);
@@ -80,7 +80,7 @@ export default function PayDashboard(): React.JSX.Element {
       const sendOtpPayload = {
         call_type: "pay",
         ip: userIP, 
-        lang: "en",
+        lang: lang,
         pay_id: payId,
       };
 
@@ -145,7 +145,7 @@ export default function PayDashboard(): React.JSX.Element {
         const body = {
           call_type: "pay",
           ip: userIP,
-          lang: "en",
+          lang: lang,
           pay_id: data?.pay_id,
         };
         APIService.sendOTP(body)

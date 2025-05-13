@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setPayId,
   setErrorPage,
+  setLang,
   // setP2PVendorsDetails,
 } from "../../redux/reducers/pay";
 import ErrorPage, { ErrorProps } from "./error_page";
@@ -79,6 +80,15 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
       } else {
         dispatch(setPayId(payId));
       }
+      const lang = localStorage.getItem("language");
+      console.log("Language from localStorage:", lang);
+      if (!lang) {
+        console.log("Language not found in localStorage, defaulting to 'en'");
+        localStorage.setItem("language", "en");
+      } else {
+        console.log("Language found in localStorage:", lang);
+      }
+      dispatch(setLang(lang));
 
       // const sendOtpPayload = {
       //   call_type: "pay",
@@ -226,7 +236,7 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-evenly",
+          justifyContent: "end",
           py: 1,
         }}
       >

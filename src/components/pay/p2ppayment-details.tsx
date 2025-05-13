@@ -13,7 +13,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const { t } = useTranslation();
-  const { p2pEscrowDetails, payId } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails, payId, lang } = useSelector((state: RootState) => state.pay);
   const fetchUserIP = async () => {
     try {
       const response = await fetch("https://api.ipify.org?format=json");
@@ -83,7 +83,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
       const sendOtpPayload = {
         call_type: "pay",
         ip: userIP,
-        lang: "en",
+        lang: lang,
         pay_id: payId,
       };
 
@@ -120,7 +120,7 @@ export default function P2pPaymentDetails(): React.JSX.Element {
 
     // Cleanup interval when component unmounts
     return () => clearInterval(interval);
-  }, [dispatch, p2pEscrowDetails, p2pEscrowDetails.others.hash, payId]);
+  }, [dispatch, lang, p2pEscrowDetails, p2pEscrowDetails.others.hash, payId]);
 
   return (
     <Box>

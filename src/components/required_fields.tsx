@@ -77,7 +77,7 @@ interface Props {
 const RequiredFields: React.FC<Props> = ({ item, }) => {
 // export default function RequiredFields(): React.JSX.Element {
     const { payId } = useSelector((state: RootState) => state.pay);
-    const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+    const { p2pEscrowDetails, lang } = useSelector((state: RootState) => state.pay);
     const dispatch = useDispatch();
     const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
 
@@ -112,6 +112,7 @@ const RequiredFields: React.FC<Props> = ({ item, }) => {
                 call_type: 'update_profile',
                 pay_id: payId,
                 users_details: userDetails,
+                lang: lang,
             };
 
             const respo = await APIService.updateUser(updateUserPayload);
@@ -127,6 +128,7 @@ const RequiredFields: React.FC<Props> = ({ item, }) => {
                 const p2pEscrowPayload = {
                     call_type: "p2p_vendors_escrow",
                     ip: userIP,
+                    lang: lang,
                     pay_id: payId,
                     vendor_id: item.id,
                 };

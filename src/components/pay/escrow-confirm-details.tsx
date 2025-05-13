@@ -16,9 +16,7 @@ import {
 
 export default function EscrowConfirmDetails() {
   const [deviceType, setDeviceType] = React.useState("mobile");
-  const { p2pEscrowDetails, payId } = useSelector(
-    (state: RootState) => state.pay
-  );
+  const { p2pEscrowDetails, payId, lang } = useSelector((state: RootState) => state.pay);
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const [open, setOpen] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
@@ -87,7 +85,7 @@ export default function EscrowConfirmDetails() {
       // dispatch(setHeaderKey(response3.data?.data?.header_key));
       // localStorage.setItem("headerKey", response3.data?.data?.header_key);
       const userIP = await fetchUserIP();
-      console.log('User IP at first', userIP);
+      console.log("User IP at first", userIP);
       if (!userIP) {
         console.error("Could not fetch IP");
         return;
@@ -95,6 +93,7 @@ export default function EscrowConfirmDetails() {
       const cancelPayload = {
         call_type: "cancel_escrow",
         ip: userIP,
+        lang: lang,
         pay_id: payId,
       };
 
@@ -125,6 +124,7 @@ export default function EscrowConfirmDetails() {
       const p2pPayload = {
         call_type: "p2p_vendors",
         ip: userIP,
+        lang: lang,
         pay_id: payId,
       };
       const respo2 = await APIService.p2pVendors(p2pPayload);
@@ -186,14 +186,8 @@ export default function EscrowConfirmDetails() {
     p: 3,
   };
   return (
-    <Box>
-      <Box
-        borderRadius={2}
-        bgcolor={theme.palette.primary.dark}
-        p={2}
-        mt={1}
-        height={"100%"}
-      >
+    <Box flex={1} display={"flex"} flexDirection={"column"}>
+      <Box borderRadius={2} bgcolor={theme.palette.primary.dark} p={2} mt={1}>
         <Box
           display="flex"
           flexDirection="row"
@@ -256,9 +250,7 @@ export default function EscrowConfirmDetails() {
           </Typography>
         </Box>
         <Box
-          display={
-            deviceType === "mobile" || deviceType === "tablet" ? "none" : "flex"
-          }
+          display={deviceType === "mobile" || deviceType === "tablet" ? "none" : "flex"}
           flexDirection="row"
           justifyContent="space-between"
           py={0.5}
@@ -288,9 +280,7 @@ export default function EscrowConfirmDetails() {
           </Typography>
         </Box>
         <Box
-          display={
-            deviceType === "mobile" || deviceType === "tablet" ? "flex" : "none"
-          }
+          display={deviceType === "mobile" || deviceType === "tablet" ? "flex" : "none"}
           // flexDirection="row"
           // justifyContent="space-between"
           py={0.5}
@@ -354,12 +344,7 @@ export default function EscrowConfirmDetails() {
                   </Box>
                 )}
               </Box>
-              <Box
-                bgcolor="#FBFBFB"
-                borderRadius={4}
-                p={1}
-                mb={deviceType === "mobile" ? 2 : 0}
-              >
+              <Box bgcolor="#FBFBFB" borderRadius={4} p={1} mb={deviceType === "mobile" ? 2 : 0}>
                 <Box display="flex" justifyContent="center">
                   <Typography
                     variant="h6"
@@ -384,18 +369,10 @@ export default function EscrowConfirmDetails() {
                     p={1}
                     pb={deviceType === "mobile" ? 2 : 0}
                   >
-                    <Typography
-                      variant="caption"
-                      color="#F04438"
-                      textAlign="center"
-                    >
+                    <Typography variant="caption" color="#F04438" textAlign="center">
                       {t("need-to-cancel")}
                     </Typography>
-                    <Typography
-                      variant="caption"
-                      color="#F04438"
-                      textAlign="center"
-                    >
+                    <Typography variant="caption" color="#F04438" textAlign="center">
                       {t("escrow-need-to")}
                     </Typography>
                   </Box>
@@ -576,8 +553,15 @@ export default function EscrowConfirmDetails() {
           </Modal>
         )}
       </Box>
-      <Box borderRadius={2} bgcolor={theme.palette.primary.light} mt={1}>
-        <Box p={2}>
+      <Box
+        flex={1}
+        display={"flex"}
+        flexDirection={"column"}
+        borderRadius={2}
+        bgcolor={theme.palette.primary.light}
+        mt={1}
+      >
+        <Box p={2} flex={1}>
           <Box
             display="flex"
             flexDirection="row"
@@ -792,12 +776,7 @@ export default function EscrowConfirmDetails() {
               {p2pEscrowDetails?.vendor?.fee_fixed}
             </Typography>
           </Box>
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-            p={0.5}
-          >
+          <Box display="flex" flexDirection="row" justifyContent="space-between" p={0.5}>
             <Typography
               color="#000"
               flex={1}
@@ -823,12 +802,7 @@ export default function EscrowConfirmDetails() {
           </Box>
         </Box>
         <Box bgcolor={"#000"} style={{ borderRadius: "0 0 5px 5px" }}>
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-            p={1}
-          >
+          <Box display="flex" flexDirection="row" justifyContent="space-between" p={1}>
             <Typography
               color="#FFF"
               flex={1}
@@ -849,7 +823,7 @@ export default function EscrowConfirmDetails() {
               justifyContent={"end"}
             >
               <span dangerouslySetInnerHTML={{ __html: currency_sign }} />
-              {p2pEscrowDetails?.pay?.total_original_amount}
+              {p2pEscrowDetails?.pay?.total_to_pay_amount}
             </Typography>
           </Box>
         </Box>

@@ -22,7 +22,7 @@ const Vendors: React.FC<Props> = ({ item }) => {
   const [alertSeverity, setAlertSeverity] = useState<"error" | null>(null);
   const dispatch = useDispatch();
   const { payId } = useSelector((state: RootState) => state.pay);
-  const { clickedId } = useSelector((state: RootState) => state.pay);
+  const { clickedId, lang } = useSelector((state: RootState) => state.pay);
   const [open, setOpen] = useState(false);
   const isDisabled = clickedId !== null && clickedId !== item.id;
   const fetchUserIP = async () => {
@@ -69,6 +69,7 @@ const Vendors: React.FC<Props> = ({ item }) => {
         ip: userIP,
         pay_id: payId,
         vendor_id: item.id,
+        lang: lang,
       };
       const respo = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
       dispatch(setP2PEscrowDetails(respo.data));

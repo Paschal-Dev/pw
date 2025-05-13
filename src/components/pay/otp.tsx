@@ -158,6 +158,7 @@ const Otp: React.FC<OtpProps> = ({
     paymentDetails,
     isOTPVerified,
     apiResponse,
+    lang
   } = useSelector((state: RootState) => state.pay);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -246,7 +247,7 @@ const Otp: React.FC<OtpProps> = ({
     const verifyOtpPayload = {
       call_type: "verify_pay_otp",
       ip: userIP,
-      lang: "en",
+      lang: lang,
       pay_id: payId,
       otp: enteredPin,
     };
@@ -325,7 +326,7 @@ const Otp: React.FC<OtpProps> = ({
       setOtpValues(["", "", "", "", "", ""]);
       // onOtpVerification(false);
     }
-  }, [dispatch, otpValues, payId, t]);
+  }, [dispatch, lang, otpValues, payId, t]);
 
   const handleResendClick = async () => {
     setAlertMessage(t("blc_pw_42"));
@@ -369,7 +370,7 @@ const Otp: React.FC<OtpProps> = ({
       const resendOtpPayload = {
         call_type: "resend_pay_otp",
         ip: userIP,
-        lang: "en",
+        lang: lang,
         pay_id: payId,
       };
 

@@ -54,7 +54,7 @@ export default function WalletCard(): React.JSX.Element {
   const [alertSeverity, setAlertSeverity] = useState<"error" | null>(null);
   const { isOTPVerified } = useSelector((state: RootState) => state.pay);
   const [isSuccessAlertShown] = useState(false);
-  const { payId: payId, paymentDetails } = useSelector(
+  const { payId: payId, paymentDetails, lang } = useSelector(
     (state: RootState) => state.pay
   );
   const dispatch = useDispatch();
@@ -144,7 +144,7 @@ export default function WalletCard(): React.JSX.Element {
         const sendOtpPayload = {
           call_type: "pay",
           ip: userIP,
-          lang: "en",
+          lang: lang,
           pay_id: payId,
         };
 
@@ -161,6 +161,7 @@ export default function WalletCard(): React.JSX.Element {
             call_type: "wallet_pay",
             ip: userIP,
             pay_id: payId,
+            lang: lang,
           };
           const respo = await APIService.walletPay(walletPayload);
           // Check if error_code is 400

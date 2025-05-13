@@ -6,6 +6,7 @@ import ManualPaymentSuccessful from "./manual_payment_successful";
 import { setConfirmPaymentDetails } from "../../redux/reducers/pay";
 import APIService from "../../services/api-service";
 import { RootState } from "../../redux/store";
+import PaymentInDispute from "./manual-payment-in-dispute";
 
 interface ManualPaymentStatusProps {
   onChatToggle: (isChatOpen: boolean) => void;
@@ -94,6 +95,8 @@ export default function ManualPaymentStatus({
         <ManualPaymentSuccessful onChatToggle={onChatToggle} />
       ) : confirmPaymentDetails?.payment_status === 4 ? (
         <ManualPaymentExpired />
+      ) : confirmPaymentDetails?.payment_status === 5 ? (
+        <PaymentInDispute onChatToggle={onChatToggle} />
       ) : (
         <AwaitingVendorConfirmation onChatToggle={onChatToggle} />
       )}

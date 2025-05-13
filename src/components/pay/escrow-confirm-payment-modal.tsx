@@ -38,7 +38,7 @@ export default function EscrowConfirmPaymentModal({
 
   // Simplify device type detection
   // const deviceType = isMobile ? "mobile" : isTablet ? "tablet" : "pc";
-  const { payId } = useSelector((state: RootState) => state.pay);
+  const { payId, lang } = useSelector((state: RootState) => state.pay);
   const fetchUserIP = async () => {
     try {
       const response = await fetch("https://api.ipify.org?format=json");
@@ -63,6 +63,7 @@ export default function EscrowConfirmPaymentModal({
       const confirmPaymentPayload = {
         call_type: "p2p_manual_payment_confirm",
         ip: userIP,
+        lang: lang,
         pay_id: payId,
       };
 

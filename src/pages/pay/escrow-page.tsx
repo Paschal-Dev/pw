@@ -1,21 +1,20 @@
 import { Backdrop, Box, Grid, Typography, useMediaQuery } from "@mui/material";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import VideoThumb from "../../components/pay/video-thumb";
 import { theme } from "../../assets/themes/theme";
 import menu from "../../assets/images/menu.svg";
-// import { PageProps } from "../../utils/myUtils";
 import EscrowConfirmDetails from "../../components/pay/escrow-confirm-details";
 import EscrowStatus from "../../components/pay/escrow-status";
 import EscrowConfirm from "../../components/pay/escrow-confirm";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import loader from "../../assets/images/loader.gif";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
-// import EscrowManualConfirm from "../../components/pay/escrow-manual-confirm";
 import Chat from "../../components/pay/chat";
 import ManualEscrow from "../../components/pay/manual-escrow";
-// import Chat from "./chat";
+import { setConfirmButtonBackdrop, setCurrentPage, setP2PVendorsDetails } from "../../redux/reducers/pay";
+import APIService from "../../services/api-service";
 
 export default function EscrowPage(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
@@ -23,15 +22,29 @@ export default function EscrowPage(): React.JSX.Element {
 
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pEscrowDetails, paymentDetails } = useSelector(
+  const { p2pEscrowDetails, paymentDetails, lang, payId } = useSelector(
     (state: RootState) => state.pay
   );
   const { isConfirmButtonBackdrop } = useSelector(
     (state: RootState) => state.button
   );
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
 
   // Function to decode HTML entities
   const decodeHtmlEntity = (entity: string) => {
@@ -58,7 +71,7 @@ export default function EscrowPage(): React.JSX.Element {
   };
 
   // Get the decoded currency symbol
-  const currencySign = useMemo(
+  const currencySign = React.useMemo(
     () => decodeHtmlEntity(paymentDetails?.data?.currency_sign || ""),
     [paymentDetails]
   );
@@ -71,12 +84,14 @@ export default function EscrowPage(): React.JSX.Element {
   };
 
   const handleChatClose = () => {
-    setIsChatOpen(false); // Close the chat
+    setIsChatOpen(false);
   };
 
-  // eslint-disable-next-line no-empty-pattern
-  const [] = useState(false);
-  const { t } = useTranslation();
+  // Callback to mark messages as read (passed to Chat)
+  const handleChatOpen = () => {
+    // This will be called by ManualEscrow when chat is opened
+  };
+
   React.useEffect(() => {
     if (mobile) {
       setDeviceType("mobile");
@@ -86,6 +101,45 @@ export default function EscrowPage(): React.JSX.Element {
       setDeviceType("pc");
     }
   }, [mobile, tablet]);
+
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const userIP = await fetchUserIP();
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
+
+      const continuousEscrowPayload = {
+        call_type: "pay",
+        ip: userIP,
+        lang: lang,
+        pay_id: payId,
+      };
+
+      try {
+        const resp = await APIService.sendOTP(continuousEscrowPayload);
+        if (resp.data?.escrow_status === 0) {
+          clearInterval(intervalId);
+          const p2pPayload = {
+            call_type: "p2p_vendors",
+            ip: userIP,
+            lang: lang,
+            pay_id: payId,
+          };
+
+          const respo2 = await APIService.p2pVendors(p2pPayload);
+          dispatch(setP2PVendorsDetails(respo2.data));
+          dispatch(setConfirmButtonBackdrop(false));
+          dispatch(setCurrentPage("p2p"));
+        }
+      } catch (error) {
+        console.error("Error during Escrow Payload:", error);
+      }
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [dispatch, lang, payId]);
 
   return (
     <>
@@ -122,14 +176,17 @@ export default function EscrowPage(): React.JSX.Element {
               {deviceType !== "mobile" && deviceType !== "tablet" && (
                 <EscrowStatus />
               )}
-
               {deviceType !== "mobile" && deviceType !== "tablet" && (
                 <VideoThumb />
               )}
             </Box>
           </Grid>
           {isChatOpen ? (
-            <Chat deviceType={deviceType} onClose={handleChatClose} />
+            <Chat
+              deviceType={deviceType}
+              onClose={handleChatClose}
+              onChatOpen={handleChatOpen}
+            />
           ) : (
             <Grid item sm={12} md={8} lg={8} display={"flex"}>
               <Box flex={1} display={"flex"} flexDirection={"column"}>
@@ -176,7 +233,7 @@ export default function EscrowPage(): React.JSX.Element {
                     </Typography>
                   </Box>
                 </Box>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} height={"100%"}>
                   <Grid
                     item
                     xs={12}
@@ -188,10 +245,10 @@ export default function EscrowPage(): React.JSX.Element {
                     {p2pEscrowDetails?.p2p_type === "auto" ? (
                       <EscrowConfirm />
                     ) : p2pEscrowDetails?.p2p_type === "manual" ? (
-                      <ManualEscrow onChatToggle={handleChatToggle}/>
+                      <ManualEscrow onChatToggle={handleChatToggle} />
                     ) : null}
                   </Grid>
-                  <Grid item xs={12} sm={7} lg={7} md={7}>
+                  <Grid item xs={12} sm={7} lg={7} md={7} display={"flex"}>
                     <EscrowConfirmDetails />
                   </Grid>
                 </Grid>

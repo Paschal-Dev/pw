@@ -15,7 +15,7 @@ import { setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
 import APIService from "../../services/api-service";
 
 export default function NotYetPaidLoader(): React.JSX.Element {
-  const { p2pEscrowDetails, payId } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails, payId, lang } = useSelector((state: RootState) => state.pay);
   const [deviceType, setDeviceType] = useState("mobile");
   const [showPreloader, setShowPreloader] = useState(true);
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -89,7 +89,7 @@ export default function NotYetPaidLoader(): React.JSX.Element {
         const body = {
           call_type: "pay",
           ip: userIP,
-          lang: "en",
+          lang: lang,
           pay_id: payId,
         };
         APIService.sendOTP(body)

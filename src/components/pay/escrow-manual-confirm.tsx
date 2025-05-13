@@ -7,10 +7,10 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import background from "../../assets/images/background.png";
 import { theme } from "../../assets/themes/theme";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Notch from "../../assets/images/notch.svg";
 import { RootState } from "../../redux/store";
 import rating from "../../assets/images/rating.png";
@@ -19,17 +19,40 @@ import { t } from "i18next";
 import { Icon } from "@iconify/react";
 import EscrowManualModal from "./escrow-manual-modal";
 import EscrowConfirmPaymentModal from "./escrow-confirm-payment-modal";
+import APIService from "../../services/api-service";
+import { setChatDetails } from "../../redux/reducers/pay";
 
-export default function EscrowManualConfirm({
+interface ManualEscrowProps {
+  onChatToggle: (isChatOpen: boolean) => void;
+  onPaidToggle?: () => void;
+  onChatOpen?: () => void; // Notify parent when chat is opened
+}
+
+export default function ManualEscrow({
   onChatToggle,
   onPaidToggle,
-}: {
-  onChatToggle: (isChatOpen: boolean) => void;
-  onPaidToggle: () => void;
-}): React.JSX.Element {
+  onChatOpen,
+}: ManualEscrowProps): React.JSX.Element {
   const [open, setOpen] = useState(false);
-  const [manualConfirmOpen, setManualConfirmOpen] = useState(false); // Renamed for consistency
+  const [manualConfirmOpen, setManualConfirmOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [readMessageIds, setReadMessageIds] = useState<string[]>([]);
+  const dispatch = useDispatch();
+
+  const { p2pEscrowDetails, payId, chatDetails } = useSelector(
+    (state: RootState) => state.pay
+  );
+  const currency_sign = p2pEscrowDetails?.data?.currency_sign;
+
+  const unreadCount = useMemo(() => {
+    return (
+      chatDetails?.data?.filter(
+        (msg: { sender_type: string; date_sent: string }) =>
+          msg.sender_type !== "buyer" &&
+          !readMessageIds.includes(msg.date_sent)
+      ).length || 0
+    );
+  }, [chatDetails, readMessageIds]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -40,10 +63,59 @@ export default function EscrowManualConfirm({
     const newChatState = !isChatOpen;
     setIsChatOpen(newChatState);
     onChatToggle(newChatState);
+    if (newChatState) {
+      handleChatOpen();
+      onChatOpen?.();
+    }
   };
 
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
-  const currency_sign = p2pEscrowDetails?.data?.currency_sign;
+  const handleChatOpen = () => {
+    if (chatDetails?.data) {
+      const newReadMessageIds = chatDetails.data
+        .filter((msg: { sender_type: string; date_sent: string }) => msg.sender_type !== "buyer")
+        .map((msg: { sender_type: string; date_sent: string }) => msg.date_sent);
+      setReadMessageIds((prev) => [
+        ...new Set([...prev, ...newReadMessageIds]),
+      ]);
+    }
+  };
+
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const userIP = await fetchUserIP();
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
+
+      const p2pChatPayload = {
+        call_type: "p2p_chat",
+        ip: userIP,
+        lang: "en",
+        pay_id: payId,
+      };
+
+      try {
+        const resp = await APIService.p2pChat(p2pChatPayload);
+        dispatch(setChatDetails(resp.data));
+      } catch (error) {
+        console.error("Error during Chat Payload:", error);
+      }
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [dispatch, payId]);
 
   const getRatingCounts = (rating: number) => {
     let fullStarsCount = 0;
@@ -97,7 +169,6 @@ export default function EscrowManualConfirm({
 
   const Chat = () => {
     handleChatToggle();
-    console.log("Display Chat");
   };
 
   return (
@@ -116,24 +187,28 @@ export default function EscrowManualConfirm({
       component={Box}
       borderRadius={2}
     >
-      <Box
-        borderRadius={"50%"}
-        width={20}
-        height={20}
-        fontSize={11}
-        bgcolor={"red"}
-        color={"#fff"}
-        fontWeight={600}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        textAlign="center"
-        position={"absolute"}
-        zIndex={10}
-        right={13}
-      >
-        2
-      </Box>
+      {unreadCount > 0 && (
+        <Box
+          borderRadius={"50%"}
+          minWidth={20}
+          height={20}
+          fontSize={11}
+          bgcolor={"red"}
+          color={"#fff"}
+          fontWeight={600}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          position={"absolute"}
+          zIndex={10}
+          right={13}
+          px={unreadCount > 9 ? 1 : 0}
+          aria-label={`${unreadCount} unread messages`}
+        >
+          {unreadCount}
+        </Box>
+      )}
       <Button
         variant="outlined"
         sx={{
@@ -321,13 +396,7 @@ export default function EscrowManualConfirm({
                   py: 1,
                 }}
               >
-                Please send the exact amount you see in this invoice to my
-                Paypal email at{" "}
-                <span style={{ textDecoration: "underline" }}>
-                  frank@peerwallet.com
-                </span>{" "}
-                as Friends & family only! Payment as goods and services would be
-                returned.
+                {p2pEscrowDetails?.vendor?.description}
               </Typography>
             </Box>
           </Box>
@@ -352,7 +421,7 @@ export default function EscrowManualConfirm({
         <EscrowConfirmPaymentModal
           open={manualConfirmOpen}
           onClose={closePaymentClick}
-          onPaidToggle={onPaidToggle} // Pass the prop from parent
+          onPaidToggle={onPaidToggle || (() => {})}
         />
       </Box>
     </Card>

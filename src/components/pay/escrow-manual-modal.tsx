@@ -10,6 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface EscrowModalProps {
   open: boolean;
@@ -17,6 +19,8 @@ interface EscrowModalProps {
 }
 
 export default function EscrowManualModal({ open, onClose }: EscrowModalProps) {
+  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+
   return (
     <Dialog
       open={open}
@@ -120,28 +124,7 @@ export default function EscrowManualModal({ open, onClose }: EscrowModalProps) {
             color="text.primary"
             lineHeight={1.6}
           >
-            Cursus ut id diam ultricies convallis pellentesque ac consectetur.
-            Malesuada quis tristique consectetur pellentesque nibh. Sed
-            tincidunt mauris quis ut. Duis vitae sagittis vestibulum sit sem
-            dictum suspendisse vitae hac. Quis sed pulvinar ipsum aliquet augue
-            sed imperdiet aliquet. Vitae nulla nullam sit tortor vitae. Nisi
-            nunc urna non enim ornare sed eget leo.
-            <br />
-            <br />
-            Fermentum nisl nunc et velit. Sapien amet anean aliquam at malesuada
-            sed mauris diam vel. Nunc facilisis id adipiscing molestie
-            vulputate. Amet arcu sed morbi vel ante a. Mattis pretium ultricies.
-            Amet arcu sed morbi vel ante a. Mattis pretium in enim nec lorem
-            porttitor lacus.
-            <br />
-            <br />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            {p2pEscrowDetails?.vendor?.terms}
           </Typography>
         </DialogContent>
 

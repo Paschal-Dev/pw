@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface PayI {
   payId: string;
+  lang: any;
   isOTPVerified: boolean;
   paymentDetails: any;
   apiResponse: any;
@@ -10,6 +11,7 @@ interface PayI {
   currentPage: string;
   walletSendPaymentDetails: any;
   p2pVendorsDetails: any;
+  chatDetails: any;
   p2pEscrowDetails: any;
   confirmPaymentDetails: any;
   isButtonClicked: boolean;
@@ -23,12 +25,14 @@ interface PayI {
 
 const initialState: PayI = {
   payId: "",
+  lang: null,
   isOTPVerified: false,
   paymentDetails: null,
   apiResponse: null,
   walletPaymentDetails: null,
   currentPage: "pay/v",
   p2pVendorsDetails: null,
+  chatDetails: null,
   walletSendPaymentDetails: undefined,
   p2pEscrowDetails: null,
   confirmPaymentDetails: null,
@@ -48,6 +52,9 @@ const paySlice = createSlice({
     setPayId: (state, action: PayloadAction<string>) => {
       state.payId = action.payload;
     },
+    setLang: (state, action: PayloadAction<any>) => {
+      state.lang = action.payload;
+    },
     setPaymentDetails: (state, action: PayloadAction<any>) => {
       state.paymentDetails = action.payload;
     },
@@ -65,6 +72,9 @@ const paySlice = createSlice({
     },
     setP2PVendorsDetails: (state, action: PayloadAction<any>) => {
       state.p2pVendorsDetails = action.payload;
+    },
+    setChatDetails: (state, action: PayloadAction<any>) => {
+      state.chatDetails = action.payload;
     },
     setP2PEscrowDetails: (state, action: PayloadAction<any>) => {
       state.p2pEscrowDetails = action.payload;
@@ -103,6 +113,7 @@ export const {
 //   setPaidClicked,
   setConfirmPaymentDetails,
   setPayId,
+  setLang,
   setPaymentDetails,
   setWalletPaymentDetails,
   setOTPVerified,
@@ -117,6 +128,7 @@ export const {
   setApiResponse,
   setErrorPage,
   setClickedId,
+  setChatDetails,
 } = paySlice.actions;
 
 export default paySlice.reducer;
