@@ -18,6 +18,7 @@ export default function EscrowConfirmDetails() {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const { p2pEscrowDetails, payId, lang } = useSelector((state: RootState) => state.pay);
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
+  const vendor_currency_sign = p2pEscrowDetails?.pay?.total_to_pay_currency;
   const [open, setOpen] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [countdown, setCountdown] = useState("");
@@ -822,7 +823,7 @@ export default function EscrowConfirmDetails() {
               textAlign="center"
               justifyContent={"end"}
             >
-              <span dangerouslySetInnerHTML={{ __html: currency_sign }} />
+              <span dangerouslySetInnerHTML={{ __html: vendor_currency_sign }} />
               {p2pEscrowDetails?.pay?.total_to_pay_amount}
             </Typography>
           </Box>

@@ -137,7 +137,7 @@ const Vendors: React.FC<Props> = ({ item }) => {
           src={item.logo}
           alt={item.payment_method}
           style={{ borderRadius: 8 }}
-          width={deviceType === "mobile" ? 120 : 190}
+          width={deviceType === "mobile" ? 120 : "100%"}
         />
         <Box borderRadius={8} p={0.5} display="flex" flexDirection="column">
           <Box
@@ -168,7 +168,7 @@ const Vendors: React.FC<Props> = ({ item }) => {
                 fontWeight={600}
                 style={{ flex: 1 }}
               >
-                {item.use_name}
+                {item.display_name}
               </Typography>
               <Box display="flex" flexDirection="row" alignItems="center" gap={0.5}>
                 {item.exchange_rate !== 0 && (

@@ -98,8 +98,9 @@ export default function ManualPaymentSuccessful({
             backgroundSize: "cover",
             position: "relative",
             mt: 1,
+            // pt: 2,
             //   flex: 1,
-            height: "45%",
+            height: "100%",
           }}
           component={Box}
           borderRadius={2}
@@ -137,7 +138,7 @@ export default function ManualPaymentSuccessful({
               color: "primary.main",
               border: "1px solid",
               position: "absolute",
-              top: "1.5%",
+              top: "2.5%",
               right: 14,
               zIndex: 9,
             }}
@@ -163,7 +164,7 @@ export default function ManualPaymentSuccessful({
             width="100%"
             pb={2}
             // flex={1}
-            mt={1}
+            mt={2}
             // position={'relative'}
           >
             <Box
@@ -193,35 +194,61 @@ export default function ManualPaymentSuccessful({
             </Box>
           </Box>
         </Card>
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <Box display="flex" alignItems="center" position={"relative"}>
-            <img src={vendors} alt="" style={{ width: "100%", height: "auto" }} />
+        <Card
+          sx={{
+            // width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            boxShadow: "0px 2px 8px 0px rgba(0,0,0,0.1)",
+            backgroundImage: `url(${background})`,
+            backgroundSize: "cover",
+            position: "relative",
+            gap: 2,
+            mt: 1,
+            py: 4,
+            px: 1,
+            height: "100%",
+          }}
+          component={Box}
+          borderRadius={2}
+        >
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Box display="flex" alignItems="center" position={"relative"}>
+              <img src={vendors} alt="" style={{ width: "100%", height: "auto" }} />
+              <Box
+                width={35}
+                height={35}
+                display="flex"
+                alignItems={"center"}
+                justifyContent={"center"}
+                bgcolor={"#D1FADF"}
+                border={"20px solid #ECFDF3"}
+                borderRadius={"50%"}
+                position={"absolute"}
+                right={-30}
+                bottom={-10}
+              >
+                <Icon icon="heroicons-outline:check-circle" fontSize={25} color="#12B76A" />
+              </Box>
+            </Box>
             <Box
-              width={35}
-              height={35}
               display="flex"
+              flexDirection={"column"}
               alignItems={"center"}
-              justifyContent={"center"}
-              bgcolor={"#D1FADF"}
-              border={"20px solid #ECFDF3"}
-              borderRadius={"50%"}
-              position={"absolute"}
-              right={-30}
-              bottom={-10}
+              textAlign="center"
+              width="100%"
             >
-              <Icon icon="heroicons-outline:check-circle" fontSize={25} color="#12B76A" />
+              <Typography variant="h6" fontWeight={700} color="green">
+                Payment Successful
+              </Typography>
+              <Typography variant="body2" fontSize={12} width={"95%"}>
+                The Vendor has confirmed your payment. Your transaction has been successfully
+                processed.
+              </Typography>
             </Box>
           </Box>
-          <Box textAlign="center" width="100%">
-            <Typography variant="h6" fontWeight={700} textAlign="center" color="green">
-              Payment Successful
-            </Typography>
-            <Typography variant="body2" fontSize={12} textAlign="center" width={"92%"}>
-              The Vendor has confirmed your payment. Your transaction has been successfully
-              processed.
-            </Typography>
-          </Box>
-        </Box>
+        </Card>
       </Box>
     </>
   );

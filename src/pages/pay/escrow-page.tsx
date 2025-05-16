@@ -119,6 +119,7 @@ export default function EscrowPage(): React.JSX.Element {
 
       try {
         const resp = await APIService.sendOTP(continuousEscrowPayload);
+        console.log("Escrow Payload Response:", resp.data);
         if (resp.data?.escrow_status === 0) {
           clearInterval(intervalId);
           const p2pPayload = {

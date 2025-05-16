@@ -12,6 +12,7 @@ import {
   setConfirmButtonBackdrop,
   setCurrentPage,
   setP2PVendorsDetails,
+  clearConfirmPaymentDetails,
 } from "../../redux/reducers/pay";
 
 export default function EscrowStatus() {
@@ -23,7 +24,9 @@ export default function EscrowStatus() {
 
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails, confirmPaymentDetails } = useSelector(
+    (state: RootState) => state.pay
+  );
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const shouldDisplayBox2 = p2pEscrowDetails?.escrow_status === 1;
   const shouldDisplayBox1 = p2pEscrowDetails?.escrow_status === 0;
@@ -87,7 +90,7 @@ export default function EscrowStatus() {
       // dispatch(setHeaderKey(response3.data?.data?.header_key));
       // localStorage.setItem("headerKey", response3.data?.data?.header_key);
       const userIP = await fetchUserIP();
-      console.log('User IP at first', userIP);
+      console.log("User IP at first", userIP);
       if (!userIP) {
         console.error("Could not fetch IP");
         return;
@@ -100,7 +103,7 @@ export default function EscrowStatus() {
 
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
-
+      dispatch(clearConfirmPaymentDetails());
       // // send-otp request
       // const sendOtpPayload = {
       //   call_type: "pay",
@@ -152,10 +155,13 @@ export default function EscrowStatus() {
       console.log("API RESPONSE FROM P2P VENDORS FETCH =>>> ", respo2.data);
 
       dispatch(setP2PVendorsDetails(respo2.data));
-      // clearInterval(intervalId);
-      dispatch(setConfirmButtonBackdrop(false));
-
-      dispatch(setCurrentPage("p2p"));
+      if (respo.data?.escrow_status === 0) {
+        // clearInterval(intervalId);
+        dispatch(setConfirmButtonBackdrop(false));
+        console.log("Confirm Payment Details", confirmPaymentDetails);
+        
+        dispatch(setCurrentPage("p2p"));
+      }
       return;
       //     }
       //   } catch (error) {
@@ -176,7 +182,7 @@ export default function EscrowStatus() {
 
     if (secondsLeft < 0) {
       setCountdown("Expired");
-      handleConfirm();
+      // handleConfirm();
       return;
     }
 
@@ -463,8 +469,6 @@ export default function EscrowStatus() {
                 </Button>
                 <Button
                   variant="contained"
-                  
-
                   onClick={handleConfirm}
                   disabled={isConfirming}
                   sx={{

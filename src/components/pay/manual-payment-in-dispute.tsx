@@ -1,4 +1,11 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 // import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -7,6 +14,8 @@ import rating from "../../assets/images/rating.png";
 import emptyRating from "../../assets/images/empty-rating.svg";
 import { Icon } from "@iconify/react";
 import { theme } from "../../assets/themes/theme";
+import background from "../../assets/images/background.png";
+
 // import { BiUpload } from "react-icons/bi";
 // import { PageProps } from "../../utils/myUtils";
 // import { setCurrentPage, setP2PEscrowDetails, setShouldRedirectEscrow } from "../../redux/reducers/pay";
@@ -94,7 +103,92 @@ export default function PaymentInDispute({
         gap={2}
         bgcolor={"#fff"}
       >
-        <Box p={{ xs: 2, sm: 3, md: 4 }}>
+        <Card
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            boxShadow: "0px 2px 8px 0px rgba(0,0,0,0.1)",
+            backgroundImage: `url(${background})`,
+            backgroundSize: "cover",
+            position: "relative",
+            mt: 1,
+            // pt: 2,
+            //   flex: 1,
+            height: "70%",
+          }}
+          component={Box}
+          borderRadius={2}
+        >
+          <Box
+            display={"flex"}
+            flexDirection="column"
+            // justifyContent={"space-between"}
+            alignItems={"center"}
+            width="100%"
+            pb={2}
+            // flex={1}
+            mt={2}
+            // position={'relative'}
+          >
+            <Box
+              py={2}
+              zIndex={5}
+              bgcolor={"#bccefb"}
+              borderRadius={"50%"}
+              px={1}
+              paddingY={1}
+              paddingBottom={0}
+              position="relative"
+            >
+              <Avatar variant="circular" style={{ width: 100, height: 100 }}>
+                <img src={p2pEscrowDetails?.seller?.image} width={100} alt="" />
+              </Avatar>
+              <Box position="absolute" top={"5%"} right={0} zIndex={10}>
+                <Box bgcolor={"white"} borderRadius={"50%"} px={0.5} pt={0.5}>
+                  <img
+                    src={p2pEscrowDetails?.seller?.ranking}
+                    alt=""
+                    style={{ width: 30 }}
+                  />
+                </Box>
+              </Box>
+            </Box>
+            <Box
+              pb={0.5}
+              zIndex={5}
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+            >
+              <div style={{ marginBottom: "10px" }}>{ratingImages}</div>
+              <Typography variant="caption">
+                {`${fullStarsCount}/5`} ({p2pEscrowDetails?.seller?.rating}%)
+              </Typography>{" "}
+            </Box>
+          </Box>
+        </Card>
+        <Card
+          sx={{
+            // width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            boxShadow: "0px 2px 8px 0px rgba(0,0,0,0.1)",
+            backgroundImage: `url(${background})`,
+            backgroundSize: "cover",
+            position: "relative",
+            gap: 1,
+            pt: 4,
+            pb: 2,
+            px: 1,
+            height: "100%",
+          }}
+          component={Box}
+          borderRadius={2}
+        >
+          {/* <Box p={{ xs: 2, sm: 3, md: 4 }}> */}
           <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
             <Box
               bgcolor={"#FEF3F2"}
@@ -159,47 +253,49 @@ export default function PaymentInDispute({
               justifyContent="center"
               textAlign="center"
               position={"absolute"}
-              right={"47%"}
+              right={"27%"}
               zIndex={1}
               mt={1}
             >
               2
             </Box>
             <Box display={"flex"} justifyContent={"center"} mt={2}>
-            <Button
-              variant="outlined"
-              sx={{
-                width: "55%",
-                paddingY: 1,
-                borderRadius: 2,
-                ":hover": { background: "transparent" },
-                fontSize: 14,
-                fontWeight: 800,
-                display: "flex",
-                gap: 0.3,
-                color: "primary.main",
-                border: "1px solid",
-              }}
-              onClick={Chat}
-            >
-              <IconButton
+              <Button
+                variant="outlined"
                 sx={{
+                  width: "100%",
+                  paddingY: 1,
+                  paddingX: 4,
+                  borderRadius: 2,
+                  ":hover": { background: "transparent" },
+                  fontSize: 14,
+                  fontWeight: 800,
+                  display: "flex",
+                  gap: 0.3,
                   color: "primary.main",
-                  padding: 0,
-                  "&:hover": { backgroundColor: "primary.main" },
+                  border: "1px solid",
                 }}
+                onClick={Chat}
               >
-                <Icon
-                  icon="lets-icons:chat-fill"
-                  fontSize={16}
-                  color={theme.palette.primary.main}
-                />
-              </IconButton>
-              Go To Chat
-            </Button>
+                <IconButton
+                  sx={{
+                    color: "primary.main",
+                    padding: 0,
+                    "&:hover": { backgroundColor: "primary.main" },
+                  }}
+                >
+                  <Icon
+                    icon="lets-icons:chat-fill"
+                    fontSize={16}
+                    color={theme.palette.primary.main}
+                  />
+                </IconButton>
+                Go To Chat
+              </Button>
             </Box>
           </Box>
-        </Box>
+          {/* </Box> */}
+        </Card>
       </Box>
     </>
   );

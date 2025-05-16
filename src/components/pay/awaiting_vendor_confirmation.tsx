@@ -98,8 +98,7 @@ export default function AwaitingVendorConfirmation({
             backgroundSize: "cover",
             position: "relative",
             mt: 1,
-            //   flex: 1,
-            height: "45%",
+            height: "100%",
           }}
           component={Box}
           borderRadius={2}
@@ -137,7 +136,7 @@ export default function AwaitingVendorConfirmation({
               color: "primary.main",
               border: "1px solid",
               position: "absolute",
-              top: "1.5%",
+              top: "2.5%",
               right: 14,
               zIndex: 9,
             }}
@@ -181,36 +180,63 @@ export default function AwaitingVendorConfirmation({
             </Box>
           </Box>
         </Card>
-        {/* Awaiting vendor confirmation */}
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <Box display="flex" alignItems="center" position={"relative"}>
-            <img src={vendors} alt="" style={{ width: "100%", height: "auto" }} />
+        <Card
+          sx={{
+            // width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            boxShadow: "0px 2px 8px 0px rgba(0,0,0,0.1)",
+            backgroundImage: `url(${background})`,
+            backgroundSize: "cover",
+            position: "relative",
+            gap: 2,
+            mt: 1,
+            py: 4,
+            px: 1,
+            height: "100%",
+          }}
+          component={Box}
+          borderRadius={2}
+        >
+          {/* Awaiting vendor confirmation */}
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Box display="flex" alignItems="center" position={"relative"}>
+              <img src={vendors} alt="" style={{ width: "100%", height: "auto" }} />
+              <Box
+                width={35}
+                height={35}
+                display="flex"
+                alignItems={"center"}
+                justifyContent={"center"}
+                bgcolor={"#FFE79E"}
+                border={"20px solid #FFFAEB"}
+                borderRadius={"50%"}
+                position={"absolute"}
+                right={-30}
+                bottom={-10}
+              >
+                <Icon icon="eos-icons:loading" fontSize={30} color="#b95c01" />
+              </Box>
+            </Box>
             <Box
-              width={35}
-              height={35}
               display="flex"
+              flexDirection={"column"}
               alignItems={"center"}
-              justifyContent={"center"}
-              bgcolor={"#FFE79E"}
-              border={"20px solid #FFFAEB"}
-              borderRadius={"50%"}
-              position={"absolute"}
-              right={-30}
-              bottom={-10}
+              textAlign="center"
+              width="100%"
+              mt={0.5}
             >
-              <Icon icon="eos-icons:loading" fontSize={30} color="#b95c01" />
+              <Typography variant="h6" fontWeight={700}>
+                Awaiting Vendor's Confirmation
+              </Typography>
+              <Typography variant="body2" fontSize={12} width={"95%"}>
+                This payment is in progress, once the vendor confirms your payment the page will be
+                automatically updated
+              </Typography>
             </Box>
           </Box>
-          <Box textAlign="center" width="100%">
-            <Typography variant="h6" fontWeight={700} textAlign="center">
-              Awaiting Vendor's Confirmation
-            </Typography>
-            <Typography variant="body2" fontSize={12} textAlign="center" width={"92%"}>
-              This payment is in progress, once the vendor confirms your payment the page will be
-              automatically updated
-            </Typography>
-          </Box>
-        </Box>
+        </Card>
       </Box>
     </>
   );

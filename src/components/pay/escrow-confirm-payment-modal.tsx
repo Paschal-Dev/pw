@@ -23,14 +23,14 @@ import {
 interface EscrowConfirmPaymentProps {
   open: boolean;
   onClose: () => void;
-  onPaidToggle: () => void;
+  // onPaidToggle: () => void;
 }
 
 export default function EscrowConfirmPaymentModal({
   open,
   onClose,
-  onPaidToggle,
-}: EscrowConfirmPaymentProps) {
+}: // onPaidToggle,
+EscrowConfirmPaymentProps) {
   // const theme = useTheme();
   // const isMobile = useMediaQuery(theme.breakpoints.only("xs"));
   // const isTablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -52,7 +52,6 @@ export default function EscrowConfirmPaymentModal({
 
   const handleConfirm = async () => {
     // dispatch(setPaidClicked(true));
-    onPaidToggle();
     try {
       const userIP = await fetchUserIP();
       console.log("User IP at first", userIP);
@@ -71,7 +70,8 @@ export default function EscrowConfirmPaymentModal({
       if (respo.data.status === "success") {
         dispatch(setConfirmPaymentDetails(respo.data));
         console.log("API RESPONSE FROM CONFIRM PAYMEMT=>>> ", respo.data);
-        
+        // onPaidToggle();
+
         // console.log("Check", isPaidClicked);
       }
       onClose();

@@ -10,13 +10,15 @@ import PaymentInDispute from "./manual-payment-in-dispute";
 
 interface ManualPaymentStatusProps {
   onChatToggle: (isChatOpen: boolean) => void;
-  onPaidToggle: () => void;
+  // onPaidToggle: () => void;
 }
 
 export default function ManualPaymentStatus({
   onChatToggle,
 }: ManualPaymentStatusProps): React.JSX.Element {
-  const { payId, confirmPaymentDetails } = useSelector((state: RootState) => state.pay);
+  const { payId, confirmPaymentDetails, lang } = useSelector(
+    (state: RootState) => state.pay
+  );
   const dispatch = useDispatch();
 
   // Memoize fetchUserIP
@@ -31,75 +33,46 @@ export default function ManualPaymentStatus({
     }
   }, []);
 
-  // Memoize the payment status check function
-  const checkPaymentStatus = useCallback(
-    async (userIP: string) => {
-      if (!payId) {
-        console.warn("No payId provided, skipping payment status check.");
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const userIP = await fetchUserIP();
+      if (!userIP) {
+        console.error("Could not fetch IP");
         return;
       }
 
+      const confirmPaymentPayload = {
+        call_type: "p2p_manual_payment_confirm",
+        ip: userIP,
+        lang: lang,
+        pay_id: payId,
+      };
+
       try {
-        const confirmPaymentPayload = {
-          call_type: "p2p_manual_payment_confirm",
-          ip: userIP,
-          pay_id: payId,
-        };
-
         const respo = await APIService.manualPayment(confirmPaymentPayload);
-        if (respo.data.status === "success") {
           dispatch(setConfirmPaymentDetails(respo.data));
-          console.log("API RESPONSE FROM CONFIRM PAYMEMT=>>> ", respo.data);
+          console.log("API RESPONSE FROM CONFIRM PAYMEMT CONTINUOUS CHECK=>>> ", respo.data);
 
-          // console.log("Check", isPaidClicked);
-        }
       } catch (error) {
-        console.error("Error confirming payment:", error);
+        console.error("Error Confirm Payment:", error);
       }
-    },
-    [payId, dispatch]
-  );
+    }, 10000); // Poll every 5 seconds
 
-  // Effect to check payment status every 5 seconds
-  useEffect(() => {
-    if (
-      confirmPaymentDetails?.payment_status === 1 ||
-      confirmPaymentDetails?.payment_status === 4
-    ) {
-      return; // Stop polling for terminal statuses
-    }
+    return () => clearInterval(intervalId);
+  }, [dispatch, fetchUserIP, lang, payId]);
 
-    let userIP: string | null = null;
-
-    const initializeIP = async () => {
-      userIP = await fetchUserIP();
-      if (userIP) {
-        await checkPaymentStatus(userIP); // Run immediately after IP fetch
-      }
-    };
-
-    initializeIP();
-
-    const interval = setInterval(() => {
-      if (userIP) {
-        checkPaymentStatus(userIP);
-      }
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [checkPaymentStatus, confirmPaymentDetails?.payment_status, fetchUserIP]);
 
   return (
     <>
-      {confirmPaymentDetails?.payment_status === 1 ? (
+      {confirmPaymentDetails?.confirm_manual_payment === 1 ? (
         <ManualPaymentSuccessful onChatToggle={onChatToggle} />
-      ) : confirmPaymentDetails?.payment_status === 4 ? (
+      ) : confirmPaymentDetails?.confirm_manual_payment === 4 ? (
         <ManualPaymentExpired />
-      ) : confirmPaymentDetails?.payment_status === 5 ? (
+      ) : confirmPaymentDetails?.confirm_manual_payment === 5 ? (
         <PaymentInDispute onChatToggle={onChatToggle} />
-      ) : (
+      ) : confirmPaymentDetails?.confirm_manual_payment === 2 ? (
         <AwaitingVendorConfirmation onChatToggle={onChatToggle} />
-      )}
+      ) : <AwaitingVendorConfirmation onChatToggle={onChatToggle} />}
     </>
   );
 }

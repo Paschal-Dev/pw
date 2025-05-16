@@ -276,12 +276,12 @@ export default function PayP2P(): React.JSX.Element {
                     ? "repeat(2, 1fr)"
                     : deviceType === "mobile"
                     ? "repeat(2, 1fr)"
-                    : "repeat(3, 1fr)"
+                    : "repeat(4, 1fr)"
                 }
                 gap={1}
                 p={1}
                 overflow={"auto"}
-                height={"100%"}
+                height={380}
                 sx={{
                   borderBottomRightRadius: 15,
                   borderBottomLeftRadius: 15,
@@ -362,12 +362,12 @@ export default function PayP2P(): React.JSX.Element {
                     ? "repeat(2, 1fr)"
                     : deviceType === "mobile"
                     ? "repeat(2, 1fr)"
-                    : "repeat(3, 1fr)"
+                    : "repeat(4, 1fr)"
                 }
                 gap={1}
                 p={1}
                 overflow={"auto"}
-                height={"100%"}
+                height={380}
                 sx={{
                   borderBottomRightRadius: 15,
                   borderBottomLeftRadius: 15,

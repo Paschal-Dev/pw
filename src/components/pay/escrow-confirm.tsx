@@ -18,7 +18,7 @@ export default function EscrowConfirm(): React.JSX.Element {
   const { p2pEscrowDetails, payId } = useSelector((state: RootState) => state.pay);
   // const resp = await APIService.sendOTP(sendOtpPayload);
   // const { payId } = useSelector((state: RootState) => state.pay);
-  const currency_sign = p2pEscrowDetails?.data?.currency_sign;
+  const currency_sign = p2pEscrowDetails?.pay?.total_to_pay_currency;
   const dispatch = useDispatch();
   const getRatingCounts = (rating: number) => {
     let fullStarsCount = 0;
@@ -295,7 +295,7 @@ export default function EscrowConfirm(): React.JSX.Element {
               textAlign={"center"}
             >
               <span dangerouslySetInnerHTML={{ __html: currency_sign }} />
-              {`${p2pEscrowDetails?.pay?.total_original_amount} ${p2pEscrowDetails?.data?.currency}`}
+              {`${p2pEscrowDetails?.pay?.total_to_pay_amount} ${p2pEscrowDetails?.pay?.toa_currency}`}
             </Typography>
           </Box>
           <img src={p2pEscrowDetails?.vendor?.logo} alt="" width='80%' />

@@ -43,16 +43,8 @@ export default function EscrowManualModal({ open, onClose }: EscrowModalProps) {
       >
         {/* Header */}
         <DialogTitle sx={{ p: 0, mb: 1 }}>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Typography
-              fontWeight={700}
-              fontSize={{ xs: 18, sm: 20, md: 23 }}
-              marginLeft={1}
-            >
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Typography fontWeight={700} fontSize={{ xs: 18, sm: 20, md: 23 }} marginLeft={1}>
               Vendor’s Terms
             </Typography>
             <IconButton
@@ -62,30 +54,15 @@ export default function EscrowManualModal({ open, onClose }: EscrowModalProps) {
                 padding: 1,
               }}
             >
-              <Icon
-                icon="icon-park-solid:error"
-                color="#DD0004"
-                fontSize={12}
-              />
+              <Icon icon="icon-park-solid:error" color="#DD0004" fontSize={12} />
             </IconButton>
           </Box>
           <Box mt={1} borderTop="3px solid #009fdd" />
         </DialogTitle>
 
         {/* Warning Box */}
-        <Box
-          bgcolor="secondary.main"
-          py={2}
-          px={2}
-          borderRadius={5}
-          textAlign="center"
-          mb={2}
-        >
-          <Typography
-            variant="body1"
-            fontSize={{ xs: 12, sm: 14 }}
-            fontWeight={700}
-          >
+        <Box bgcolor="secondary.main" py={2} px={2} borderRadius={5} textAlign="center" mb={2}>
+          <Typography variant="body1" fontSize={{ xs: 12, sm: 14 }} fontWeight={700}>
             Make sure you Read, Understand & Accept the Vendor’s terms
           </Typography>
         </Box>
@@ -124,7 +101,7 @@ export default function EscrowManualModal({ open, onClose }: EscrowModalProps) {
             color="text.primary"
             lineHeight={1.6}
           >
-            {p2pEscrowDetails?.vendor?.terms}
+            <div dangerouslySetInnerHTML={{ __html: p2pEscrowDetails?.vendor?.terms }} />
           </Typography>
         </DialogContent>
 

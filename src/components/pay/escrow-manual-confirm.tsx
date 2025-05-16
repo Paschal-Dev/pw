@@ -24,13 +24,13 @@ import { setChatDetails } from "../../redux/reducers/pay";
 
 interface ManualEscrowProps {
   onChatToggle: (isChatOpen: boolean) => void;
-  onPaidToggle?: () => void;
+  // onPaidToggle?: () => void;
   onChatOpen?: () => void; // Notify parent when chat is opened
 }
 
 export default function ManualEscrow({
   onChatToggle,
-  onPaidToggle,
+  // onPaidToggle,
   onChatOpen,
 }: ManualEscrowProps): React.JSX.Element {
   const [open, setOpen] = useState(false);
@@ -42,7 +42,9 @@ export default function ManualEscrow({
   const { p2pEscrowDetails, payId, chatDetails } = useSelector(
     (state: RootState) => state.pay
   );
-  const currency_sign = p2pEscrowDetails?.data?.currency_sign;
+  // const currency_sign = p2pEscrowDetails?.data?.currency_sign;
+  const vendor_currency_sign = p2pEscrowDetails?.pay?.total_to_pay_currency;
+
 
   const unreadCount = useMemo(() => {
     return (
@@ -345,8 +347,8 @@ export default function ManualEscrow({
               color={theme.palette.success.main}
               textAlign={"center"}
             >
-              <span dangerouslySetInnerHTML={{ __html: currency_sign }} />
-              {`${p2pEscrowDetails?.pay?.total_original_amount} ${p2pEscrowDetails?.data?.currency}`}
+              <span dangerouslySetInnerHTML={{ __html: vendor_currency_sign }} />
+              {`${p2pEscrowDetails?.pay?.total_to_pay_amount} ${p2pEscrowDetails?.pay?.toa_currency}`}
             </Typography>
           </Box>
           <Box display={"flex"} flexDirection={"column"} gap={1}>
@@ -396,7 +398,7 @@ export default function ManualEscrow({
                   py: 1,
                 }}
               >
-                {p2pEscrowDetails?.vendor?.description}
+              <div dangerouslySetInnerHTML={{ __html: p2pEscrowDetails?.vendor?.description }} />
               </Typography>
             </Box>
           </Box>
@@ -421,7 +423,7 @@ export default function ManualEscrow({
         <EscrowConfirmPaymentModal
           open={manualConfirmOpen}
           onClose={closePaymentClick}
-          onPaidToggle={onPaidToggle || (() => {})}
+          // onPaidToggle={onPaidToggle || (() => {})}
         />
       </Box>
     </Card>

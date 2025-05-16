@@ -106,12 +106,16 @@ const paySlice = createSlice({
     setConfirmPaymentDetails: (state, action: PayloadAction<any>) => {
       state.confirmPaymentDetails = action.payload;
     },
+    clearConfirmPaymentDetails(state) {
+      state.confirmPaymentDetails = null; // Reset to initial state
+    },
   },
 });
 
 export const {
 //   setPaidClicked,
   setConfirmPaymentDetails,
+  clearConfirmPaymentDetails,
   setPayId,
   setLang,
   setPaymentDetails,
