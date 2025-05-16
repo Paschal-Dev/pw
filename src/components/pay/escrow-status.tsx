@@ -181,8 +181,8 @@ export default function EscrowStatus() {
     let secondsLeft = p2pEscrowDetails?.pay?.escrow_exp - now;
 
     if (secondsLeft < 0) {
-      setCountdown("Expired");
-      // handleConfirm();
+      setCountdown("00h 00m 00s Left");
+      
       return;
     }
 

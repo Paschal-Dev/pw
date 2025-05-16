@@ -3,7 +3,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 
-type SenderType = "admin" | "buyer" | "other";
+type SenderType = "admin" | "buyer" | "vendor";
 
 export interface ChatItemProps {
   name: string;
@@ -33,7 +33,7 @@ export default function ChatItem({
   const chatBgColorMap = {
     admin: "#D6FED6",
     buyer: "#FFE5E5",
-    other: "#E3F2FD",
+    vendor: "#E3F2FD",
   };
 
   return (

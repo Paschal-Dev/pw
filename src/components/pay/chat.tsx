@@ -15,11 +15,7 @@ interface ChatProps extends MediaProps {
   onChatOpen: () => void; // Notify parent when chat is opened
 }
 
-export default function Chat({
-  deviceType,
-  onClose,
-  onChatOpen,
-}: ChatProps): React.JSX.Element {
+export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): React.JSX.Element {
   const dispatch = useDispatch();
   const { chatDetails, p2pEscrowDetails, payId, lang } = useSelector(
     (state: RootState) => state.pay
@@ -48,15 +44,16 @@ export default function Chat({
     translated_message: string;
   }
 
-  const dummyMessages: ChatItemProps[] = chatDetails?.data?.map((msg: ChatMessage) => ({
-    senderType: msg.sender_type,
-    name: msg.use_name,
-    profilePic: msg.use_image,
-    status: msg.online_status === 0 ? "Offline" : msg.online_status === 1 ? "Online" : "Away",
-    localTime: msg.local_time,
-    timeAgo: msg.date_sent,
-    message: msg.translated_message,
-  })) || [];
+  const dummyMessages: ChatItemProps[] =
+    chatDetails?.data?.map((msg: ChatMessage) => ({
+      senderType: msg.sender_type,
+      name: msg.use_name,
+      profilePic: msg.use_image,
+      status: msg.online_status === 0 ? "Offline" : msg.online_status === 1 ? "Online" : "Away",
+      localTime: msg.local_time,
+      timeAgo: msg.date_sent,
+      message: msg.translated_message,
+    })) || [];
 
   const fetchUserIP = async () => {
     try {
@@ -157,10 +154,7 @@ export default function Chat({
                 />
               </Box>
             )}
-            <Typography
-              fontSize={deviceType === "mobile" ? 16 : "4vh"}
-              fontWeight={700}
-            >
+            <Typography fontSize={deviceType === "mobile" ? 16 : "4vh"} fontWeight={700}>
               Chat For #{p2pEscrowDetails?.pay?.unique_id}
             </Typography>
           </Box>
@@ -182,7 +176,7 @@ export default function Chat({
             sx={{
               borderTopLeftRadius: "16px",
               borderTopRightRadius: "16px",
-              maxHeight: "400px",
+              height: "400px",
               overflowY: "auto",
             }}
           >
@@ -196,11 +190,7 @@ export default function Chat({
                     : "flex-start";
 
                 return (
-                  <Box
-                    key={index}
-                    display="flex"
-                    justifyContent={justifyContent}
-                  >
+                  <Box key={index} display="flex" justifyContent={justifyContent}>
                     <ChatItem {...msg} />
                   </Box>
                 );
@@ -210,14 +200,7 @@ export default function Chat({
           </Box>
 
           {/* Input Area */}
-          <Box
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            gap={4}
-            bgcolor="#fff"
-            p={2}
-          >
+          <Box display="flex" flexDirection="row" alignItems="center" gap={4} bgcolor="#fff" p={2}>
             <Box
               display="flex"
               alignItems="center"

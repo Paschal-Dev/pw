@@ -137,7 +137,7 @@ export default function EscrowPage(): React.JSX.Element {
       } catch (error) {
         console.error("Error during Escrow Payload:", error);
       }
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, [dispatch, lang, payId]);
