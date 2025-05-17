@@ -31,7 +31,8 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
       onChatOpen();
       setIsFirstRender(false);
     }
-  }, [chatDetails, onChatOpen, isFirstRender]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFirstRender]);
 
   // Transform chatDetails.data into ChatItemProps
   interface ChatMessage {

@@ -11,13 +11,15 @@ import {
   setConfirmButtonBackdrop,
   setCurrentPage,
   setP2PVendorsDetails,
-  clearConfirmPaymentDetails
+  clearConfirmPaymentDetails,
 } from "../../redux/reducers/pay";
 // import background from "../../assets/images/background.png";
 
 export default function EscrowConfirmDetails() {
   const [deviceType, setDeviceType] = React.useState("mobile");
-  const { p2pEscrowDetails, payId, confirmPaymentDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails, payId, confirmPaymentDetails } = useSelector(
+    (state: RootState) => state.pay
+  );
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const vendor_currency_sign = p2pEscrowDetails?.pay?.total_to_pay_currency;
   const [open, setOpen] = useState(false);
@@ -56,132 +58,132 @@ export default function EscrowConfirmDetails() {
       return null;
     }
   };
-   const handleConfirm = async () => {
-      setIsConfirming(true);
-      setOpen(true);
-      dispatch(setConfirmButtonBackdrop(true));
-      localStorage.removeItem("checkout_link");
-      localStorage.clear();
-      try {
-        // const formData = new FormData();
-        // formData.append("call_type", "get_key");
-  
-        // const response1 = await APIService.getToken(formData);
-        // console.log(
-        //   "API RESPONSE FROM CANCEL ESCROW GET TOKEN =>>> ",
-        //   response1.data
-        // );
-  
-        // const payload = {
-        //   call_type: "encode_key",
-        //   token: response1.data?.data?.token,
-        //   key: response1.data?.data?.key,
-        //   timestamp: Math.floor(Date.now() / 1000),
-        // };
-  
-        // const response3 = await APIService.encodeKey(payload);
-        // console.log(
-        //   "API RESPONSE FROM CANCEL ESCROW ENCODE KEY =>>> ",
-        //   response3.data
-        // );
-  
-        // dispatch(setHeaderKey(response3.data?.data?.header_key));
-        // localStorage.setItem("headerKey", response3.data?.data?.header_key);
-        const userIP = await fetchUserIP();
-        console.log("User IP at first", userIP);
-        if (!userIP) {
-          console.error("Could not fetch IP");
-          return;
-        }
-        const cancelPayload = {
-          call_type: "cancel_escrow",
-          ip: userIP,
-          pay_id: payId,
-        };
-  
-        const respo = await APIService.p2pCancelEscrow(cancelPayload);
-        console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
-        dispatch(clearConfirmPaymentDetails());
-        // // send-otp request
-        // const sendOtpPayload = {
-        //   call_type: "pay",
-        //   ip: userIP,
-        //   lang: "en",
-        //   pay_id: payId,
-        // };
-  
-        // // eslint-disable-next-line prefer-const
-        // let intervalId: number | undefined;
-        // const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
-        //   try {
-        //     const resp = await APIService.sendOTP(sendOtpPayload);
-        //     console.log(
-        //       "API RESPONSE FROM PAGE_RELOAD SEND OTP =>>> ",
-        //       resp.data
-        //     );
-  
-        // if (resp.data?.escrow_status === 1) {
-        //   // Do nothing, let the interval continue
-        // } else {
-        // const formData = new FormData();
-        // formData.append("call_type", "get_key");
-        // const response1 = await APIService.getToken(formData);
-        // console.log(
-        //   "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
-        //   response1.data
-        // );
-  
-        // const payload = {
-        //   call_type: "encode_key",
-        //   token: response1.data?.data?.token,
-        //   key: response1.data?.data?.key,
-        //   timestamp: Math.floor(Date.now() / 1000),
-        // };
-        // const response3 = await APIService.encodeKey(payload);
-        // console.log(
-        //   "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
-        //   response3.data
-        // );
-        // dispatch(setHeaderKey(response3.data?.data?.header_key));
-        // localStorage.setItem("headerKey", response3.data?.data?.header_key);
-        const p2pPayload = {
-          call_type: "p2p_vendors",
-          ip: userIP,
-          pay_id: payId,
-        };
-        const respo2 = await APIService.p2pVendors(p2pPayload);
-        console.log("API RESPONSE FROM P2P VENDORS FETCH =>>> ", respo2.data);
-  
-        dispatch(setP2PVendorsDetails(respo2.data));
-        if (respo.data?.escrow_status === 0) {
-          // clearInterval(intervalId);
-          dispatch(setConfirmButtonBackdrop(false));
-          console.log("Confirm Payment Details", confirmPaymentDetails);
-          
-          dispatch(setCurrentPage("p2p"));
-        }
-        return;
-        //     }
-        //   } catch (error) {
-        //     console.log("ERROR ::::::: ", error);
-        //   }
-        // };
-        // intervalId = setInterval(
-        //   () => checkPaymentStatusAndRun(sendOtpPayload),
-        //   3000
-        // );
-      } catch (error) {
-        console.error("Error Cancelling Escrow:", error);
-      }
-    };
+  const handleConfirm = async () => {
+    setIsConfirming(true);
+    setOpen(true);
+    dispatch(setConfirmButtonBackdrop(true));
+    localStorage.removeItem("checkout_link");
+    localStorage.clear();
+    try {
+      // const formData = new FormData();
+      // formData.append("call_type", "get_key");
 
-   const calculateCountdown = () => {
+      // const response1 = await APIService.getToken(formData);
+      // console.log(
+      //   "API RESPONSE FROM CANCEL ESCROW GET TOKEN =>>> ",
+      //   response1.data
+      // );
+
+      // const payload = {
+      //   call_type: "encode_key",
+      //   token: response1.data?.data?.token,
+      //   key: response1.data?.data?.key,
+      //   timestamp: Math.floor(Date.now() / 1000),
+      // };
+
+      // const response3 = await APIService.encodeKey(payload);
+      // console.log(
+      //   "API RESPONSE FROM CANCEL ESCROW ENCODE KEY =>>> ",
+      //   response3.data
+      // );
+
+      // dispatch(setHeaderKey(response3.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
+      const userIP = await fetchUserIP();
+      console.log("User IP at first", userIP);
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
+      const cancelPayload = {
+        call_type: "cancel_escrow",
+        ip: userIP,
+        pay_id: payId,
+      };
+
+      const respo = await APIService.p2pCancelEscrow(cancelPayload);
+      console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
+      dispatch(clearConfirmPaymentDetails());
+      // // send-otp request
+      // const sendOtpPayload = {
+      //   call_type: "pay",
+      //   ip: userIP,
+      //   lang: "en",
+      //   pay_id: payId,
+      // };
+
+      // // eslint-disable-next-line prefer-const
+      // let intervalId: number | undefined;
+      // const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
+      //   try {
+      //     const resp = await APIService.sendOTP(sendOtpPayload);
+      //     console.log(
+      //       "API RESPONSE FROM PAGE_RELOAD SEND OTP =>>> ",
+      //       resp.data
+      //     );
+
+      // if (resp.data?.escrow_status === 1) {
+      //   // Do nothing, let the interval continue
+      // } else {
+      // const formData = new FormData();
+      // formData.append("call_type", "get_key");
+      // const response1 = await APIService.getToken(formData);
+      // console.log(
+      //   "API RESPONSE FROM P2P VENDORS GET TOKEN =>>> ",
+      //   response1.data
+      // );
+
+      // const payload = {
+      //   call_type: "encode_key",
+      //   token: response1.data?.data?.token,
+      //   key: response1.data?.data?.key,
+      //   timestamp: Math.floor(Date.now() / 1000),
+      // };
+      // const response3 = await APIService.encodeKey(payload);
+      // console.log(
+      //   "API RESPONSE FROM P2P VENDORS ENCODE KEY =>>> ",
+      //   response3.data
+      // );
+      // dispatch(setHeaderKey(response3.data?.data?.header_key));
+      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
+      const p2pPayload = {
+        call_type: "p2p_vendors",
+        ip: userIP,
+        pay_id: payId,
+      };
+      const respo2 = await APIService.p2pVendors(p2pPayload);
+      console.log("API RESPONSE FROM P2P VENDORS FETCH =>>> ", respo2.data);
+
+      dispatch(setP2PVendorsDetails(respo2.data));
+      if (respo.data?.escrow_status === 0) {
+        // clearInterval(intervalId);
+        dispatch(setConfirmButtonBackdrop(false));
+        console.log("Confirm Payment Details", confirmPaymentDetails);
+
+        dispatch(setCurrentPage("p2p"));
+      }
+      return;
+      //     }
+      //   } catch (error) {
+      //     console.log("ERROR ::::::: ", error);
+      //   }
+      // };
+      // intervalId = setInterval(
+      //   () => checkPaymentStatusAndRun(sendOtpPayload),
+      //   3000
+      // );
+    } catch (error) {
+      console.error("Error Cancelling Escrow:", error);
+    }
+  };
+
+  const calculateCountdown = () => {
     const now = Math.floor(Date.now() / 1000);
     let secondsLeft = p2pEscrowDetails?.pay?.escrow_exp - now;
 
     if (secondsLeft < 0) {
       setCountdown("00h 00m 00s Left");
-      
+
       return;
     }
 
@@ -261,7 +263,7 @@ export default function EscrowConfirmDetails() {
             fontWeight={600}
             style={{ flex: 1 }}
           >
-            {t("blc_pw_8")}
+            Order Amount
           </Typography>
 
           <Typography
@@ -278,7 +280,9 @@ export default function EscrowConfirmDetails() {
           </Typography>
         </Box>
         <Box
-          display={deviceType === "mobile" || deviceType === "tablet" ? "none" : "flex"}
+          display={
+            deviceType === "mobile" || deviceType === "tablet" ? "none" : "flex"
+          }
           flexDirection="row"
           justifyContent="space-between"
           py={0.5}
@@ -291,7 +295,7 @@ export default function EscrowConfirmDetails() {
             fontWeight={600}
             style={{ flex: 1 }}
           >
-            {t("amount-to-pay")}
+            Total Order Amount
           </Typography>
 
           <Typography
@@ -308,7 +312,9 @@ export default function EscrowConfirmDetails() {
           </Typography>
         </Box>
         <Box
-          display={deviceType === "mobile" || deviceType === "tablet" ? "flex" : "none"}
+          display={
+            deviceType === "mobile" || deviceType === "tablet" ? "flex" : "none"
+          }
           // flexDirection="row"
           // justifyContent="space-between"
           py={0.5}
@@ -372,7 +378,12 @@ export default function EscrowConfirmDetails() {
                   </Box>
                 )}
               </Box>
-              <Box bgcolor="#FBFBFB" borderRadius={4} p={1} mb={deviceType === "mobile" ? 2 : 0}>
+              <Box
+                bgcolor="#FBFBFB"
+                borderRadius={4}
+                p={1}
+                mb={deviceType === "mobile" ? 2 : 0}
+              >
                 <Box display="flex" justifyContent="center">
                   <Typography
                     variant="h6"
@@ -397,10 +408,18 @@ export default function EscrowConfirmDetails() {
                     p={1}
                     pb={deviceType === "mobile" ? 2 : 0}
                   >
-                    <Typography variant="caption" color="#F04438" textAlign="center">
+                    <Typography
+                      variant="caption"
+                      color="#F04438"
+                      textAlign="center"
+                    >
                       {t("need-to-cancel")}
                     </Typography>
-                    <Typography variant="caption" color="#F04438" textAlign="center">
+                    <Typography
+                      variant="caption"
+                      color="#F04438"
+                      textAlign="center"
+                    >
                       {t("escrow-need-to")}
                     </Typography>
                   </Box>
@@ -533,12 +552,18 @@ export default function EscrowConfirmDetails() {
               </Typography>
               <Typography
                 variant="body2"
+                fontSize={12}
                 id="modal-modal-description"
                 sx={{ mt: 1 }}
                 alignItems={"center"}
                 textAlign={"center"}
               >
-                {t("blc_pw_14")}
+                If you’ve already completed the payment, <span style={{
+                  fontWeight: 700
+                }}>do not cancel the
+                escrow!</span>  However, if you haven’t made the payment yet, you may
+                cancel the escrow to choose a different payment method from the
+                P2P checkout.
               </Typography>
               <Box
                 display="flex"
@@ -804,7 +829,12 @@ export default function EscrowConfirmDetails() {
               {p2pEscrowDetails?.vendor?.fee_fixed}
             </Typography>
           </Box>
-          <Box display="flex" flexDirection="row" justifyContent="space-between" p={0.5}>
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            p={0.5}
+          >
             <Typography
               color="#000"
               flex={1}
@@ -830,7 +860,12 @@ export default function EscrowConfirmDetails() {
           </Box>
         </Box>
         <Box bgcolor={"#000"} style={{ borderRadius: "0 0 5px 5px" }}>
-          <Box display="flex" flexDirection="row" justifyContent="space-between" p={1}>
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            p={1}
+          >
             <Typography
               color="#FFF"
               flex={1}
@@ -850,7 +885,9 @@ export default function EscrowConfirmDetails() {
               textAlign="center"
               justifyContent={"end"}
             >
-              <span dangerouslySetInnerHTML={{ __html: vendor_currency_sign }} />
+              <span
+                dangerouslySetInnerHTML={{ __html: vendor_currency_sign }}
+              />
               {p2pEscrowDetails?.pay?.total_to_pay_amount}
             </Typography>
           </Box>

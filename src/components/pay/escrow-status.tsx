@@ -159,7 +159,7 @@ export default function EscrowStatus() {
         // clearInterval(intervalId);
         dispatch(setConfirmButtonBackdrop(false));
         console.log("Confirm Payment Details", confirmPaymentDetails);
-        
+
         dispatch(setCurrentPage("p2p"));
       }
       return;
@@ -182,7 +182,7 @@ export default function EscrowStatus() {
 
     if (secondsLeft < 0) {
       setCountdown("00h 00m 00s Left");
-      
+
       return;
     }
 
@@ -439,11 +439,23 @@ export default function EscrowStatus() {
               </Typography>
               <Typography
                 variant="body2"
+                fontSize={14}
                 id="modal-modal-description"
                 sx={{ mt: 1 }}
+                alignItems={"center"}
                 textAlign={"center"}
               >
-                {t("blc_pw_14")}
+                If you’ve already completed the payment,{" "}
+                <span
+                  style={{
+                    fontWeight: 700,
+                  }}
+                >
+                  do not cancel the escrow!
+                </span>{" "}
+                However, if you haven’t made the payment yet, you may cancel the
+                escrow to choose a different payment method from the P2P
+                checkout.
               </Typography>
               <Box
                 display={"flex"}
