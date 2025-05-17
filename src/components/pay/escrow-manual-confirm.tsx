@@ -7,10 +7,10 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import background from "../../assets/images/background.png";
 import { theme } from "../../assets/themes/theme";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Notch from "../../assets/images/notch.svg";
 import { RootState } from "../../redux/store";
 import rating from "../../assets/images/rating.png";
@@ -19,8 +19,6 @@ import { t } from "i18next";
 import { Icon } from "@iconify/react";
 import EscrowManualModal from "./escrow-manual-modal";
 import EscrowConfirmPaymentModal from "./escrow-confirm-payment-modal";
-import APIService from "../../services/api-service";
-import { setChatDetails } from "../../redux/reducers/pay";
 
 interface ManualEscrowProps {
   onChatToggle: (isChatOpen: boolean) => void;
@@ -37,9 +35,9 @@ export default function ManualEscrow({
   const [manualConfirmOpen, setManualConfirmOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [readMessageIds, setReadMessageIds] = useState<string[]>([]);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const { p2pEscrowDetails, payId, chatDetails } = useSelector(
+  const { p2pEscrowDetails, chatDetails } = useSelector(
     (state: RootState) => state.pay
   );
   const vendor_currency_sign = p2pEscrowDetails?.pay?.total_to_pay_currency;
@@ -47,9 +45,9 @@ export default function ManualEscrow({
   const unreadCount = useMemo(() => {
     return (
       chatDetails?.data?.filter(
-        (msg: { sender_type: string; date_sent: string }) =>
+        (msg: { sender_type: string; id: string }) =>
           msg.sender_type !== "buyer" &&
-          !readMessageIds.includes(msg.date_sent)
+          !readMessageIds.includes(msg.id)
       ).length || 0
     );
   }, [chatDetails, readMessageIds]);
@@ -70,50 +68,13 @@ export default function ManualEscrow({
   const handleChatOpen = () => {
     if (chatDetails?.data) {
       const newReadMessageIds = chatDetails.data
-        .filter((msg: { sender_type: string; date_sent: string }) => msg.sender_type !== "buyer")
-        .map((msg: { sender_type: string; date_sent: string }) => msg.date_sent);
+        .filter((msg: { sender_type: string; id: string }) => msg.sender_type !== "buyer")
+        .map((msg: { id: string }) => msg.id);
       setReadMessageIds((prev) => [
         ...new Set([...prev, ...newReadMessageIds]),
       ]);
     }
   };
-
-  const fetchUserIP = async () => {
-    try {
-      const response = await fetch("https://api.ipify.org?format=json");
-      const data = await response.json();
-      return data.ip;
-    } catch (error) {
-      console.error("Error fetching IP:", error);
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    const intervalId = setInterval(async () => {
-      const userIP = await fetchUserIP();
-      if (!userIP) {
-        console.error("Could not fetch IP");
-        return;
-      }
-
-      const p2pChatPayload = {
-        call_type: "p2p_chat",
-        ip: userIP,
-        lang: "en",
-        pay_id: payId,
-      };
-
-      try {
-        const resp = await APIService.p2pChat(p2pChatPayload);
-        dispatch(setChatDetails(resp.data));
-      } catch (error) {
-        console.error("Error during Chat Payload:", error);
-      }
-    }, 5000);
-
-    return () => clearInterval(intervalId);
-  }, [dispatch, payId]);
 
   const getRatingCounts = (rating: number) => {
     let fullStarsCount = 0;
@@ -326,84 +287,85 @@ export default function ManualEscrow({
               {t("pay")}
             </Typography>
           </Box>
-          <Typography
-            variant="h6"
-            fontWeight={700}
-            textAlign={"center"}
-            mb={1}
-            style={{ width: "100%" }}
-          >
-            {p2pEscrowDetails?.seller?.name}
-          </Typography>
-          <Box
-            borderRadius={2}
-            bgcolor={"#E3EFF5"}
-            py={0.6}
-            width={"80%"}
-            boxShadow={
-              "inset 0 4px 4px 0 rgba(0, 0, 0, 0.15), inset 0 -2px 5px 0 rgba(0, 0, 0, 0.15)"
-            }
-            mb={2}
-          >
+          <Box display="flex" flexDirection="column" alignItems="center" width="100%">
             <Typography
               variant="h6"
               fontWeight={700}
-              color={theme.palette.success.main}
               textAlign={"center"}
+              mb={1}
             >
-              <span dangerouslySetInnerHTML={{ __html: vendor_currency_sign }} />
-              {`${p2pEscrowDetails?.pay?.total_to_pay_amount} ${p2pEscrowDetails?.pay?.toa_currency}`}
+              {p2pEscrowDetails?.seller?.name}
             </Typography>
-          </Box>
-          <Box display={"flex"} flexDirection={"column"} gap={1}>
             <Box
-              display={"flex"}
-              flexDirection={"row"}
-              alignItems={"center"}
-              justifyContent={"space-between"}
-            >
-              <Typography
-                color={"#28304E"}
-                variant="body2"
-                fontSize={"10px"}
-                fontWeight={700}
-              >
-                Payment Instructions
-              </Typography>
-              <Button
-                variant="contained"
-                sx={{
-                  whiteSpace: "nowrap",
-                  fontSize: "8px",
-                  padding: "6px 6px",
-                  fontWeight: 600,
-                  bgcolor: "#D92D20",
-                  color: "#fff",
-                }}
-                onClick={handleOpen}
-              >
-                Vendor’s Terms
-              </Button>
-              <EscrowManualModal open={open} onClose={handleClose} />
-            </Box>
-            <Box
-              bgcolor={theme.palette.secondary.light}
               borderRadius={2}
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"space-between"}
+              bgcolor={"#E3EFF5"}
+              py={0.6}
+              width={"80%"}
+              boxShadow={
+                "inset 0 4px 4px 0 rgba(0, 0, 0, 0.15), inset 0 -2px 5px 0 rgba(0, 0, 0, 0.15)"
+              }
+              mb={2}
             >
               <Typography
-                variant="body2"
-                fontWeight={600}
-                sx={{
-                  fontSize: 14,
-                  px: 1,
-                  py: 1,
-                }}
+                variant="h6"
+                fontWeight={700}
+                color={theme.palette.success.main}
+                textAlign={"center"}
               >
-              <div dangerouslySetInnerHTML={{ __html: p2pEscrowDetails?.vendor?.description }} />
+                <span dangerouslySetInnerHTML={{ __html: vendor_currency_sign }} />
+                {`${p2pEscrowDetails?.pay?.total_to_pay_amount} ${p2pEscrowDetails?.pay?.toa_currency}`}
               </Typography>
+            </Box>
+            <Box display={"flex"} flexDirection={"column"} gap={1} width="100%">
+              <Box
+                display={"flex"}
+                flexDirection={"row"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+              >
+                <Typography
+                  color={"#28304E"}
+                  variant="body2"
+                  fontSize={"10px"}
+                  fontWeight={700}
+                >
+                  Payment Instructions
+                </Typography>
+                <Button
+                  variant="contained"
+                  sx={{
+                    whiteSpace: "nowrap",
+                    fontSize: "8px",
+                    padding: "6px 6px",
+                    fontWeight: 600,
+                    bgcolor: "#D92D20",
+                    color: "#fff",
+                  }}
+                  onClick={handleOpen}
+                >
+                  Vendor’s Terms
+                </Button>
+                <EscrowManualModal open={open} onClose={handleClose} />
+              </Box>
+              <Box
+                bgcolor={theme.palette.secondary.light}
+                borderRadius={2}
+                display={"flex"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+              >
+                <Typography
+                  variant="body2"
+                  fontWeight={600}
+                  sx={{
+                    fontSize: 14,
+                    px: 1,
+                    py: 1,
+                  }}
+                >
+                  <div dangerouslySetInnerHTML={{ __html: p2pEscrowDetails?.vendor?.description }} />
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </Box>

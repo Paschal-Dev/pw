@@ -11,11 +11,10 @@ import APIService from "../../services/api-service";
 import { setChatDetails } from "../../redux/reducers/pay";
 
 interface ChatProps extends MediaProps {
-  onClose: () => void;
-  onChatOpen: () => void; // Notify parent when chat is opened
+  onChatToggle: () => void;
 }
 
-export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): React.JSX.Element {
+export default function Chat({ deviceType, onChatToggle }: ChatProps): React.JSX.Element {
   const dispatch = useDispatch();
   const { chatDetails, p2pEscrowDetails, payId, lang } = useSelector(
     (state: RootState) => state.pay
@@ -23,19 +22,21 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [message, setMessage] = useState("");
   const [isFirstRender, setIsFirstRender] = useState(true);
+  const [isSending, setIsSending] = useState(false);
 
   // Scroll to latest message and notify parent on chat open
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     if (isFirstRender && chatDetails?.data) {
-      onChatOpen();
+      onChatToggle();
       setIsFirstRender(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFirstRender]);
 
   // Transform chatDetails.data into ChatItemProps
   interface ChatMessage {
+    id: string; // Added unique ID for deduplication
     sender_type: string;
     use_name: string;
     use_image: string;
@@ -43,10 +44,12 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
     local_time: string;
     date_sent: string;
     translated_message: string;
+    image?: string;
   }
 
-  const dummyMessages: ChatItemProps[] =
+  const messages: ChatItemProps[] =
     chatDetails?.data?.map((msg: ChatMessage) => ({
+      id: msg.id,
       senderType: msg.sender_type,
       name: msg.use_name,
       profilePic: msg.use_image,
@@ -54,6 +57,7 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
       localTime: msg.local_time,
       timeAgo: msg.date_sent,
       message: msg.translated_message,
+      image: msg.image,
     })) || [];
 
   const fetchUserIP = async () => {
@@ -67,53 +71,51 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(async () => {
-      const userIP = await fetchUserIP();
-      if (!userIP) {
-        console.error("Could not fetch IP");
-        return;
-      }
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-      const p2pChatPayload = {
-        call_type: "p2p_chat",
-        ip: userIP,
-        lang: lang,
-        pay_id: payId,
-      };
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64 = reader.result as string;
+      await handleSend(base64);
+    };
+    reader.readAsDataURL(file);
+  };
 
-      try {
-        const resp = await APIService.p2pChat(p2pChatPayload);
-        dispatch(setChatDetails(resp.data));
-      } catch (error) {
-        console.error("Error during Chat Payload:", error);
-      }
-    }, 5000); // Poll every 5 seconds
-
-    return () => clearInterval(intervalId);
-  }, [dispatch, lang, payId]);
-
-  const handleSend = async () => {
+  const handleSend = async (imgContent?: string) => {
+    if (isSending) return;
+    setIsSending(true);
+ 
     try {
-      if (!message.trim()) return;
+      const comment = message.trim(); // text message
+      const image = imgContent; // base64 image or URL
+ 
+      // Don't send if both are empty
+      if (!comment && !image) return;
+ 
       const userIP = await fetchUserIP();
       if (!userIP) {
-        console.error("Could not fetch IP");
+        console.error("Unable to retrieve user IP");
         return;
       }
-      const p2pChatPayload = {
+ 
+      const payload = {
         call_type: "p2p_chat",
         ip: userIP,
         lang: lang,
         pay_id: payId,
-        comment: message,
+        comment,
+        image,
       };
-
-      const resp = await APIService.p2pChat(p2pChatPayload);
-      dispatch(setChatDetails(resp.data));
-      setMessage("");
+ 
+      const response = await APIService.p2pChat(payload);
+      dispatch(setChatDetails(response.data));
+      setMessage(""); // Clear input
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("Failed to send message:", error);
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -162,7 +164,7 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
           <Button
             variant="outlined"
             sx={{ border: "1px solid #fff", color: "#fff", p: 1 }}
-            onClick={onClose}
+            onClick={onChatToggle}
           >
             Close
           </Button>
@@ -182,7 +184,7 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
             }}
           >
             <Box display="flex" flexDirection="column" gap={1}>
-              {dummyMessages.map((msg, index) => {
+              {messages.map((msg) => {
                 const justifyContent: "center" | "flex-end" | "flex-start" =
                   msg.senderType === "admin"
                     ? "center"
@@ -191,7 +193,7 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
                     : "flex-start";
 
                 return (
-                  <Box key={index} display="flex" justifyContent={justifyContent}>
+                  <Box key={msg.id} display="flex" justifyContent={justifyContent}>
                     <ChatItem {...msg} />
                   </Box>
                 );
@@ -211,8 +213,9 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
               borderRadius={3}
               flex={1}
             >
-              <IconButton>
+              <IconButton component="label">
                 <Icon icon="humbleicons:image" fontSize={26} color="#A7A7A7" />
+                <input type="file" accept="image/*" hidden onChange={(e) => handleFileUpload(e)} />
               </IconButton>
               <Box flex={1}>
                 <input
@@ -233,8 +236,9 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
               </Box>
             </Box>
             <Button
-              onClick={handleSend}
+              onClick={() => handleSend()}
               variant="contained"
+              disabled={isSending}
               sx={{
                 fontSize: "14px",
                 padding: "13px",
@@ -244,7 +248,7 @@ export default function Chat({ deviceType, onClose, onChatOpen }: ChatProps): Re
                 whiteSpace: "nowrap",
               }}
             >
-              Send Message
+              {isSending ? "Sending..." : "Send Message"}
             </Button>
           </Box>
         </Box>

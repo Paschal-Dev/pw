@@ -2,24 +2,24 @@ import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import React, { useState } from "react";
 import background from "../../assets/images/background.png";
 import { theme } from "../../assets/themes/theme";
-// import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import rating from "../../assets/images/rating.png";
 import emptyRating from "../../assets/images/empty-rating.svg";
 import vendors from "../../assets/images/vendors.png";
 import { Icon } from "@iconify/react";
-// import { BiUpload } from "react-icons/bi";
-// import { PageProps } from "../../utils/myUtils";
-// import { setCurrentPage, setP2PEscrowDetails, setShouldRedirectEscrow } from "../../redux/reducers/pay";
-// import { setCurrentPage } from "../../redux/reducers/pay";
 
 export default function AwaitingVendorConfirmation({
   onChatToggle,
 }: {
   onChatToggle: (isChatOpen: boolean) => void;
 }): React.JSX.Element {
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails, chatDetails } = useSelector((state: RootState) => state.pay);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const unreadCount = chatDetails?.data?.filter(
+    (msg: { sender_type: string }) => msg.sender_type !== "buyer"
+  ).length || 0;
 
   const getRatingCounts = (rating: number) => {
     let fullStarsCount = 0;
@@ -69,19 +69,14 @@ export default function AwaitingVendorConfirmation({
     );
   }
 
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
   const handleChatToggle = () => {
     const newChatState = !isChatOpen;
     setIsChatOpen(newChatState);
-    onChatToggle(newChatState); // Notify parent of state change
+    onChatToggle(newChatState);
   };
 
-  // ... existing code until the Chat function
-
-  const Chat = async () => {
+  const Chat = () => {
     handleChatToggle();
-    console.log("Display Chat");
   };
 
   return (
@@ -103,25 +98,26 @@ export default function AwaitingVendorConfirmation({
           component={Box}
           borderRadius={2}
         >
-          <Box
-            borderRadius={"50%"}
-            width={20}
-            height={20}
-            fontSize={11}
-            // p={0.1}
-            bgcolor={"red"}
-            color={"#fff"}
-            fontWeight={600}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            textAlign="center"
-            position={"absolute"}
-            zIndex={10}
-            right={13}
-          >
-            2
-          </Box>
+          {unreadCount > 0 && (
+            <Box
+              borderRadius={"50%"}
+              width={20}
+              height={20}
+              fontSize={11}
+              bgcolor={"red"}
+              color={"#fff"}
+              fontWeight={600}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              textAlign="center"
+              position={"absolute"}
+              zIndex={10}
+              right={13}
+            >
+              {unreadCount}
+            </Box>
+          )}
           <Button
             variant="outlined"
             sx={{
@@ -176,13 +172,12 @@ export default function AwaitingVendorConfirmation({
               <div style={{ marginBottom: "10px" }}>{ratingImages}</div>
               <Typography variant="caption">
                 {`${fullStarsCount}/5`} ({p2pEscrowDetails?.seller?.rating}%)
-              </Typography>{" "}
+              </Typography>
             </Box>
           </Box>
         </Card>
         <Card
           sx={{
-            // width: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -199,7 +194,6 @@ export default function AwaitingVendorConfirmation({
           component={Box}
           borderRadius={2}
         >
-          {/* Awaiting vendor confirmation */}
           <Box display="flex" flexDirection="column" alignItems="center">
             <Box display="flex" alignItems="center" position={"relative"}>
               <img src={vendors} alt="" style={{ width: "100%", height: "auto" }} />

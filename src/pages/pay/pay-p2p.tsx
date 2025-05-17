@@ -1,12 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import {
-  Avatar,
-  Box,
-  Typography,
-  useMediaQuery,
-  IconButton,
-  Backdrop,
-} from "@mui/material";
+import { Avatar, Box, Typography, useMediaQuery, IconButton, Backdrop } from "@mui/material";
 import { theme } from "../../assets/themes/theme";
 // import VideoThumb from "../../components/pay/video-thumb";
 import Vendors from "../../components/pay/vendors";
@@ -24,9 +17,7 @@ export default function PayP2P(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pVendorsDetails, paymentDetails } = useSelector(
-    (state: RootState) => state.pay
-  );
+  const { p2pVendorsDetails, paymentDetails } = useSelector((state: RootState) => state.pay);
   const dispatch = useDispatch();
 
   const vendors = p2pVendorsDetails?.p2p;
@@ -103,39 +94,17 @@ export default function PayP2P(): React.JSX.Element {
               : "Payment Page"
           }
         />
-        <meta
-          property="og:image"
-          content={paymentDetails?.seller?.image || ""}
-        />
+        <meta property="og:image" content={paymentDetails?.seller?.image || ""} />
       </Helmet>
       <Box flex={1} display={"flex"}>
-        <Box
-          flex={1}
-          display={"flex"}
-          flexDirection={"column"}
-          justifyContent={"start"}
-          gap={1}
-        >
+        <Box flex={1} display={"flex"} flexDirection={"column"} justifyContent={"start"} gap={1}>
           <Box display={"flex"} justifyContent={"start"}>
             <IconButton onClick={backButtonClicked}>
-              <Icon
-                icon="cil:arrow-left"
-                fontSize={30}
-                color={theme.palette.primary.main}
-              />
+              <Icon icon="cil:arrow-left" fontSize={30} color={theme.palette.primary.main} />
             </IconButton>
           </Box>
-          <Box
-            bgcolor={theme.palette.background.default}
-            borderRadius={3}
-            py={1}
-          >
-            <Box
-              display={"flex"}
-              justifyContent={"start"}
-              alignItems={"center"}
-              gap={2}
-            >
+          <Box bgcolor={theme.palette.background.default} borderRadius={3} py={1}>
+            <Box display={"flex"} justifyContent={"start"} alignItems={"center"} gap={2}>
               <Typography
                 variant="body1"
                 textTransform={"uppercase"}
@@ -153,10 +122,7 @@ export default function PayP2P(): React.JSX.Element {
 
               <Box display="flex" flexDirection="column">
                 <Box>
-                  <Typography
-                    variant={deviceType === "mobile" ? "body1" : "h5"}
-                    fontWeight={800}
-                  >
+                  <Typography variant={deviceType === "mobile" ? "body1" : "h5"} fontWeight={800}>
                     {p2pVendorsDetails?.seller?.name}
                   </Typography>
                 </Box>
@@ -267,29 +233,32 @@ export default function PayP2P(): React.JSX.Element {
                 </Box>
               </Box>
               <Box
-                // flex={1}
                 bgcolor={theme.palette.primary.light}
-                alignItems={"start"}
-                display="grid"
-                gridTemplateColumns={
-                  deviceType === "tablet"
-                    ? "repeat(2, 1fr)"
-                    : deviceType === "mobile"
-                    ? "repeat(2, 1fr)"
-                    : "repeat(4, 1fr)"
-                }
-                gap={1}
-                p={1}
-                overflow={"auto"}
                 height={380}
                 sx={{
                   borderBottomRightRadius: 15,
                   borderBottomLeftRadius: 15,
                 }}
               >
-                {vendors?.map((item: Vendor, index: number) => (
-                  <Vendors item={item} key={index} />
-                ))}
+                <Box
+                  alignItems={"start"}
+                  justifyItems={"start"}
+                  display="grid"
+                  gridTemplateColumns={
+                    deviceType === "tablet"
+                      ? "repeat(2, 1fr)"
+                      : deviceType === "mobile"
+                      ? "repeat(2, 1fr)"
+                      : "repeat(4, 1fr)"
+                  }
+                  gap={1}
+                  p={1}
+                  overflow={"auto"}
+                >
+                  {vendors?.map((item: Vendor, index: number) => (
+                    <Vendors item={item} key={index} />
+                  ))}
+                </Box>
               </Box>
             </Box>
 
@@ -348,34 +317,38 @@ export default function PayP2P(): React.JSX.Element {
                       fontSize: deviceType === "mobile" ? 12 : 14,
                     }}
                   >
-                    These payment options require the Vendor's confirmation
-                    after you mark payment as paid.
+                    These payment options require the Vendor's confirmation after you mark payment
+                    as paid.
                   </Typography>
                 </Box>
               </Box>
               <Box
                 bgcolor={theme.palette.primary.light}
-                alignItems={"start"}
-                display="grid"
-                gridTemplateColumns={
-                  deviceType === "tablet"
-                    ? "repeat(2, 1fr)"
-                    : deviceType === "mobile"
-                    ? "repeat(2, 1fr)"
-                    : "repeat(4, 1fr)"
-                }
-                gap={1}
-                p={1}
-                overflow={"auto"}
                 height={380}
                 sx={{
                   borderBottomRightRadius: 15,
                   borderBottomLeftRadius: 15,
                 }}
               >
-                {Manualvendors?.map((item: Vendor, index: number) => (
-                  <Vendors item={item} key={index} />
-                ))}
+                <Box
+                  display="grid"
+                  alignItems={"start"}
+                  justifyItems={"start"}
+                  gridTemplateColumns={
+                    deviceType === "tablet"
+                      ? "repeat(2, 1fr)"
+                      : deviceType === "mobile"
+                      ? "repeat(2, 1fr)"
+                      : "repeat(4, 1fr)"
+                  }
+                  gap={1}
+                  p={1}
+                  overflow={"auto"}
+                >
+                  {Manualvendors?.map((item: Vendor, index: number) => (
+                    <Vendors item={item} key={index} />
+                  ))}
+                </Box>
               </Box>
             </Box>
           </Box>

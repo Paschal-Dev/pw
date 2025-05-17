@@ -21,6 +21,8 @@ interface PayI {
   shouldRedirectEscrow: boolean;
   errorPage: boolean;
   clickedId: any;
+  readMessageIds: string[];
+  isChatOpen: boolean;
 }
 
 const initialState: PayI = {
@@ -43,6 +45,8 @@ const initialState: PayI = {
   shouldRedirectEscrow: false,
   errorPage: false,
   clickedId: null,
+   readMessageIds: [],
+   isChatOpen: false,
 };
 
 const paySlice = createSlice({
@@ -109,6 +113,12 @@ const paySlice = createSlice({
     clearConfirmPaymentDetails(state) {
       state.confirmPaymentDetails = null; // Reset to initial state
     },
+     setReadMessageIds: (state, action: PayloadAction<string[]>) => {
+      state.readMessageIds = action.payload;
+    },
+    setIsChatOpen: (state, action: PayloadAction<boolean>) => {
+      state.isChatOpen = action.payload;
+    },
   },
 });
 
@@ -133,6 +143,8 @@ export const {
   setErrorPage,
   setClickedId,
   setChatDetails,
+  setReadMessageIds,
+  setIsChatOpen,
 } = paySlice.actions;
 
 export default paySlice.reducer;

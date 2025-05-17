@@ -10,7 +10,6 @@ import PaymentInDispute from "./manual-payment-in-dispute";
 
 interface ManualPaymentStatusProps {
   onChatToggle: (isChatOpen: boolean) => void;
-  // onPaidToggle: () => void;
 }
 
 export default function ManualPaymentStatus({
@@ -21,7 +20,6 @@ export default function ManualPaymentStatus({
   );
   const dispatch = useDispatch();
 
-  // Memoize fetchUserIP
   const fetchUserIP = useCallback(async () => {
     try {
       const response = await fetch("https://api.ipify.org?format=json");
@@ -50,17 +48,14 @@ export default function ManualPaymentStatus({
 
       try {
         const respo = await APIService.manualPayment(confirmPaymentPayload);
-          dispatch(setConfirmPaymentDetails(respo.data));
-          console.log("API RESPONSE FROM CONFIRM PAYMEMT CONTINUOUS CHECK=>>> ", respo.data);
-
+        dispatch(setConfirmPaymentDetails(respo.data));
       } catch (error) {
         console.error("Error Confirm Payment:", error);
       }
-    }, 10000); // Poll every 5 seconds
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, [dispatch, fetchUserIP, lang, payId]);
-
 
   return (
     <>
@@ -70,9 +65,9 @@ export default function ManualPaymentStatus({
         <ManualPaymentExpired />
       ) : confirmPaymentDetails?.confirm_manual_payment === 5 ? (
         <PaymentInDispute onChatToggle={onChatToggle} />
-      ) : confirmPaymentDetails?.confirm_manual_payment === 2 ? (
+      ) : (
         <AwaitingVendorConfirmation onChatToggle={onChatToggle} />
-      ) : <AwaitingVendorConfirmation onChatToggle={onChatToggle} />}
+      )}
     </>
   );
 }

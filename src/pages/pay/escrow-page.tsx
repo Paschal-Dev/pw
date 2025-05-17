@@ -1,5 +1,5 @@
 import { Backdrop, Box, Grid, Typography, useMediaQuery } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import VideoThumb from "../../components/pay/video-thumb";
 import { theme } from "../../assets/themes/theme";
 import menu from "../../assets/images/menu.svg";
@@ -19,6 +19,7 @@ import {
   setP2PVendorsDetails,
   setPaymentDetails,
   setOTPVerified,
+  setChatDetails,
 } from "../../redux/reducers/pay";
 import APIService from "../../services/api-service";
 
@@ -41,7 +42,7 @@ export default function EscrowPage(): React.JSX.Element {
     window.scrollTo(0, 0);
   }, []);
 
-  const fetchUserIP = async () => {
+  const fetchUserIP = useCallback(async () => {
     try {
       const response = await fetch("https://api.ipify.org?format=json");
       const data = await response.json();
@@ -50,7 +51,7 @@ export default function EscrowPage(): React.JSX.Element {
       console.error("Error fetching IP:", error);
       return null;
     }
-  };
+  }, []);
 
   // Function to decode HTML entities
   const decodeHtmlEntity = (entity: string) => {
@@ -85,18 +86,11 @@ export default function EscrowPage(): React.JSX.Element {
   // Convert symbol to currency code if available
   const displayCurrency = currencyMap[currencySign] || currencySign;
 
-  const handleChatToggle = (chatOpen: boolean) => {
-    setIsChatOpen(chatOpen);
+  const handleChatToggle = () => {
+    setIsChatOpen(prev => !prev);
   };
 
-  const handleChatClose = () => {
-    setIsChatOpen(false);
-  };
-
-  // Callback to mark messages as read (passed to Chat)
-  const handleChatOpen = () => {
-    // This will be called by ManualEscrow when chat is opened
-  };
+  
 
   React.useEffect(() => {
     if (mobile) {
@@ -108,60 +102,73 @@ export default function EscrowPage(): React.JSX.Element {
     }
   }, [mobile, tablet]);
 
-useEffect(() => {
-  const intervalId = setInterval(async () => {
-    const userIP = await fetchUserIP();
-    if (!userIP) {
-      console.error("Could not fetch IP");
-      return;
-    }
-
-    const continuousEscrowPayload = {
-      call_type: "pay",
-      ip: userIP,
-      lang: lang,
-      pay_id: payId,
-    };
-
-    try {
-      const resp = await APIService.sendOTP(continuousEscrowPayload);
-      console.log("Escrow Payload Response:", resp.data);
-
-      if (resp.data?.escrow_status === 0) {
-        // Escrow is not active, transition to P2P page
-        clearInterval(intervalId);
-        const p2pPayload = {
-          call_type: "p2p_vendors",
-          ip: userIP,
-          lang: lang,
-          pay_id: payId,
-        };
-        const respo2 = await APIService.p2pVendors(p2pPayload);
-        dispatch(setP2PVendorsDetails(respo2.data));
-        dispatch(setConfirmButtonBackdrop(false));
-        dispatch(setCurrentPage("p2p"));
-      } else {
-        // Escrow is active
-        dispatch(setPaymentDetails(resp.data));
-        if (resp.data?.data?.verify === 0) {
-          // Verification pending, go to PayDashboard for OTP verification
-          dispatch(setConfirmButtonBackdrop(false));
-          dispatch(setOTPVerified(false));
-          dispatch(setCurrentPage("pay"));
-        } else if (resp.data?.data?.verify === 1) {
-          // Verification complete, stay on EscrowPage
-          dispatch(setConfirmButtonBackdrop(false));
-          dispatch(setOTPVerified(true));
-          // Stay on EscrowPage, no need to change page
-        }
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const userIP = await fetchUserIP();
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
       }
-    } catch (error) {
-      console.error("Error during Escrow Payload:", error);
-    }
-  }, 10000);
 
-  return () => clearInterval(intervalId);
-}, [dispatch, lang, payId]);
+      // Fetch escrow status
+      const continuousEscrowPayload = {
+        call_type: "pay",
+        ip: userIP,
+        lang: lang,
+        pay_id: payId,
+      };
+
+      // Fetch chat updates
+      const p2pChatPayload = {
+        call_type: "p2p_chat",
+        ip: userIP,
+        lang: lang,
+        pay_id: payId,
+      };
+
+      try {
+        // Parallel API calls for efficiency
+        const [escrowResp, chatResp] = await Promise.all([
+          APIService.sendOTP(continuousEscrowPayload),
+          APIService.p2pChat(p2pChatPayload),
+        ]);
+        console.log("Escrow response:", escrowResp);
+        console.log("Chat response:", chatResp);
+
+        // Handle escrow response
+        if (escrowResp.data?.escrow_status === 0) {
+          clearInterval(intervalId);
+          const p2pPayload = {
+            call_type: "p2p_vendors",
+            ip: userIP,
+            lang: lang,
+            pay_id: payId,
+          };
+          const respo2 = await APIService.p2pVendors(p2pPayload);
+          dispatch(setP2PVendorsDetails(respo2.data));
+          dispatch(setConfirmButtonBackdrop(false));
+          dispatch(setCurrentPage("p2p"));
+        } else {
+          dispatch(setPaymentDetails(escrowResp.data));
+          if (escrowResp.data?.data?.verify === 0) {
+            dispatch(setConfirmButtonBackdrop(false));
+            dispatch(setOTPVerified(false));
+            dispatch(setCurrentPage("pay"));
+          } else if (escrowResp.data?.data?.verify === 1) {
+            dispatch(setConfirmButtonBackdrop(false));
+            dispatch(setOTPVerified(true));
+          }
+        }
+
+        // Handle chat response
+        dispatch(setChatDetails(chatResp.data));
+      } catch (error) {
+        console.error("Error during polling:", error);
+      }
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [dispatch, fetchUserIP, lang, payId]);
 
   return (
     <>
@@ -206,8 +213,7 @@ useEffect(() => {
           {isChatOpen ? (
             <Chat
               deviceType={deviceType}
-              onClose={handleChatClose}
-              onChatOpen={handleChatOpen}
+              onChatToggle={handleChatToggle}
             />
           ) : (
             <Grid item sm={12} md={8} lg={8} display={"flex"}>
@@ -267,7 +273,9 @@ useEffect(() => {
                     {p2pEscrowDetails?.p2p_type === "auto" ? (
                       <EscrowConfirm />
                     ) : p2pEscrowDetails?.p2p_type === "manual" ? (
-                      <ManualEscrow onChatToggle={handleChatToggle} />
+                      <ManualEscrow
+                        onChatToggle={handleChatToggle}
+                      />
                     ) : null}
                   </Grid>
                   <Grid item xs={12} sm={7} lg={7} md={7} display={"flex"}>

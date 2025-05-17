@@ -1,11 +1,12 @@
 // components/chat/chat-item.tsx
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React, { Key, useState } from "react";
+import { Box, Modal, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 
 type SenderType = "admin" | "buyer" | "vendor";
 
 export interface ChatItemProps {
+  id: Key | null | undefined;
   name: string;
   profilePic: string;
   status: "Online" | "Offline" | "Away";
@@ -13,6 +14,7 @@ export interface ChatItemProps {
   timeAgo: string;
   message: string;
   senderType: SenderType;
+  image?: string;
 }
 
 export default function ChatItem({
@@ -23,6 +25,7 @@ export default function ChatItem({
   timeAgo,
   message,
   senderType,
+  image,
 }: ChatItemProps): React.JSX.Element {
   const statusColorMap = {
     Online: "#4CAF50",
@@ -34,6 +37,14 @@ export default function ChatItem({
     admin: "#D6FED6",
     buyer: "#FFE5E5",
     vendor: "#E3F2FD",
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const isImage = !!image;
+
+  const handleClick = () => {
+    if (isImage) setOpen(true);
   };
 
   return (
@@ -82,9 +93,41 @@ export default function ChatItem({
       </Box>
 
       <Box p={2} bgcolor={chatBgColorMap[senderType]} mt={1} borderRadius="8px">
-        <Typography variant="body2" fontSize="12px">
-          {message}
-        </Typography>
+        {isImage ? (
+          <>
+            <img
+              src={image}
+              alt="chat-img"
+              onClick={handleClick}
+              style={{
+                cursor: "pointer",
+                maxWidth: "200px",
+                borderRadius: 8,
+                marginTop: 4,
+              }}
+            />
+            <Modal open={open} onClose={() => setOpen(false)}>
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height="100vh"
+                bgcolor="rgba(0,0,0,0.3)"
+                onClick={() => setOpen(false)}
+              >
+                <img
+                  src={image}
+                  alt="Image Full View"
+                  style={{ maxWidth: "90%", maxHeight: "90%", borderRadius: 12 }}
+                />
+              </Box>
+            </Modal>
+          </>
+        ) : (
+          <Typography variant="body2" fontSize="12px">
+            {message}
+          </Typography>
+        )}
       </Box>
 
       <Typography variant="body2" color="#8E97A4" mt={0.5}>

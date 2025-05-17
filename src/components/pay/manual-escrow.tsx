@@ -7,12 +7,10 @@ import { useSelector } from "react-redux";
 
 interface ManualEscrowProps {
   onChatToggle: (isChatOpen: boolean) => void;
-  onChatOpen?: () => void;
 }
 
 export default function ManualEscrow({
   onChatToggle,
-  onChatOpen,
 }: ManualEscrowProps): React.JSX.Element {
   // const [isPaidClicked, setIsPaidClicked] = useState(false);
 
@@ -37,12 +35,10 @@ export default function ManualEscrow({
       />
     );
   }
-
   // Otherwise, show the confirm UI and pass a handler to show status
   return (
     <EscrowManualConfirm
       onChatToggle={onChatToggle}
-      onChatOpen={onChatOpen}
       onPaid={() => setShowStatus(true)}
     />
   );

@@ -7,7 +7,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-// import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import rating from "../../assets/images/rating.png";
@@ -16,13 +15,17 @@ import { Icon } from "@iconify/react";
 import { theme } from "../../assets/themes/theme";
 import background from "../../assets/images/background.png";
 
-
 export default function PaymentInDispute({
   onChatToggle,
 }: {
   onChatToggle: (isChatOpen: boolean) => void;
 }): React.JSX.Element {
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
+  const { p2pEscrowDetails, chatDetails } = useSelector((state: RootState) => state.pay);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const unreadCount = chatDetails?.data?.filter(
+    (msg: { sender_type: string }) => msg.sender_type !== "buyer"
+  ).length || 0;
 
   const getRatingCounts = (rating: number) => {
     let fullStarsCount = 0;
@@ -74,19 +77,14 @@ export default function PaymentInDispute({
     );
   }
 
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
   const handleChatToggle = () => {
     const newChatState = !isChatOpen;
     setIsChatOpen(newChatState);
-    onChatToggle(newChatState); // Notify parent of state change
+    onChatToggle(newChatState);
   };
 
-  // ... existing code until the Chat function
-
-  const Chat = async () => {
+  const Chat = () => {
     handleChatToggle();
-    console.log("Display Chat");
   };
 
   return (
@@ -110,8 +108,6 @@ export default function PaymentInDispute({
             backgroundSize: "cover",
             position: "relative",
             mt: 1,
-            // pt: 2,
-            //   flex: 1,
             height: "70%",
           }}
           component={Box}
@@ -120,13 +116,10 @@ export default function PaymentInDispute({
           <Box
             display={"flex"}
             flexDirection="column"
-            // justifyContent={"space-between"}
             alignItems={"center"}
             width="100%"
             pb={2}
-            // flex={1}
             mt={2}
-            // position={'relative'}
           >
             <Box
               py={2}
@@ -161,13 +154,12 @@ export default function PaymentInDispute({
               <div style={{ marginBottom: "10px" }}>{ratingImages}</div>
               <Typography variant="caption">
                 {`${fullStarsCount}/5`} ({p2pEscrowDetails?.seller?.rating}%)
-              </Typography>{" "}
+              </Typography>
             </Box>
           </Box>
         </Card>
         <Card
           sx={{
-            // width: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -184,7 +176,6 @@ export default function PaymentInDispute({
           component={Box}
           borderRadius={2}
         >
-          {/* <Box p={{ xs: 2, sm: 3, md: 4 }}> */}
           <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
             <Box
               bgcolor={"#FEF3F2"}
@@ -236,25 +227,27 @@ export default function PaymentInDispute({
           </Typography>
 
           <Box display="flex" flexDirection="column">
-            <Box
-              borderRadius={"50%"}
-              width={20}
-              height={20}
-              fontSize={11}
-              bgcolor={"red"}
-              color={"#fff"}
-              fontWeight={600}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              textAlign="center"
-              position={"absolute"}
-              right={"27%"}
-              zIndex={1}
-              mt={1}
-            >
-              2
-            </Box>
+            {unreadCount > 0 && (
+              <Box
+                borderRadius={"50%"}
+                width={20}
+                height={20}
+                fontSize={11}
+                bgcolor={"red"}
+                color={"#fff"}
+                fontWeight={600}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                position={"absolute"}
+                right={"27%"}
+                zIndex={1}
+                mt={1}
+              >
+                {unreadCount}
+              </Box>
+            )}
             <Box display={"flex"} justifyContent={"center"} mt={2}>
               <Button
                 variant="outlined"
@@ -290,7 +283,6 @@ export default function PaymentInDispute({
               </Button>
             </Box>
           </Box>
-          {/* </Box> */}
         </Card>
       </Box>
     </>
