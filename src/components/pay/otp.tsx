@@ -12,7 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import APIService from "../../services/api-service";
 import { RootState } from "../../redux/store";
-import { setOTPVerified } from "../../redux/reducers/pay";
+import {
+  setButtonClicked,
+  setCurrentPage,
+  setOTPVerified,
+  setP2PEscrowDetails,
+} from "../../redux/reducers/pay";
 import { useTranslation } from "react-i18next";
 
 interface OtpInputProps {
@@ -158,7 +163,7 @@ const Otp: React.FC<OtpProps> = ({
     paymentDetails,
     isOTPVerified,
     apiResponse,
-    lang
+    lang,
   } = useSelector((state: RootState) => state.pay);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -174,8 +179,6 @@ const Otp: React.FC<OtpProps> = ({
       setIsSuccessAlertShown(false);
     }
   }, [apiResponse]);
-
-
 
   useEffect(() => {
     if (alertSeverity === "success") {
@@ -239,7 +242,7 @@ const Otp: React.FC<OtpProps> = ({
     // e.preventDefault();
     const enteredPin = otpValues.join("");
     const userIP = await fetchUserIP();
-    console.log('User IP at first', userIP);
+    console.log("User IP at first", userIP);
     if (!userIP) {
       console.error("Could not fetch IP");
       return;
@@ -279,7 +282,6 @@ const Otp: React.FC<OtpProps> = ({
 
       // const enteredPin = otpValues.join("");
 
-
       // // const formData2 = new FormData();
       // // formData2.append("call_type", "verify_pay_otp");
       // // formData2.append("ip", "192.168.0.0");
@@ -313,6 +315,11 @@ const Otp: React.FC<OtpProps> = ({
         setAlertSeverity("success");
         setOtpValues(["", "", "", "", "", ""]);
         dispatch(setOTPVerified(true));
+        if (res.data?.escrow_status === 1) {
+          dispatch(setButtonClicked(true));
+          dispatch(setP2PEscrowDetails(res.data));
+          dispatch(setCurrentPage("escrow-page"));
+        }
       } else {
         setAlertMessage(res.data?.message);
         setAlertSeverity("error");
@@ -336,7 +343,7 @@ const Otp: React.FC<OtpProps> = ({
 
     try {
       const userIP = await fetchUserIP();
-      console.log('User IP at first', userIP);
+      console.log("User IP at first", userIP);
       if (!userIP) {
         console.error("Could not fetch IP");
         return;
@@ -383,8 +390,6 @@ const Otp: React.FC<OtpProps> = ({
             console.log("ERROR ::::::: ", error);
           });
       }, 2000);
-
-
     } catch (error) {
       console.error("Error Resending OTP:", error);
     }
@@ -399,8 +404,6 @@ const Otp: React.FC<OtpProps> = ({
     }
   }, [handleButtonClick, isButtonDisabled]);
 
-
-
   return (
     <>
       {alertSeverity === "success" && !isSuccessAlertShown && (
@@ -408,14 +411,24 @@ const Otp: React.FC<OtpProps> = ({
           severity="success"
           style={{
             position: "absolute",
-            left: deviceType === "tablet" ? "26%" : 'auto',
-            fontSize: deviceType === "tablet" || deviceType === "mobile" ? "10px" : 'auto',
-            backgroundColor: "#d8f8d8"
+            left: deviceType === "tablet" ? "26%" : "auto",
+            fontSize:
+              deviceType === "tablet" || deviceType === "mobile"
+                ? "10px"
+                : "auto",
+            backgroundColor: "#d8f8d8",
           }}
         >
-          <AlertTitle sx={{
-            fontSize: deviceType === "tablet" || deviceType === "mobile" ? "10px" : 'auto',
-          }}>Success</AlertTitle>
+          <AlertTitle
+            sx={{
+              fontSize:
+                deviceType === "tablet" || deviceType === "mobile"
+                  ? "10px"
+                  : "auto",
+            }}
+          >
+            Success
+          </AlertTitle>
           {alertMessage}
         </Alert>
       )}
@@ -425,27 +438,50 @@ const Otp: React.FC<OtpProps> = ({
           severity="success"
           style={{
             position: "absolute",
-            left: deviceType === "tablet" ? "26%" : 'auto',
-            fontSize: deviceType === "tablet" || deviceType === "mobile" ? "10px" : 'auto',
-            backgroundColor: "#d8f8d8"
+            left: deviceType === "tablet" ? "26%" : "auto",
+            fontSize:
+              deviceType === "tablet" || deviceType === "mobile"
+                ? "10px"
+                : "auto",
+            backgroundColor: "#d8f8d8",
           }}
         >
-          <AlertTitle sx={{
-            fontSize: deviceType === "tablet" || deviceType === "mobile" ? "10px" : 'auto',
-          }}>Success</AlertTitle>
+          <AlertTitle
+            sx={{
+              fontSize:
+                deviceType === "tablet" || deviceType === "mobile"
+                  ? "10px"
+                  : "auto",
+            }}
+          >
+            Success
+          </AlertTitle>
           {alertMessage}
         </Alert>
       )}
 
       {alertSeverity === "error" && !isSuccessAlertShown && (
-        <Alert severity="error" style={{
-          position: "absolute",
-          left: deviceType === "tablet" ? "26%" : 'auto',
-          fontSize: deviceType === "tablet" || deviceType === "mobile" ? "10px" : 'auto',
-        }}>
-          <AlertTitle sx={{
-            fontSize: deviceType === "tablet" || deviceType === "mobile" ? "10px" : 'auto',
-          }}>Error</AlertTitle>
+        <Alert
+          severity="error"
+          style={{
+            position: "absolute",
+            left: deviceType === "tablet" ? "26%" : "auto",
+            fontSize:
+              deviceType === "tablet" || deviceType === "mobile"
+                ? "10px"
+                : "auto",
+          }}
+        >
+          <AlertTitle
+            sx={{
+              fontSize:
+                deviceType === "tablet" || deviceType === "mobile"
+                  ? "10px"
+                  : "auto",
+            }}
+          >
+            Error
+          </AlertTitle>
           {alertMessage}
         </Alert>
       )}
@@ -454,7 +490,11 @@ const Otp: React.FC<OtpProps> = ({
           {!isOTPVerified && (
             <Box
               flex={1}
-              bgcolor={deviceType === "tablet" ? "#F5F5DC" : theme.palette.background.default}
+              bgcolor={
+                deviceType === "tablet"
+                  ? "#F5F5DC"
+                  : theme.palette.background.default
+              }
               borderRadius={2}
               py={1}
               px={5}
@@ -466,7 +506,7 @@ const Otp: React.FC<OtpProps> = ({
               textAlign={"center"}
               gap={1}
               width={deviceType === "tablet" ? "40%" : "auto"}
-            // position={showOtp  ? "fixed" : "unset"}
+              // position={showOtp  ? "fixed" : "unset"}
             >
               <img src={NoticeIcon} alt="" style={{ width: 45 }} />
               <Box width={"80%"}>
@@ -556,7 +596,9 @@ const Otp: React.FC<OtpProps> = ({
       )}
 
       {isOTPVerified && (
-        <Box>{deviceType !== "mobile" && deviceType !== "tablet" && <VideoThumb />}</Box>
+        <Box>
+          {deviceType !== "mobile" && deviceType !== "tablet" && <VideoThumb />}
+        </Box>
       )}
     </>
   );

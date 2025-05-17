@@ -25,12 +25,15 @@ import { Helmet } from "react-helmet";
 // import { setCurrentPage, setApiResponse } from "../../redux/reducers/pay";
 // import { setHeaderKey } from "../../redux/reducers/auth";
 import P2PPayment from "./p2p-payment";
+import APIService from "../../services/api-service";
 
 export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
   // const [errorPage, setErrorPage] = useState(false);
   const [isRedirecting] = useState(false);
   // const [hasCheckedEscrow, setHasCheckedEscrow] = useState(false); // Ensure only one check
-  const { paymentDetails, currentPage, errorPage } = useSelector((state: RootState) => state.pay);
+  const { paymentDetails, currentPage, errorPage, lang } = useSelector(
+    (state: RootState) => state.pay
+  );
 
   const dispatch = useDispatch();
 
@@ -67,11 +70,22 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
   // Convert symbol to currency code if available
   const displayCurrency = currencyMap[currencySign] || currencySign;
 
+  const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
+    const url = new URL(window.location.href);
+    const payId = url.searchParams.get("v") || "";
     const initializePayment = async () => {
-      const url = new URL(window.location.href);
       // Extract "v" parameter from URL
-      const payId = url.searchParams.get("v") || "";
 
       if (!payId) {
         console.log("Invalid or missing Pay ID");
@@ -118,6 +132,41 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
       //   setHasCheckedEscrow(true);
       // }
     };
+
+    const checkVerifyStatus = async () => {
+      const userIP = await fetchUserIP();
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
+
+      const verifyStatus = {
+        call_type: "pay_verify_status",
+        ip: userIP,
+        lang: lang,
+        pay_id: payId,
+      };
+
+      try {
+        const resp = await APIService.verifyStatus(verifyStatus);
+        console.log("Verify Status Check:", resp.data);
+        if (resp?.data?.message === "Successful") {
+          // Escrow is not active, transition to P2P page
+          const resendOtpPayload = {
+            call_type: "resend_pay_otp",
+            ip: userIP,
+            lang: lang,
+            pay_id: payId,
+          };
+          const respo2 = await APIService.resendOTP(resendOtpPayload);
+          console.log("API RESPONSE FROM RESEND OTP =>>> ", respo2.data);
+        }
+      } catch (error) {
+        console.error("Error during Escrow Payload:", error);
+      }
+    };
+
+    checkVerifyStatus();
 
     // if (!hasCheckedEscrow) {
     initializePayment();
@@ -227,7 +276,10 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
               : "Payment Page"
           }
         />
-        <meta property="og:image" content={paymentDetails?.seller?.image || ""} />
+        <meta
+          property="og:image"
+          content={paymentDetails?.seller?.image || ""}
+        />
       </Helmet>
       <Topbar />
       <Container
@@ -240,7 +292,11 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
           py: 1,
         }}
       >
-        {errorPage ? <ErrorPage errorResponse={errorResponse} /> : renderActivePage()}
+        {errorPage ? (
+          <ErrorPage errorResponse={errorResponse} />
+        ) : (
+          renderActivePage()
+        )}
         <Disclaimer />
         <Footer />
       </Container>

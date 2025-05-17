@@ -3,9 +3,12 @@
 import {
   Box,
   Button,
+  Checkbox,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   Typography,
   // useMediaQuery,
   // useTheme,
@@ -19,6 +22,7 @@ import {
   setConfirmPaymentDetails,
   // setPaidClicked,
 } from "../../redux/reducers/pay";
+import { useState } from "react";
 
 interface EscrowConfirmPaymentProps {
   open: boolean;
@@ -39,6 +43,8 @@ EscrowConfirmPaymentProps) {
   // Simplify device type detection
   // const deviceType = isMobile ? "mobile" : isTablet ? "tablet" : "pc";
   const { payId, lang } = useSelector((state: RootState) => state.pay);
+  const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const fetchUserIP = async () => {
     try {
       const response = await fetch("https://api.ipify.org?format=json");
@@ -52,11 +58,13 @@ EscrowConfirmPaymentProps) {
 
   const handleConfirm = async () => {
     // dispatch(setPaidClicked(true));
+    setIsLoading(true);
     try {
       const userIP = await fetchUserIP();
       console.log("User IP at first", userIP);
       if (!userIP) {
         console.error("Could not fetch IP");
+        setIsLoading(false);
         return;
       }
       const confirmPaymentPayload = {
@@ -77,6 +85,7 @@ EscrowConfirmPaymentProps) {
       onClose();
     } catch (error) {
       console.error("Error Confirming:", error);
+      setIsLoading(false);
     }
   };
 
@@ -148,11 +157,25 @@ EscrowConfirmPaymentProps) {
               paid” when you have not paid.{" "}
             </Typography>
           </Box>
-
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isPaymentConfirmed}
+                onChange={(e) => setIsPaymentConfirmed(e.target.checked)}
+              />
+            }
+            label={
+              <Typography variant="body2" fontSize="14px">
+                Please confirm you have made payment
+              </Typography>
+            }
+            sx={{ mb: 2 }}
+          />
           <Box display="flex" flexDirection="column">
             <Button
               variant="contained"
               onClick={handleConfirm}
+              disabled={!isPaymentConfirmed || isLoading}
               sx={{
                 fontSize: "12px",
                 padding: "4px 12px",
@@ -164,7 +187,11 @@ EscrowConfirmPaymentProps) {
                 },
               }}
             >
-              Yes, I have paid
+             {isLoading ? (
+                <CircularProgress size={24} sx={{ color: "white" }} />
+              ) : (
+                "Yes, I have paid"
+              )}
             </Button>
           </Box>
         </DialogContent>

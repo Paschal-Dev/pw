@@ -31,5 +31,7 @@ export default class APIService {
     axiosInstance.post('/pay/p2p-manual-payment-confirm.php', encryptPayload(payload));
   static p2pChat = (payload: any) =>
     axiosInstance.post('/pay/p2p-chat.php', encryptPayload(payload));
+  static verifyStatus = (payload: any) =>
+    axiosInstance.post('/pay/pay-verify-status.php', encryptPayload(payload));
 }
 

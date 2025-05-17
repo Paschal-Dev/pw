@@ -13,7 +13,13 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import Chat from "../../components/pay/chat";
 import ManualEscrow from "../../components/pay/manual-escrow";
-import { setConfirmButtonBackdrop, setCurrentPage, setP2PVendorsDetails } from "../../redux/reducers/pay";
+import {
+  setConfirmButtonBackdrop,
+  setCurrentPage,
+  setP2PVendorsDetails,
+  setPaymentDetails,
+  setOTPVerified,
+} from "../../redux/reducers/pay";
 import APIService from "../../services/api-service";
 
 export default function EscrowPage(): React.JSX.Element {
@@ -102,45 +108,60 @@ export default function EscrowPage(): React.JSX.Element {
     }
   }, [mobile, tablet]);
 
-  useEffect(() => {
-    const intervalId = setInterval(async () => {
-      const userIP = await fetchUserIP();
-      if (!userIP) {
-        console.error("Could not fetch IP");
-        return;
-      }
+useEffect(() => {
+  const intervalId = setInterval(async () => {
+    const userIP = await fetchUserIP();
+    if (!userIP) {
+      console.error("Could not fetch IP");
+      return;
+    }
 
-      const continuousEscrowPayload = {
-        call_type: "pay",
-        ip: userIP,
-        lang: lang,
-        pay_id: payId,
-      };
+    const continuousEscrowPayload = {
+      call_type: "pay",
+      ip: userIP,
+      lang: lang,
+      pay_id: payId,
+    };
 
-      try {
-        const resp = await APIService.sendOTP(continuousEscrowPayload);
-        console.log("Escrow Payload Response:", resp.data);
-        if (resp.data?.escrow_status === 0) {
-          clearInterval(intervalId);
-          const p2pPayload = {
-            call_type: "p2p_vendors",
-            ip: userIP,
-            lang: lang,
-            pay_id: payId,
-          };
+    try {
+      const resp = await APIService.sendOTP(continuousEscrowPayload);
+      console.log("Escrow Payload Response:", resp.data);
 
-          const respo2 = await APIService.p2pVendors(p2pPayload);
-          dispatch(setP2PVendorsDetails(respo2.data));
+      if (resp.data?.escrow_status === 0) {
+        // Escrow is not active, transition to P2P page
+        clearInterval(intervalId);
+        const p2pPayload = {
+          call_type: "p2p_vendors",
+          ip: userIP,
+          lang: lang,
+          pay_id: payId,
+        };
+        const respo2 = await APIService.p2pVendors(p2pPayload);
+        dispatch(setP2PVendorsDetails(respo2.data));
+        dispatch(setConfirmButtonBackdrop(false));
+        dispatch(setCurrentPage("p2p"));
+      } else {
+        // Escrow is active
+        dispatch(setPaymentDetails(resp.data));
+        if (resp.data?.data?.verify === 0) {
+          // Verification pending, go to PayDashboard for OTP verification
           dispatch(setConfirmButtonBackdrop(false));
-          dispatch(setCurrentPage("p2p"));
+          dispatch(setOTPVerified(false));
+          dispatch(setCurrentPage("pay"));
+        } else if (resp.data?.data?.verify === 1) {
+          // Verification complete, stay on EscrowPage
+          dispatch(setConfirmButtonBackdrop(false));
+          dispatch(setOTPVerified(true));
+          // Stay on EscrowPage, no need to change page
         }
-      } catch (error) {
-        console.error("Error during Escrow Payload:", error);
       }
-    }, 10000);
+    } catch (error) {
+      console.error("Error during Escrow Payload:", error);
+    }
+  }, 10000);
 
-    return () => clearInterval(intervalId);
-  }, [dispatch, lang, payId]);
+  return () => clearInterval(intervalId);
+}, [dispatch, lang, payId]);
 
   return (
     <>

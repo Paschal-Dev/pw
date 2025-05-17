@@ -66,56 +66,52 @@ export default function PayDashboard(): React.JSX.Element {
   }, [mobile, tablet]);
 
   useEffect(() => {
-    if(!payId) return;
-    const Pay = async () => {
+  if (!payId) return;
 
-      const userIP = await fetchUserIP();
-      console.log('User IP at first', userIP);
-      if (!userIP) {
-        console.error("Could not fetch IP");
-        setErrorPage(true);
-        return;
-      }
-  
-      const sendOtpPayload = {
-        call_type: "pay",
-        ip: userIP, 
-        lang: lang,
-        pay_id: payId,
-      };
+  const Pay = async () => {
+    const userIP = await fetchUserIP();
+    if (!userIP) {
+      console.error("Could not fetch IP");
+      setErrorPage(true);
+      return;
+    }
 
-      try {
-        const resp = await APIService.sendOTP(sendOtpPayload);
-        console.log("API Response from PayDashboard OTP:", resp.data);
-
-
-        if (resp.data?.escrow_status === 1) {
-          // console.log("Already redirected, displaying escrow page.");
-          dispatch(setButtonClicked(true));
-          dispatch(setCurrentPage("escrow-page"));
-          dispatch(setP2PEscrowDetails(resp.data));
-
-
-        } else {
-          dispatch(setButtonClicked(false));
-          console.log("No checkout link or escrow status not 1.");
-          handleNonEscrowResponse(resp.data);
-        }
-      } catch (error) {
-        console.error("Error during Send OTP:", error);
-        setErrorPage(true);
-      }
-      // finally {
-      //   setHasCheckedEscrow(true);
-      // }
+    const sendOtpPayload = {
+      call_type: "pay",
+      ip: userIP,
+      lang: lang,
+      pay_id: payId,
     };
 
-    // if (!hasCheckedEscrow) {
-    
-    Pay();
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, payId]);
+    try {
+      const resp = await APIService.sendOTP(sendOtpPayload);
+      console.log("API Response from PayDashboard OTP:", resp.data);
+
+      if (resp.data?.escrow_status === 1 && resp.data?.data?.verify === 1) {
+        // Escrow active and verified, go to EscrowPage
+        dispatch(setButtonClicked(true));
+        dispatch(setCurrentPage("escrow-page"));
+        dispatch(setP2PEscrowDetails(resp.data));
+      } else if (resp.data?.escrow_status === 1 && resp.data?.data?.verify === 0) {
+        // Escrow active but not verified, stay on PayDashboard
+        dispatch(setButtonClicked(false));
+        dispatch(setOTPVerified(false));
+        dispatch(setPaymentDetails(resp.data));
+      } else {
+        // Handle non-escrow cases
+        dispatch(setButtonClicked(false));
+        console.log("No checkout link or escrow status not 1.");
+        handleNonEscrowResponse(resp.data);
+      }
+    } catch (error) {
+      console.error("Error during Send OTP:", error);
+      setErrorPage(true);
+    }
+  };
+
+  Pay();
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [dispatch, payId, lang]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleNonEscrowResponse = async (data: any) => {
