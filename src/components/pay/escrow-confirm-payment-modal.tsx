@@ -27,13 +27,14 @@ import { useState } from "react";
 interface EscrowConfirmPaymentProps {
   open: boolean;
   onClose: () => void;
-  // onPaidToggle: () => void;
+  onPaid: () => void;
 }
 
 export default function EscrowConfirmPaymentModal({
   open,
   onClose,
-}: // onPaidToggle,
+   onPaid,
+}:
 EscrowConfirmPaymentProps) {
   // const theme = useTheme();
   // const isMobile = useMediaQuery(theme.breakpoints.only("xs"));
@@ -83,6 +84,7 @@ EscrowConfirmPaymentProps) {
         // console.log("Check", isPaidClicked);
       }
       onClose();
+      onPaid();
     } catch (error) {
       console.error("Error Confirming:", error);
       setIsLoading(false);
@@ -141,8 +143,9 @@ EscrowConfirmPaymentProps) {
           fontWeight={700}
           fontSize={25}
           textTransform="capitalize"
+          textAlign={"center"}
             >
-              Confirm You have Made payment{" "}
+              Confirm you have made payment{" "}
             </Typography>
           </Box>
 
@@ -171,6 +174,7 @@ EscrowConfirmPaymentProps) {
             }
             sx={{ mb: 2 }}
           />
+
           <Box display="flex" flexDirection="column">
             <Button
               variant="contained"

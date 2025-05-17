@@ -16,10 +16,6 @@ import { Icon } from "@iconify/react";
 import { theme } from "../../assets/themes/theme";
 import background from "../../assets/images/background.png";
 
-// import { BiUpload } from "react-icons/bi";
-// import { PageProps } from "../../utils/myUtils";
-// import { setCurrentPage, setP2PEscrowDetails, setShouldRedirectEscrow } from "../../redux/reducers/pay";
-// import { setCurrentPage } from "../../redux/reducers/pay";
 
 export default function PaymentInDispute({
   onChatToggle,

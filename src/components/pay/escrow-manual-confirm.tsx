@@ -24,13 +24,13 @@ import { setChatDetails } from "../../redux/reducers/pay";
 
 interface ManualEscrowProps {
   onChatToggle: (isChatOpen: boolean) => void;
-  // onPaidToggle?: () => void;
-  onChatOpen?: () => void; // Notify parent when chat is opened
+  onPaid: () => void;
+  onChatOpen?: () => void;
 }
 
 export default function ManualEscrow({
   onChatToggle,
-  // onPaidToggle,
+  onPaid,
   onChatOpen,
 }: ManualEscrowProps): React.JSX.Element {
   const [open, setOpen] = useState(false);
@@ -42,9 +42,7 @@ export default function ManualEscrow({
   const { p2pEscrowDetails, payId, chatDetails } = useSelector(
     (state: RootState) => state.pay
   );
-  // const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const vendor_currency_sign = p2pEscrowDetails?.pay?.total_to_pay_currency;
-
 
   const unreadCount = useMemo(() => {
     return (
@@ -58,8 +56,6 @@ export default function ManualEscrow({
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const openPaymentClick = () => setManualConfirmOpen(true);
-  const closePaymentClick = () => setManualConfirmOpen(false);
 
   const handleChatToggle = () => {
     const newChatState = !isChatOpen;
@@ -171,6 +167,14 @@ export default function ManualEscrow({
 
   const Chat = () => {
     handleChatToggle();
+  };
+
+  const openPaymentClick = () => setManualConfirmOpen(true);
+  const closePaymentClick = () => setManualConfirmOpen(false);
+
+  const handlePaid = () => {
+    setManualConfirmOpen(false);
+    onPaid();
   };
 
   return (
@@ -423,7 +427,7 @@ export default function ManualEscrow({
         <EscrowConfirmPaymentModal
           open={manualConfirmOpen}
           onClose={closePaymentClick}
-          // onPaidToggle={onPaidToggle || (() => {})}
+          onPaid={handlePaid}
         />
       </Box>
     </Card>
