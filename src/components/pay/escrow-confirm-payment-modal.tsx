@@ -137,10 +137,10 @@ EscrowConfirmPaymentProps) {
         <DialogContent sx={{ p: 0 }}>
           <Box>
             <Typography
-              variant="body1"
-              fontSize={{ xs: 12, sm: "24px" }}
-              fontWeight={800}
-              textAlign={"center"}
+              variant="h6"
+          fontWeight={700}
+          fontSize={25}
+          textTransform="capitalize"
             >
               Confirm You have Made payment{" "}
             </Typography>
