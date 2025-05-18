@@ -85,6 +85,8 @@ EscrowConfirmPaymentProps) {
       }
       onClose();
       onPaid();
+      setIsLoading(false);
+
     } catch (error) {
       console.error("Error Confirming:", error);
       setIsLoading(false);

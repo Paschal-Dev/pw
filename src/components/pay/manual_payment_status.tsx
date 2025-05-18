@@ -49,6 +49,7 @@ export default function ManualPaymentStatus({
       try {
         const respo = await APIService.manualPayment(confirmPaymentPayload);
         dispatch(setConfirmPaymentDetails(respo.data));
+        console.log("Confirm Payment Response:", respo.data);
       } catch (error) {
         console.error("Error Confirm Payment:", error);
       }

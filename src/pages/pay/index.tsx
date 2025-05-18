@@ -81,12 +81,45 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
     }
   };
 
-  useEffect(() => {
+   useEffect(() => {
     const url = new URL(window.location.href);
+    // Extract "v" parameter from URL
     const payId = url.searchParams.get("v") || "";
+ 
+    const checkVerifyStatus = async () => {
+      const userIP = await fetchUserIP();
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
+ 
+      const verifyStatus = {
+        call_type: "pay_verify_status",
+        ip: userIP,
+        lang: lang,
+        pay_id: payId,
+      };
+ 
+      try {
+        const resp = await APIService.verifyStatus(verifyStatus);
+        console.log("Verify Status Check:", resp.data);
+        // if (resp?.data?.message === "Successful") {
+        //   // Escrow is not active, transition to P2P page
+        //   const resendOtpPayload = {
+        //     call_type: "resend_pay_otp",
+        //     ip: userIP,
+        //     lang: lang,
+        //     pay_id: payId,
+        //   };
+        //   const respo2 = await APIService.resendOTP(resendOtpPayload);
+        //   console.log("API RESPONSE FROM RESEND OTP =>>> ", respo2.data);
+        // }
+      } catch (error) {
+        console.error("Error during Escrow Payload:", error);
+      }
+    };
+ 
     const initializePayment = async () => {
-      // Extract "v" parameter from URL
-
       if (!payId) {
         console.log("Invalid or missing Pay ID");
         setErrorPage(true);
@@ -103,14 +136,14 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
         console.log("Language found in localStorage:", lang);
       }
       dispatch(setLang(lang));
-
+ 
       // const sendOtpPayload = {
       //   call_type: "pay",
       //   ip: "192.168.0.0",
       //   lang: "en",
       //   pay_id: payId,
       // };
-
+ 
       // try {
       //   const resp = await APIService.sendOTP(sendOtpPayload);
       //   console.log("API Response from Send OTP:", resp.data);
@@ -120,7 +153,7 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
       //   //     dispatch(setButtonClicked(true));
       //   //     dispatch(setCurrentPage("escrow-page"));
       //   //     dispatch(setP2PEscrowDetails(resp.data));
-
+ 
       //   //   } else {
       //   //     console.log("No checkout link or escrow status not 1.");
       //   //   }
@@ -132,46 +165,15 @@ export default function Pay({ errorResponse }: ErrorProps): React.JSX.Element {
       //   setHasCheckedEscrow(true);
       // }
     };
-
-    const checkVerifyStatus = async () => {
-      const userIP = await fetchUserIP();
-      if (!userIP) {
-        console.error("Could not fetch IP");
-        return;
-      }
-
-      const verifyStatus = {
-        call_type: "pay_verify_status",
-        ip: userIP,
-        lang: lang,
-        pay_id: payId,
-      };
-
-      try {
-        const resp = await APIService.verifyStatus(verifyStatus);
-        console.log("Verify Status Check:", resp.data);
-        if (resp?.data?.message === "Successful") {
-          // Escrow is not active, transition to P2P page
-          const resendOtpPayload = {
-            call_type: "resend_pay_otp",
-            ip: userIP,
-            lang: lang,
-            pay_id: payId,
-          };
-          const respo2 = await APIService.resendOTP(resendOtpPayload);
-          console.log("API RESPONSE FROM RESEND OTP =>>> ", respo2.data);
-        }
-      } catch (error) {
-        console.error("Error during Escrow Payload:", error);
-      }
+ 
+    const runInit = async () => {
+      await checkVerifyStatus();
+      await initializePayment();
     };
-
-    checkVerifyStatus();
-
-    // if (!hasCheckedEscrow) {
-    initializePayment();
-    // }
+ 
+    runInit();
   }, []);
+ 
 
   // const handleNonEscrowResponse = (data: any) => {
   //   if (data?.message?.toLowerCase()?.includes("verified")) {
