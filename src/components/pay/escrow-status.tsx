@@ -25,7 +25,7 @@ export default function EscrowStatus() {
 
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pEscrowDetails, confirmPaymentDetails } = useSelector(
+  const { p2pEscrowDetails, confirmPaymentDetails, chatDetails } = useSelector(
     (state: RootState) => state.pay
   );
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
@@ -66,30 +66,6 @@ export default function EscrowStatus() {
     localStorage.removeItem("checkout_link");
     localStorage.clear();
     try {
-      // const formData = new FormData();
-      // formData.append("call_type", "get_key");
-
-      // const response1 = await APIService.getToken(formData);
-      // console.log(
-      //   "API RESPONSE FROM CANCEL ESCROW GET TOKEN =>>> ",
-      //   response1.data
-      // );
-
-      // const payload = {
-      //   call_type: "encode_key",
-      //   token: response1.data?.data?.token,
-      //   key: response1.data?.data?.key,
-      //   timestamp: Math.floor(Date.now() / 1000),
-      // };
-
-      // const response3 = await APIService.encodeKey(payload);
-      // console.log(
-      //   "API RESPONSE FROM CANCEL ESCROW ENCODE KEY =>>> ",
-      //   response3.data
-      // );
-
-      // dispatch(setHeaderKey(response3.data?.data?.header_key));
-      // localStorage.setItem("headerKey", response3.data?.data?.header_key);
       const userIP = await fetchUserIP();
       console.log("User IP at first", userIP);
       if (!userIP) {
@@ -161,23 +137,18 @@ export default function EscrowStatus() {
         // clearInterval(intervalId);
         dispatch(setConfirmButtonBackdrop(false));
         console.log("Confirm Payment Details", confirmPaymentDetails);
-
         dispatch(setCurrentPage("p2p"));
       }
       return;
-      //     }
-      //   } catch (error) {
-      //     console.log("ERROR ::::::: ", error);
-      //   }
-      // };
-      // intervalId = setInterval(
-      //   () => checkPaymentStatusAndRun(sendOtpPayload),
-      //   3000
-      // );
     } catch (error) {
       console.error("Error Cancelling Escrow:", error);
     }
   };
+
+  useEffect(() => {
+    console.log("chatDetails updated:", chatDetails);
+  }, [chatDetails]);
+
   const calculateCountdown = () => {
     const now = Math.floor(Date.now() / 1000);
     let secondsLeft = p2pEscrowDetails?.pay?.escrow_exp - now;
@@ -218,29 +189,14 @@ export default function EscrowStatus() {
   };
 
   return (
-    <Box
-      bgcolor="#FBFBFB"
-      borderRadius={4}
-      p={1}
-      mb={deviceType === "mobile" ? 2 : 0}
-    >
+    <Box bgcolor="#FBFBFB" borderRadius={4} p={1} mb={deviceType === "mobile" ? 2 : 0}>
       <Box display="flex" justifyContent="center">
-        <Typography
-          variant="h6"
-          fontWeight={700}
-          fontSize={35}
-          textTransform="capitalize"
-        >
+        <Typography variant="h6" fontWeight={700} fontSize={35} textTransform="capitalize">
           {t("escrow-status")}
         </Typography>
       </Box>
 
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+      <Box display="flex" flexDirection="column" justifyContent="space-between" alignItems="center">
         <Box
           bgcolor="#FEF3F2"
           borderRadius={2}
@@ -419,12 +375,7 @@ export default function EscrowStatus() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Box
-                    borderRadius={"50%"}
-                    bgcolor={"#FEE4E2"}
-                    width={50}
-                    p={2}
-                  >
+                  <Box borderRadius={"50%"} bgcolor={"#FEE4E2"} width={50} p={2}>
                     <Box display={"flex"} justifyContent={"center"}>
                       <img src={danger} alt="" width={40} />
                     </Box>
@@ -447,7 +398,7 @@ export default function EscrowStatus() {
                 alignItems={"center"}
                 textAlign={"center"}
               >
-               {t("blc_pw_84")}
+                {t("blc_pw_84")}
                 <span
                   style={{
                     fontWeight: 700,

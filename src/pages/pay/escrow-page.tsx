@@ -7,6 +7,7 @@ import EscrowConfirmDetails from "../../components/pay/escrow-confirm-details";
 import EscrowStatus from "../../components/pay/escrow-status";
 import EscrowConfirm from "../../components/pay/escrow-confirm";
 import {
+  useDispatch,
   // useDispatch,
   useSelector,
 } from "react-redux";
@@ -16,6 +17,8 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import Chat from "../../components/pay/chat";
 import ManualEscrow from "../../components/pay/manual-escrow";
+import { setChatDetails } from "../../redux/reducers/pay";
+import APIService from "../../services/api-service";
 // import {
 //   setConfirmButtonBackdrop,
 //   setCurrentPage,
@@ -33,7 +36,7 @@ export default function EscrowPage(): React.JSX.Element {
 
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pEscrowDetails, paymentDetails, confirmPaymentDetails } = useSelector(
+  const { p2pEscrowDetails, paymentDetails, confirmPaymentDetails, lang, payId } = useSelector(
     (state: RootState) => state.pay
   );
   const { isConfirmButtonBackdrop } = useSelector((state: RootState) => state.button);
@@ -87,6 +90,17 @@ export default function EscrowPage(): React.JSX.Element {
   confirmPaymentDetails ||
   manualPaymentStatus;
 
+    const fetchUserIP = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+      return null;
+    }
+  };
+
   React.useEffect(() => {
     if (mobile) {
       setDeviceType("mobile");
@@ -96,6 +110,45 @@ export default function EscrowPage(): React.JSX.Element {
       setDeviceType("pc");
     }
   }, [mobile, tablet]);
+
+    const dispatch = useDispatch();
+  
+
+  useEffect(() => {
+  if (p2pEscrowDetails?.p2p_type !== "manual") return;
+
+  const handleChatCheck = async () => {
+    try {
+      const userIP = await fetchUserIP();
+      if (!userIP) {
+        console.error("Unable to retrieve user IP");
+        return;
+      }
+
+      const payload = {
+        call_type: "p2p_chat",
+        ip: userIP,
+        lang: lang,
+        pay_id: payId,
+      };
+
+      const response = await APIService.p2pChat(payload);
+      dispatch(setChatDetails(response.data));
+      console.log("Chat details fetched successfully:", response.data);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
+
+  // Initial call
+  handleChatCheck();
+
+  // Set up interval for every 5 seconds
+  const intervalId = setInterval(handleChatCheck, 5000);
+
+  // Cleanup interval on component unmount
+  return () => clearInterval(intervalId);
+}, [p2pEscrowDetails?.p2p_type, lang, payId, dispatch]);
 
   return (
     <>

@@ -220,6 +220,7 @@ export default function P2PPayment(): React.JSX.Element {
                   </IconButton>
                 )}
                 <Box
+                
                   p={1}
                   display={"flex"}
                   flexDirection={"column"}
