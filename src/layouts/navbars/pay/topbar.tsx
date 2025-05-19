@@ -30,7 +30,7 @@ import bengali from "../../../assets/images/flag_bengali.jpeg";
 // import { setCurrentPage } from "../../../redux/reducers/pay";
 import { useDispatch } from "react-redux";
 // import { RootState } from "../../../redux/store";
-import { setCurrentPage } from "../../../redux/reducers/pay";
+import { setCurrentPage, setLang } from "../../../redux/reducers/pay";
 // import { RootState } from "../../../redux/store";
 // import APIService from "../../../services/api-service";
 // import { PageProps } from "../../../utils/myUtils";
@@ -56,6 +56,15 @@ export default function Topbar(): React.JSX.Element {
     setLanguage(event.target.value);
     i18n.changeLanguage(event.target.value);
     localStorage.setItem("language", event.target.value);
+    const lang = localStorage.getItem("language");
+      console.log("Language from localStorage:", lang);
+      if (!lang) {
+        console.log("Language not found in localStorage, defaulting to 'en'");
+        localStorage.setItem("language", "en");
+      } else {
+        console.log("Language found in localStorage:", lang);
+      }
+      dispatch(setLang(lang));
   };
   React.useEffect(() => {
     if (mobile) {

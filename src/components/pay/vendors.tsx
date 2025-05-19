@@ -72,6 +72,7 @@ const Vendors: React.FC<Props> = ({ item }) => {
         lang: lang,
       };
       const respo = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
+      console.log('P2p Escrow Payload:', p2pEscrowPayload);
       dispatch(setP2PEscrowDetails(respo.data));
 
       const errorMessage = respo.data?.message?.toLowerCase()?.includes("Daily");
