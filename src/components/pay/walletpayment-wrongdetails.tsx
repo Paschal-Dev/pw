@@ -314,7 +314,7 @@ export default function WalletPaymentWrongDetails(): React.JSX.Element {
                   textAlign={"center"}
                   color={"#fff"}
                 >
-                  Wrong Payment
+                  {t("blc_pw_75")}
                 </Typography>
               </Box>
             )}    

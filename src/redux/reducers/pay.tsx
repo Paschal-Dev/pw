@@ -113,6 +113,9 @@ const paySlice = createSlice({
     clearConfirmPaymentDetails(state) {
       state.confirmPaymentDetails = null; // Reset to initial state
     },
+    clearChatDetails(state) {
+      state.chatDetails = null; // Reset to initial state
+    },
      setReadMessageIds: (state, action: PayloadAction<string[]>) => {
       state.readMessageIds = action.payload;
     },
@@ -126,6 +129,7 @@ export const {
 //   setPaidClicked,
   setConfirmPaymentDetails,
   clearConfirmPaymentDetails,
+  clearChatDetails,
   setPayId,
   setLang,
   setPaymentDetails,

@@ -311,7 +311,7 @@ export default function NotYetPaidDetails() {
                   textAlign={"center"}
                   color={"#000"}
                 >
-                  Not Yet Paid
+                  {t("blc_pw_71")}
                 </Typography>
               </Box>
             )}

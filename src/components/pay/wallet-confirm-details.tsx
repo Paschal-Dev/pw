@@ -202,7 +202,7 @@ export default function WalletConfirmDetails() {
               fontWeight={400}
               style={{ flex: 1 }}
             >
-              Pay ID
+              {t("blc_pw_50")}
             </Typography>
 
             <Typography

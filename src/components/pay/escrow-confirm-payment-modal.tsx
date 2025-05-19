@@ -17,6 +17,8 @@ import { Icon } from "@iconify/react";
 import APIService from "../../services/api-service";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useTranslation } from "react-i18next";
+
 // import { useState, useEffect } from "react";
 import {
   setConfirmPaymentDetails,
@@ -93,6 +95,7 @@ EscrowConfirmPaymentProps) {
     }
   };
 
+  const { t } = useTranslation();
   return (
     <Dialog
       open={open}
@@ -147,7 +150,7 @@ EscrowConfirmPaymentProps) {
           textTransform="capitalize"
           textAlign={"center"}
             >
-              Confirm you have made payment{" "}
+              {t("blc_pw_51")}
             </Typography>
           </Box>
 
@@ -158,8 +161,7 @@ EscrowConfirmPaymentProps) {
               fontWeight={700}
               color="#F04438"
             >
-              Be sure you have paid. You can be banned for clicking “i have
-              paid” when you have not paid.{" "}
+              {t("blc_pw_52")}
             </Typography>
           </Box>
           <FormControlLabel
@@ -171,7 +173,7 @@ EscrowConfirmPaymentProps) {
             }
             label={
               <Typography variant="body2" fontSize="14px">
-                Please confirm you have made payment
+                {t("blc_pw_87")}
               </Typography>
             }
             sx={{ mb: 2 }}
@@ -196,7 +198,7 @@ EscrowConfirmPaymentProps) {
              {isLoading ? (
                 <CircularProgress size={24} sx={{ color: "white" }} />
               ) : (
-                "Yes, I have paid"
+                (t("blc_pw_53"))
               )}
             </Button>
           </Box>

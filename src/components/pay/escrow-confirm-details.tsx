@@ -12,6 +12,7 @@ import {
   setCurrentPage,
   setP2PVendorsDetails,
   clearConfirmPaymentDetails,
+  clearChatDetails,
 } from "../../redux/reducers/pay";
 // import background from "../../assets/images/background.png";
 
@@ -104,6 +105,7 @@ export default function EscrowConfirmDetails() {
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
       dispatch(clearConfirmPaymentDetails());
+      dispatch(clearChatDetails());
       // // send-otp request
       // const sendOtpPayload = {
       //   call_type: "pay",
@@ -263,7 +265,7 @@ export default function EscrowConfirmDetails() {
             fontWeight={600}
             style={{ flex: 1 }}
           >
-            Order Amount
+            {t("blc_pw_82")}
           </Typography>
 
           <Typography
@@ -295,7 +297,7 @@ export default function EscrowConfirmDetails() {
             fontWeight={600}
             style={{ flex: 1 }}
           >
-            Total Order Amount
+            {t("blc_pw_83")}
           </Typography>
 
           <Typography
@@ -558,12 +560,9 @@ export default function EscrowConfirmDetails() {
                 alignItems={"center"}
                 textAlign={"center"}
               >
-                If you’ve already completed the payment, <span style={{
+              {t("blc_pw_84")} <span style={{
                   fontWeight: 700
-                }}>do not cancel the
-                escrow!</span>  However, if you haven’t made the payment yet, you may
-                cancel the escrow to choose a different payment method from the
-                P2P checkout.
+                }}>{t("blc_pw_85")}</span>  {t("blc_pw_86")}
               </Typography>
               <Box
                 display="flex"
@@ -780,7 +779,7 @@ export default function EscrowConfirmDetails() {
               fontWeight={400}
               style={{ flex: 1 }}
             >
-              Pay ID
+             {t("blc_pw_50")}
             </Typography>
 
             <Typography

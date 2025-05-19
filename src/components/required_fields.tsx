@@ -9,6 +9,8 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css'; // Import default styles
 import { setCurrentPage, setP2PEscrowDetails } from '../redux/reducers/pay';
 import { Vendor } from '../data/pay/vendors-data';
+import { useTranslation } from "react-i18next";
+
 
 // Custom CSS to style PhoneInput like MUI TextField
 const phoneInputStyles = `
@@ -178,6 +180,8 @@ const RequiredFields: React.FC<Props> = ({ item, }) => {
         );
     };
 
+    const { t } = useTranslation();
+
     return (
         <>
             <form action="">
@@ -187,7 +191,7 @@ const RequiredFields: React.FC<Props> = ({ item, }) => {
                             renderField(field)
                         )
                     ) : (
-                        <Box>No required fields to display.</Box>
+                        <Box>{t("blc_pw_76")}</Box>
                     )}
                 </Box>
             </form>
@@ -209,7 +213,7 @@ const RequiredFields: React.FC<Props> = ({ item, }) => {
                         bgcolor: '#009FDD',
                     }}
                 >
-                    Update & Continue
+                    {t("blc_pw_77")}
                 </Button>
             </Box>
         </>

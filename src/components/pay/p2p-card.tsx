@@ -330,7 +330,7 @@ const P2pCard: React.FC<P2pCardProps> = () => {
                 width: deviceType !== "mobile" ? "60%" : "20%",
               }}
             >
-              <AlertTitle>Error</AlertTitle>
+              <AlertTitle>{t("blc_pw_89")}</AlertTitle>
               {alertMessage}
             </Alert>
           )}

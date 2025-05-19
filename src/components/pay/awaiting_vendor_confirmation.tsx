@@ -8,6 +8,8 @@ import rating from "../../assets/images/rating.png";
 import emptyRating from "../../assets/images/empty-rating.svg";
 import vendors from "../../assets/images/vendors.png";
 import { Icon } from "@iconify/react";
+import { useTranslation } from "react-i18next";
+
 
 export default function AwaitingVendorConfirmation({
   onChatToggle,
@@ -79,6 +81,7 @@ export default function AwaitingVendorConfirmation({
     handleChatToggle();
   };
 
+  const { t } = useTranslation();
   return (
     <>
       <Box display={"flex"} flexDirection="column" alignItems="center" width="100%" gap={2}>
@@ -139,7 +142,7 @@ export default function AwaitingVendorConfirmation({
             onClick={Chat}
           >
             <Icon icon="lets-icons:chat-fill" fontSize={16} color={theme.palette.primary.main} />
-            Chat
+            {t("blc_pw_47")}
           </Button>
           <Box
             display={"flex"}
@@ -222,11 +225,10 @@ export default function AwaitingVendorConfirmation({
               mt={0.5}
             >
               <Typography variant="h6" fontWeight={700}>
-                Awaiting Vendor's Confirmation
+              {t("blc_pw_48")}
               </Typography>
               <Typography variant="body2" fontSize={12} width={"95%"}>
-                This payment is in progress, once the vendor confirms your payment the page will be
-                automatically updated
+                {t("blc_pw_49")}
               </Typography>
             </Box>
           </Box>

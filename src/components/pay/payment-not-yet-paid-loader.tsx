@@ -231,7 +231,7 @@ export default function NotYetPaidLoader(): React.JSX.Element {
           color={"black"}
           textAlign={"center"}
         >
-          Awaiting Payment
+          {t("blc_pw_72")}
         </Typography>
       </Box>
         <Button

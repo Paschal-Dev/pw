@@ -209,7 +209,7 @@ export default function ManualEscrow({
             color={theme.palette.primary.main}
           />
         </IconButton>
-        Chat
+        {t("blc_pw_47")}
       </Button>
       <Box
         display={"flex"}
@@ -329,7 +329,7 @@ export default function ManualEscrow({
                   fontSize={"10px"}
                   fontWeight={700}
                 >
-                  Payment Instructions
+                  {t("blc_pw_54")}
                 </Typography>
                 <Button
                   variant="contained"
@@ -343,7 +343,7 @@ export default function ManualEscrow({
                   }}
                   onClick={handleOpen}
                 >
-                  Vendor’s Terms
+                  {t("blc_pw_60")}
                 </Button>
                 <EscrowManualModal open={open} onClose={handleClose} />
               </Box>
@@ -384,7 +384,7 @@ export default function ManualEscrow({
           onClick={openPaymentClick}
         >
           <Icon icon="ph:hand-deposit-fill" fontSize={20} color={"#fff"} />
-          I Have Paid
+          {t("blc_pw_59")}
         </Button>
         <EscrowConfirmPaymentModal
           open={manualConfirmOpen}

@@ -13,6 +13,7 @@ import {
   setCurrentPage,
   setP2PVendorsDetails,
   clearConfirmPaymentDetails,
+  clearChatDetails,
 } from "../../redux/reducers/pay";
 
 export default function EscrowStatus() {
@@ -104,6 +105,7 @@ export default function EscrowStatus() {
       const respo = await APIService.p2pCancelEscrow(cancelPayload);
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
       dispatch(clearConfirmPaymentDetails());
+      dispatch(clearChatDetails());
       // // send-otp request
       // const sendOtpPayload = {
       //   call_type: "pay",
@@ -445,17 +447,15 @@ export default function EscrowStatus() {
                 alignItems={"center"}
                 textAlign={"center"}
               >
-                If you’ve already completed the payment,{" "}
+               {t("blc_pw_84")}
                 <span
                   style={{
                     fontWeight: 700,
                   }}
                 >
-                  do not cancel the escrow!
+                  {t("blc_pw_85")}
                 </span>{" "}
-                However, if you haven’t made the payment yet, you may cancel the
-                escrow to choose a different payment method from the P2P
-                checkout.
+                {t("blc_pw_86")}
               </Typography>
               <Box
                 display={"flex"}

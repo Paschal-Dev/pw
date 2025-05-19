@@ -14,6 +14,7 @@ import emptyRating from "../../assets/images/empty-rating.svg";
 import { Icon } from "@iconify/react";
 import { theme } from "../../assets/themes/theme";
 import background from "../../assets/images/background.png";
+import { useTranslation } from "react-i18next";
 
 export default function PaymentInDispute({
   onChatToggle,
@@ -87,6 +88,7 @@ export default function PaymentInDispute({
     handleChatToggle();
   };
 
+  const { t } = useTranslation();
   return (
     <>
       <Box
@@ -213,7 +215,7 @@ export default function PaymentInDispute({
               textAlign={"center"}
               color={"#D92D20"}
             >
-              Payment in Dispute
+              {t("blc_pw_68")}
             </Typography>
           </Box>
 
@@ -222,8 +224,7 @@ export default function PaymentInDispute({
             fontSize={{ xs: 12, sm: "12px" }}
             textAlign={"center"}
           >
-            This payment is in dispute, it will be completed when fully resolved
-            by all parties involved.
+           {t("blc_pw_69")}
           </Typography>
 
           <Box display="flex" flexDirection="column">
@@ -279,7 +280,7 @@ export default function PaymentInDispute({
                     color={theme.palette.primary.main}
                   />
                 </IconButton>
-                Go To Chat
+               {t("blc_pw_70")}
               </Button>
             </Box>
           </Box>

@@ -14,6 +14,8 @@ import emptyRating from "../../assets/images/empty-rating.svg";
 import { Icon } from "@iconify/react";
 import { theme } from "../../assets/themes/theme";
 import background from "../../assets/images/background.png";
+import { useTranslation } from "react-i18next";
+
 
 export default function ManualPaymentExpired(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
@@ -70,7 +72,7 @@ export default function ManualPaymentExpired(): React.JSX.Element {
       />
     );
   }
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   React.useEffect(() => {
     if (mobile) {
       setDeviceType("mobile");
@@ -205,10 +207,10 @@ export default function ManualPaymentExpired(): React.JSX.Element {
             fontWeight={800}
             fontSize={deviceType === "mobile" ? 14 : 24}
           >
-            Payment Expired
+            {t("blc_pw_63")}
           </Typography>
           <Typography variant="body2" fontSize={12} color={"#000"}>
-            The Transaction Has Timed Out
+           {t("blc_pw_64")}
           </Typography>
         </Box>
         <Button
@@ -222,7 +224,7 @@ export default function ManualPaymentExpired(): React.JSX.Element {
           }}
           // onClick={onClose}
         >
-          Go Back
+        {t("blc_pw_65")}
         </Button>
       </Card>
     </Box>

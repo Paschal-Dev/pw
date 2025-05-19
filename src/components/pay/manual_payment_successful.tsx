@@ -8,6 +8,8 @@ import rating from "../../assets/images/rating.png";
 import emptyRating from "../../assets/images/empty-rating.svg";
 import vendors from "../../assets/images/vendors.png";
 import { Icon } from "@iconify/react";
+import { useTranslation } from "react-i18next";
+
 
 export default function ManualPaymentSuccessful({
   onChatToggle,
@@ -78,7 +80,7 @@ export default function ManualPaymentSuccessful({
   const Chat = () => {
     handleChatToggle();
   };
-
+ const { t } = useTranslation();
   return (
     <>
       <Box display={"flex"} flexDirection="column" alignItems="center" width="100%" gap={2}>
@@ -147,7 +149,7 @@ export default function ManualPaymentSuccessful({
             >
               <Icon icon="lets-icons:chat-fill" fontSize={16} color={theme.palette.primary.main} />
             </IconButton>
-            Chat
+            {t("blc_pw_47")}
           </Button>
           <Box
             display={"flex"}
@@ -229,11 +231,10 @@ export default function ManualPaymentSuccessful({
               width="100%"
             >
               <Typography variant="h6" fontWeight={700} color="green">
-                Payment Successful
+                {t("blc_pw_66")}
               </Typography>
               <Typography variant="body2" fontSize={12} width={"95%"}>
-                The Vendor has confirmed your payment. Your transaction has been successfully
-                processed.
+                {t("blc_pw_67")}
               </Typography>
             </Box>
           </Box>

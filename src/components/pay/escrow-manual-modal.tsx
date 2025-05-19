@@ -12,6 +12,7 @@ import {
 import { Icon } from "@iconify/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useTranslation } from "react-i18next";
 
 interface EscrowModalProps {
   open: boolean;
@@ -20,7 +21,7 @@ interface EscrowModalProps {
 
 export default function EscrowManualModal({ open, onClose }: EscrowModalProps) {
   const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
-
+ const { t } = useTranslation();
   return (
     <Dialog
       open={open}
@@ -45,7 +46,7 @@ export default function EscrowManualModal({ open, onClose }: EscrowModalProps) {
         <DialogTitle sx={{ p: 0, mb: 1 }}>
           <Box display="flex" alignItems="center" justifyContent="space-between">
             <Typography fontWeight={700} fontSize={{ xs: 18, sm: 20, md: 23 }} marginLeft={1}>
-              Vendor’s Terms
+              {t("blc_pw_55")}
             </Typography>
             <IconButton
               onClick={onClose}
@@ -63,7 +64,7 @@ export default function EscrowManualModal({ open, onClose }: EscrowModalProps) {
         {/* Warning Box */}
         <Box bgcolor="secondary.main" py={2} px={2} borderRadius={5} textAlign="center" mb={2}>
           <Typography variant="body1" fontSize={{ xs: 12, sm: 14 }} fontWeight={700}>
-            Make sure you Read, Understand & Accept the Vendor’s terms
+           {t("blc_pw_61")}
           </Typography>
         </Box>
 
@@ -120,7 +121,7 @@ export default function EscrowManualModal({ open, onClose }: EscrowModalProps) {
               },
             }}
           >
-            I Accept
+           {t("blc_pw_62")}
           </Button>
         </Box>
       </Box>

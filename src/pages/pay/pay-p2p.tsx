@@ -204,7 +204,7 @@ export default function PayP2P(): React.JSX.Element {
                     }}
                     textTransform={"capitalize"}
                   >
-                    AUTO
+                    {t("blc_pw_78")}
                   </Typography>
                 </Box>
                 <Box
@@ -228,7 +228,7 @@ export default function PayP2P(): React.JSX.Element {
                       fontSize: deviceType === "mobile" ? 12 : 14,
                     }}
                   >
-                    These payment options are confirmed instantly
+                   {t("blc_pw_79")}
                   </Typography>
                 </Box>
               </Box>
@@ -293,7 +293,7 @@ export default function PayP2P(): React.JSX.Element {
                     }}
                     textTransform={"capitalize"}
                   >
-                    MANUAL
+                    {t("blc_pw_80")}
                   </Typography>
                 </Box>
                 <Box
@@ -317,8 +317,7 @@ export default function PayP2P(): React.JSX.Element {
                       fontSize: deviceType === "mobile" ? 12 : 14,
                     }}
                   >
-                    These payment options require the Vendor's confirmation after you mark payment
-                    as paid.
+                   {t("blc_pw_81")}
                   </Typography>
                 </Box>
               </Box>

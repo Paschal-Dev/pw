@@ -133,7 +133,7 @@ export default function P2pProcessingDetails() {
               style={{ flex: 1 }}
               textTransform={"uppercase"}
             >
-              Total Amount
+              {t('blc_pw_90')}
             </Typography>
             <Typography
               color="#000"
