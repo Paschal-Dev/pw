@@ -28,11 +28,11 @@ export default function Chat({ deviceType, onChatToggle }: ChatProps): React.JSX
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     if (isFirstRender && chatDetails?.data) {
-      onChatToggle();
+      // onChatToggle();
       setIsFirstRender(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFirstRender]);
+  }, [isFirstRender, chatDetails?.data]);
 
   // Transform chatDetails.data into ChatItemProps
   interface ChatMessage {
