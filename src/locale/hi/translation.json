@@ -1,16 +1,20 @@
 {
   "languages": {
-    "pt": "Portuguese",
+  "pt": "Portuguese",
     "en": "English",
     "fr": "French",
     "it": "Italian",
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
-    "sk": "slovak"
+    "sk": "slovak",
+    "ar": "arabic",
+    "be": "bengali",
+    "zh": "chinese",
+    "kr": "korean"
   },
   "translation": {
     "otp_required": "ओटीपी आवश्यक है",
@@ -187,6 +191,13 @@
     "blc_pw_87": " कृपया पुष्टि करें कि आपने भुगतान कर दिया है",
     "blc_pw_88": " सफल",
     "blc_pw_89": " त्रुटि",
-    "blc_pw_90": " कुल राशि"
+    "blc_pw_90": " कुल राशि",
+    "blc_pw_91": " से",
+    "blc_pw_92": " चैट के लिए",
+    "blc_pw_93": " बंद करें",
+    "blc_pw_94": " संदेश भेजें",
+    "blc_pw_95": " भेजा जा रहा है...",
+    "blc_pw_96": " कुछ लिखें",
+    "blc_pw_97": " बायाँ"
   }
 }

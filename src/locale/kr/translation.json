@@ -1,19 +1,19 @@
 {
   "languages": {
-    "pt": "Portuguese",
+   "pt": "Portuguese",
     "en": "English",
     "fr": "French",
     "it": "Italian",
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
     "sk": "slovak",
     "ar": "arabic",
     "be": "bengali",
-    "ch": "chinese",
+    "zh": "chinese",
     "kr": "korean"
   },
   "translation": {
@@ -193,6 +193,13 @@
     "blc_pw_87": "결제를 완료했는지 확인해 주세요.",
     "blc_pw_88": "성공",
     "blc_pw_89": "오류",
-    "blc_pw_90": "총액"
+    "blc_pw_90": "총액",
+    "blc_pw_91": "받는 사람",
+    "blc_pw_92": "채팅 상대",
+    "blc_pw_93": "닫기",
+    "blc_pw_94": "메시지 보내기",
+    "blc_pw_95": "보내는 중...",
+    "blc_pw_96": "입력하세요",
+    "blc_pw_97": "남기다"
   }
 }

@@ -1,16 +1,20 @@
 {
   "languages": {
-    "pt": "Portuguese",
+   "pt": "Portuguese",
     "en": "English",
     "fr": "French",
     "it": "Italian",
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
-    "sk": "slovak"
+    "sk": "slovak",
+    "ar": "arabic",
+    "be": "bengali",
+    "zh": "chinese",
+    "kr": "korean"
   },
   "translation": {
     "otp_required": "JE VYŽADOVANÉ OTP",
@@ -145,7 +149,7 @@
     "blc_pw_45": " Nie je dostupný žiadny predajca P2P",
     "blc_pw_46": " Predajný účet nie je aktívny, kontaktujte podporu",
 
-    "blc_pw_47": " Chat",
+    "blc_pw_47": " Čet",
     "blc_pw_48": " Čakám na potvrdenie dodávateľa",
     "blc_pw_49": " Táto platba prebieha, akonáhle dodávateľ potvrdí vašu platbu, stránka sa automaticky aktualizuje",
     "blc_pw_50": " ID platby",
@@ -187,6 +191,13 @@
     "blc_pw_87": " Potvrďte, prosím, že ste platbu uskutočnili,",
     "blc_pw_88": " Úspešne,",
     "blc_pw_89": " Chyba,",
-    "blc_pw_90": " Celková suma"
+    "blc_pw_90": " Celková suma",
+    "blc_pw_91": " komu",
+    "blc_pw_92": " Chat pre",
+    "blc_pw_93": " Zatvoriť",
+    "blc_pw_94": " Poslať správu",
+    "blc_pw_95": " Odosiela sa...",
+    "blc_pw_96": " Napíšte niečo",
+    "blc_pw_97": " Odišiel"
   }
 }

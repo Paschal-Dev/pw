@@ -1,16 +1,20 @@
 {
   "languages": {
-    "pt": "Portuguese",
+   "pt": "Portuguese",
     "en": "English",
     "fr": "French",
     "it": "Italian",
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
-    "sk": "slovakia"
+    "sk": "slovak",
+    "ar": "arabic",
+    "be": "bengali",
+    "zh": "chinese",
+    "kr": "korean"
   },
   "translation": {
     "otp_required": "OTP REQUIS",
@@ -187,6 +191,13 @@
     "blc_pw_87": "Veuillez confirmer que vous avez effectué le paiement",
     "blc_pw_88": "Réussite",
     "blc_pw_89": "Erreur",
-    "blc_pw_90": "Montant total"
+    "blc_pw_90": "Montant total",
+    "blc_pw_91": "à",
+    "blc_pw_92": "Discuter pour",
+    "blc_pw_93": "Fermer",
+    "blc_pw_94": "Envoyer un message",
+    "blc_pw_95": "Envoi en cours...",
+    "blc_pw_96": "Saisir quelque chose",
+    "blc_pw_97": "Gauche"
   }
 }

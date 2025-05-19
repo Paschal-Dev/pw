@@ -7,10 +7,14 @@
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
-    "sk": "slovak"
+    "sk": "slovak",
+    "ar": "arabic",
+    "be": "bengali",
+    "zh": "chinese",
+    "kr": "korean"
   },
   "translation": {
     "otp_required": "OTP NECESSÁRIO",
@@ -145,7 +149,7 @@
     "blc_pw_45": "Nenhum fornecedor P2P disponível",
     "blc_pw_46": "A conta de venda não está ativa, por favor contacte o suporte",
 
-    "blc_pw_47": " Chat",
+    "blc_pw_47": " Conversa",
 "blc_pw_48": "Aguarda confirmação do fornecedor",
 "blc_pw_49": "Este pagamento está em curso. Assim que o fornecedor confirmar o seu pagamento, a página será automaticamente atualizada",
 "blc_pw_50": "ID de pagamento",
@@ -187,7 +191,14 @@
 "blc_pw_87": "Por favor, confirme que efetuou o pagamento",
 "blc_pw_88": "Sucesso",
 "blc_pw_89": "Erro",
-"blc_pw_90": "Valor total"
+"blc_pw_90": "Valor total",
+"blc_pw_91": "para",
+"blc_pw_92": " Chat para",
+"blc_pw_93": " Fechar",
+"blc_pw_94": "Enviar mensagem",
+"blc_pw_95": "A enviar...",
+"blc_pw_96": "Introduza algo",
+"blc_pw_97": "Esquerda"
 
   }
 }

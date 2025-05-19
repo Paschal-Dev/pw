@@ -7,10 +7,14 @@
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
-    "sk": "slovakia"
+    "sk": "slovak",
+    "ar": "arabic",
+    "be": "bengali",
+    "zh": "chinese",
+    "kr": "korean"
   },
   "translation": {
     "otp_required": "OTP DIPERLUKAN",
@@ -187,6 +191,13 @@
     "blc_pw_87": " Harap konfirmasi bahwa Anda telah melakukan pembayaran",
     "blc_pw_88": " Berhasil",
     "blc_pw_89": " Kesalahan",
-    "blc_pw_90": " Jumlah Total"
+    "blc_pw_90": " Jumlah Total",
+    "blc_pw_91": " ke",
+    "blc_pw_92": " Ngobrol Untuk",
+    "blc_pw_93": " Tutup",
+    "blc_pw_94": " Kirim Pesan",
+    "blc_pw_95": " Mengirim...",
+    "blc_pw_96": " Ketik sesuatu",
+    "blc_pw_97": " Kiri"
   }
 }

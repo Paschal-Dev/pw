@@ -7,13 +7,13 @@
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
     "sk": "slovak",
     "ar": "arabic",
     "be": "bengali",
-    "ch": "chinese",
+    "zh": "chinese",
     "kr": "korean"
   },
   "translation": {
@@ -193,6 +193,13 @@
     "blc_pw_87": "请确认您已付款",
     "blc_pw_88": "成功",
     "blc_pw_89": "错误",
-    "blc_pw_90": "总金额"
+    "blc_pw_90": "总金额",
+    "blc_pw_91": " 至",
+    "blc_pw_92": " 聊天对象",
+    "blc_pw_93": " 关闭",
+    "blc_pw_94": " 发送消息",
+    "blc_pw_95": " 发送中...",
+    "blc_pw_96": " 输入内容",
+    "blc_pw_97": " 离开"
   }
 }

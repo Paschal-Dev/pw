@@ -1,16 +1,20 @@
 {
   "languages": {
-    "pt": "Portuguese",
+  "pt": "Portuguese",
     "en": "English",
     "fr": "French",
     "it": "Italian",
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
-    "sk": "slovak"
+    "sk": "slovak",
+    "ar": "arabic",
+    "be": "bengali",
+    "zh": "chinese",
+    "kr": "korean"
   },
   "translation": {
     "otp_required": "OTPが必要です",
@@ -189,6 +193,13 @@
     "blc_pw_87": "お支払いが完了したことを確認してください",
     "blc_pw_88": "成功",
     "blc_pw_89": "エラー",
-    "blc_pw_90": "合計金額"
+    "blc_pw_90": "合計金額",
+    "blc_pw_91": " 宛先",
+    "blc_pw_92": " チャット相手",
+    "blc_pw_93": " 閉じる",
+    "blc_pw_94": " メッセージを送信",
+    "blc_pw_95": " 送信中...",
+    "blc_pw_96": " 何か入力",
+    "blc_pw_97": " 左へ"
   }
 }

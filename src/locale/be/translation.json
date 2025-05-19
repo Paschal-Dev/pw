@@ -7,13 +7,13 @@
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
     "sk": "slovak",
     "ar": "arabic",
     "be": "bengali",
-    "ch": "chinese",
+    "zh": "chinese",
     "kr": "korean"
   },
   "translation": {
@@ -193,6 +193,13 @@
     "blc_pw_87": " অনুগ্রহ করে নিশ্চিত করুন যে আপনি পেমেন্ট করেছেন",
     "blc_pw_88": " সফল ",
     "blc_pw_89": " ত্রুটি ",
-    "blc_pw_90": " মোট পরিমাণ"
+    "blc_pw_90": " মোট পরিমাণ",
+    "blc_pw_91": " প্রতি",
+    "blc_pw_92": " চ্যাটের জন্য",
+    "blc_pw_93": " বন্ধ করুন",
+    "blc_pw_94": " বার্তা পাঠান",
+    "blc_pw_95": " পাঠানো হচ্ছে...",
+    "blc_pw_96": " কিছু টাইপ করুন",
+    "blc_pw_97": " বাম"
   }
 }

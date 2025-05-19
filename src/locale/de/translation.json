@@ -7,10 +7,14 @@
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
-    "sk": "slovak"
+    "sk": "slovak",
+    "ar": "arabic",
+    "be": "bengali",
+    "zh": "chinese",
+    "kr": "korean"
   },
   "translation": {
     "otp_required": "OTP ERFORDERLICH",
@@ -187,6 +191,13 @@
     "blc_pw_87": "Bitte bestätigen Sie die Zahlung.",
     "blc_pw_88": "Erfolgreich",
     "blc_pw_89": "Fehler",
-    "blc_pw_90": "Gesamtbetrag"
+    "blc_pw_90": "Gesamtbetrag",
+    "blc_pw_91": "An",
+    "blc_pw_92": "Chat für",
+    "blc_pw_93": "Schließen",
+    "blc_pw_94": "Nachricht senden",
+    "blc_pw_95": "Senden...",
+    "blc_pw_96": "Geben Sie etwas ein",
+    "blc_pw_97": "Links"
   }
 }

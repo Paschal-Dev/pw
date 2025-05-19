@@ -7,10 +7,14 @@
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
-    "sk": "slovak"
+    "sk": "slovak",
+    "ar": "arabic",
+    "be": "bengali",
+    "zh": "chinese",
+    "kr": "korean"
   },
   "translation": {
     "otp_required": "ТРЕБУЕТСЯ OTP",
@@ -187,6 +191,13 @@
     "blc_pw_87": "Подтвердите, что вы выполнили платеж",
     "blc_pw_88": "Успешно",
     "blc_pw_89": "Ошибка",
-    "blc_pw_90": "Общая сумма"
+    "blc_pw_90": "Общая сумма",
+    "blc_pw_91": " кому",
+    "blc_pw_92": " Чат для",
+    "blc_pw_93": " Закрыть",
+    "blc_pw_94": " Отправить сообщение",
+    "blc_pw_95": " Отправка...",
+    "blc_pw_96": " Введите что-нибудь",
+    "blc_pw_97": " Оставлено"
   }
 }

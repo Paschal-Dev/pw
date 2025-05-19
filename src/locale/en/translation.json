@@ -7,13 +7,13 @@
     "es": "Spanish",
     "de": "german",
     "id": "indonesian",
-    "jp": "japanese",
+    "ja": "japanese",
     "hi": "hindi",
     "ru": "russian",
     "sk": "slovak",
     "ar": "arabic",
     "be": "bengali",
-    "ch": "chinese",
+    "zh": "chinese",
     "kr": "korean"
   },
   "translation": {
@@ -196,7 +196,19 @@
     "blc_pw_87": " Please confirm you have made payment",
     "blc_pw_88": " Success",
     "blc_pw_89": " Error",
-    "blc_pw_90": " Total Amount"
+    "blc_pw_90": " Total Amount",
+
+    "blc_pw_91": " to",
+    "blc_pw_92": "  Chat For",
+    "blc_pw_93": " Close",
+    "blc_pw_94": " Send Message",
+    "blc_pw_95": " Sending...",
+    "blc_pw_96": " Type something",
+    "blc_pw_97": " Left"
+
+
+
+    
    
 
 

@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import AwaitingVendorConfirmation from "./awaiting_vendor_confirmation";
 import ManualPaymentExpired from "./manual_payment_expired";
 import ManualPaymentSuccessful from "./manual_payment_successful";
-import { setConfirmPaymentDetails } from "../../redux/reducers/pay";
+import {
+  setConfirmPaymentDetails,
+  setCurrentPage,
+  setP2PEscrowDetails,
+} from "../../redux/reducers/pay";
 import APIService from "../../services/api-service";
 import { RootState } from "../../redux/store";
 import PaymentInDispute from "./manual-payment-in-dispute";
@@ -50,6 +54,25 @@ export default function ManualPaymentStatus({
         const respo = await APIService.manualPayment(confirmPaymentPayload);
         dispatch(setConfirmPaymentDetails(respo.data));
         console.log("Confirm Payment Response:", respo.data);
+        if (respo.data?.confirm_manual_payment === 1) {
+          clearInterval(intervalId);
+          dispatch(setConfirmPaymentDetails(respo.data));
+          dispatch(setP2PEscrowDetails(respo.data));
+
+          const url = `https://pay.peerwallet.com/?v=${respo.data.data.unique_id}`;
+
+          const RedirectUrl = respo.data.data.redirect_url;
+
+          if (respo.data?.data.redirect_url === url) {
+            dispatch(setCurrentPage("p2p-payment"));
+          } else {
+            console.log(
+              "Payment Successful, rendering success page",
+              RedirectUrl
+            );
+            window.location.assign(RedirectUrl);
+          }
+        }
       } catch (error) {
         console.error("Error Confirm Payment:", error);
       }
