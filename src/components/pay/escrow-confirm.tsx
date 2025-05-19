@@ -115,6 +115,11 @@ export default function EscrowConfirm(): React.JSX.Element {
             console.log("Status Check", resp.data?.pay?.payment_status);
             dispatch(setP2PEscrowDetails(resp.data));
             if (resp.data?.pay?.payment_status === 1) {
+              // console.log("Status Check", resp.data?.pay?.payment_status);
+              // console.log("Payment Successful, rendering success page");
+              // if (paymentWindow && !paymentWindow.closed) {
+              //   paymentWindow.close();
+              // }
 
               clearInterval(checkPaymentStatus);
               dispatch(setP2PEscrowDetails(resp.data));

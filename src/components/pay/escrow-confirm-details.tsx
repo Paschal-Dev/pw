@@ -18,9 +18,8 @@ import {
 
 export default function EscrowConfirmDetails() {
   const [deviceType, setDeviceType] = React.useState("mobile");
-  const { p2pEscrowDetails, payId, confirmPaymentDetails, chatDetails } = useSelector(
-    (state: RootState) => state.pay
-  );
+  const { p2pEscrowDetails, payId, confirmPaymentDetails, chatDetails } =
+    useSelector((state: RootState) => state.pay);
   const currency_sign = p2pEscrowDetails?.data?.currency_sign;
   const vendor_currency_sign = p2pEscrowDetails?.pay?.total_to_pay_currency;
   const [open, setOpen] = useState(false);
@@ -59,73 +58,72 @@ export default function EscrowConfirmDetails() {
       return null;
     }
   };
-   const handleConfirm = async () => {
-     setIsConfirming(true);
-     setOpen(true);
-     dispatch(setConfirmButtonBackdrop(true));
-     localStorage.removeItem("checkout_link");
-     localStorage.clear();
-     try {
-       const userIP = await fetchUserIP();
-       console.log("User IP at first", userIP);
-       if (!userIP) {
-         console.error("Could not fetch IP");
-         return;
-       }
-       const cancelPayload = {
-         call_type: "cancel_escrow",
-         ip: userIP,
-         pay_id: payId,
-       };
- 
-       const respo = await APIService.p2pCancelEscrow(cancelPayload);
-       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
-       dispatch(clearConfirmPaymentDetails());
-       dispatch(clearChatDetails());
-       // // send-otp request
-       // const sendOtpPayload = {
-       //   call_type: "pay",
-       //   ip: userIP,
-       //   lang: "en",
-       //   pay_id: payId,
-       // };
- 
-       // // eslint-disable-next-line prefer-const
-       // let intervalId: number | undefined;
-       // const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
+  const handleConfirm = async () => {
+    setIsConfirming(true);
+    setOpen(true);
+    dispatch(setConfirmButtonBackdrop(true));
+    localStorage.removeItem("checkout_link");
+    localStorage.clear();
+    try {
+      const userIP = await fetchUserIP();
+      console.log("User IP at first", userIP);
+      if (!userIP) {
+        console.error("Could not fetch IP");
+        return;
+      }
+      const cancelPayload = {
+        call_type: "cancel_escrow",
+        ip: userIP,
+        pay_id: payId,
+      };
 
-       const p2pPayload = {
-         call_type: "p2p_vendors",
-         ip: userIP,
-         pay_id: payId,
-       };
-       const respo2 = await APIService.p2pVendors(p2pPayload);
-       console.log("API RESPONSE FROM P2P VENDORS FETCH =>>> ", respo2.data);
- 
-       dispatch(setP2PVendorsDetails(respo2.data));
-       if (respo.data?.escrow_status === 0) {
-         // clearInterval(intervalId);
-         dispatch(setConfirmButtonBackdrop(false));
-         console.log("Confirm Payment Details", confirmPaymentDetails);
-         dispatch(setCurrentPage("p2p"));
-       }
-       return;
-     } catch (error) {
-       console.error("Error Cancelling Escrow:", error);
-     }
-   };
- 
-   useEffect(() => {
-     console.log("chatDetails updated:", chatDetails);
-   }, [chatDetails]);
+      const respo = await APIService.p2pCancelEscrow(cancelPayload);
+      console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
+      dispatch(clearConfirmPaymentDetails());
+      dispatch(clearChatDetails());
+      // // send-otp request
+      // const sendOtpPayload = {
+      //   call_type: "pay",
+      //   ip: userIP,
+      //   lang: "en",
+      //   pay_id: payId,
+      // };
+
+      // // eslint-disable-next-line prefer-const
+      // let intervalId: number | undefined;
+      // const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
+
+      const p2pPayload = {
+        call_type: "p2p_vendors",
+        ip: userIP,
+        pay_id: payId,
+      };
+      const respo2 = await APIService.p2pVendors(p2pPayload);
+      console.log("API RESPONSE FROM P2P VENDORS FETCH =>>> ", respo2.data);
+
+      dispatch(setP2PVendorsDetails(respo2.data));
+      if (respo.data?.escrow_status === 0) {
+        // clearInterval(intervalId);
+        dispatch(setConfirmButtonBackdrop(false));
+        console.log("Confirm Payment Details", confirmPaymentDetails);
+        dispatch(setCurrentPage("p2p"));
+      }
+      return;
+    } catch (error) {
+      console.error("Error Cancelling Escrow:", error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("chatDetails updated:", chatDetails);
+  }, [chatDetails]);
 
   const calculateCountdown = () => {
     const now = Math.floor(Date.now() / 1000);
     let secondsLeft = p2pEscrowDetails?.pay?.escrow_exp - now;
 
     if (secondsLeft < 0) {
-      setCountdown("00h 00m 00s Left");
-
+      setCountdown(`00h 00m 00s ${t("blc_pw_97")}`);
       return;
     }
 
@@ -134,7 +132,7 @@ export default function EscrowConfirmDetails() {
     const minutes = Math.floor(secondsLeft / 60);
     secondsLeft -= minutes * 60;
 
-    setCountdown(`${hours}h ${minutes}m ${secondsLeft}s Left`);
+    setCountdown(`${hours}h ${minutes}m ${secondsLeft}s ${t("blc_pw_97")}`);
   };
 
   useEffect(() => {
@@ -500,9 +498,15 @@ export default function EscrowConfirmDetails() {
                 alignItems={"center"}
                 textAlign={"center"}
               >
-              {t("blc_pw_84")} <span style={{
-                  fontWeight: 700
-                }}>{t("blc_pw_85")}</span>  {t("blc_pw_86")}
+                {t("blc_pw_84")}{" "}
+                <span
+                  style={{
+                    fontWeight: 700,
+                  }}
+                >
+                  {t("blc_pw_85")}
+                </span>{" "}
+                {t("blc_pw_86")}
               </Typography>
               <Box
                 display="flex"
@@ -719,7 +723,7 @@ export default function EscrowConfirmDetails() {
               fontWeight={400}
               style={{ flex: 1 }}
             >
-             {t("blc_pw_50")}
+              {t("blc_pw_50")}
             </Typography>
 
             <Typography

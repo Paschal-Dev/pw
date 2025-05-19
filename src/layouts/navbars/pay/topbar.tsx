@@ -182,10 +182,10 @@ export default function Topbar(): React.JSX.Element {
                 />{" "}
                 Indonesian
               </MenuItem>
-              <MenuItem value={"jp"}>
+              <MenuItem value={"ja"}>
                 <img
                   src={japanese}
-                  alt="JP"
+                  alt="JA"
                   style={{ width: 20, marginRight: 10 }}
                 />{" "}
                 Japanese
@@ -206,10 +206,10 @@ export default function Topbar(): React.JSX.Element {
                 />{" "}
                 Korean
               </MenuItem>
-              <MenuItem value={"ch"}>
+              <MenuItem value={"zh"}>
                 <img
                   src={chinese}
-                  alt="CH"
+                  alt="ZH"
                   style={{ width: 20, marginRight: 10 }}
                 />{" "}
                 Chinese

@@ -284,7 +284,7 @@ export default function PayDashboard(): React.JSX.Element {
                         <span
                           dangerouslySetInnerHTML={{ __html: currency_sign }}
                         />
-                        {`${paymentDetails?.data?.amount} to ${paymentDetails?.seller?.name}`}
+                        {`${paymentDetails?.data?.amount}  ${t("blc_pw_91")} ${paymentDetails?.seller?.name}`}
                       </Typography>
                     )}
                   </Box>

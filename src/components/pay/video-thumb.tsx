@@ -45,7 +45,7 @@ export default function VideoThumb(): React.JSX.Element {
     de: german,
     hi: hindi,
     pt: portugese,
-    sl: slovak,
+    sk: slovak,
     kr: korean
 
    

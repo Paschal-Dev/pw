@@ -179,8 +179,7 @@ export default function EscrowPage(): React.JSX.Element {
               gap={deviceType === "mobile" ? 2 : 2}
               mr={deviceType === "mobile" ? 0 : 4}
             >
-              {deviceType !== "mobile" && deviceType !== "tablet" && confirmPaymentDetails?.confirm_manual_payment !== 1 && <EscrowStatus />}
-              {deviceType !== "mobile" && deviceType !== "tablet" && confirmPaymentDetails?.confirm_manual_payment === 1 && <VideoThumb />}
+              {deviceType !== "mobile" && deviceType !== "tablet" && <EscrowStatus />}
               {deviceType !== "mobile" && deviceType !== "tablet" && <VideoThumb />}
             </Box>
           </Grid>

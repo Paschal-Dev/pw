@@ -54,7 +54,7 @@ export default function ManualPaymentStatus({
         const respo = await APIService.manualPayment(confirmPaymentPayload);
         dispatch(setConfirmPaymentDetails(respo.data));
         console.log("Confirm Payment Response:", respo.data);
-        if (respo.data?.confirm_manual_payment === 1) {
+        if (respo.data?.pay?.payment_status === 1) {
           clearInterval(intervalId);
           dispatch(setConfirmPaymentDetails(respo.data));
           dispatch(setP2PEscrowDetails(respo.data));

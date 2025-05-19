@@ -9,6 +9,7 @@ import { Icon } from "@iconify/react";
 import ChatItem, { ChatItemProps } from "./chat-item";
 import APIService from "../../services/api-service";
 import { setChatDetails } from "../../redux/reducers/pay";
+import { useTranslation } from "react-i18next";
 
 interface ChatProps extends MediaProps {
   onChatToggle: () => void;
@@ -119,6 +120,8 @@ export default function Chat({ deviceType, onChatToggle }: ChatProps): React.JSX
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <Grid item sm={12} md={8} display="flex">
       <Box flex={1} display="flex" flexDirection="column" gap={2}>
@@ -158,7 +161,7 @@ export default function Chat({ deviceType, onChatToggle }: ChatProps): React.JSX
               </Box>
             )}
             <Typography fontSize={deviceType === "mobile" ? 16 : "4vh"} fontWeight={700}>
-              Chat For #{p2pEscrowDetails?.pay?.unique_id}
+              {t("blc_pw_92")} #{p2pEscrowDetails?.pay?.unique_id}
             </Typography>
           </Box>
           <Button
@@ -166,7 +169,7 @@ export default function Chat({ deviceType, onChatToggle }: ChatProps): React.JSX
             sx={{ border: "1px solid #fff", color: "#fff", p: 1 }}
             onClick={onChatToggle}
           >
-            Close
+            {t("blc_pw_93")}
           </Button>
         </Box>
 
@@ -220,7 +223,7 @@ export default function Chat({ deviceType, onChatToggle }: ChatProps): React.JSX
               <Box flex={1}>
                 <input
                   type="text"
-                  placeholder="Type something"
+                  placeholder={t("blc_pw_96")}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   style={{
@@ -248,7 +251,7 @@ export default function Chat({ deviceType, onChatToggle }: ChatProps): React.JSX
                 whiteSpace: "nowrap",
               }}
             >
-              {isSending ? "Sending..." : "Send Message"}
+              {isSending ? (t("blc_pw_95")) : (t("blc_pw_94"))}
             </Button>
           </Box>
         </Box>

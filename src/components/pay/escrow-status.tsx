@@ -154,8 +154,7 @@ export default function EscrowStatus() {
     let secondsLeft = p2pEscrowDetails?.pay?.escrow_exp - now;
 
     if (secondsLeft < 0) {
-      setCountdown("00h 00m 00s Left");
-
+      setCountdown(`00h 00m 00s ${t("blc_pw_97")}`);
       return;
     }
 
@@ -164,7 +163,7 @@ export default function EscrowStatus() {
     const minutes = Math.floor(secondsLeft / 60);
     secondsLeft -= minutes * 60;
 
-    setCountdown(`${hours}h ${minutes}m ${secondsLeft}s Left`);
+    setCountdown(`${hours}h ${minutes}m ${secondsLeft}s ${t("blc_pw_97")}`);
   };
   useEffect(() => {
     calculateCountdown(); // Call once initially or when dependencies change.
