@@ -150,7 +150,7 @@ export default function EscrowConfirmPaymentModal({
           <Box
             display={"flex"}
             flexDirection={"column"}
-            bgcolor={"#f2fbfe"}
+            bgcolor={"transparent"}
             gap={1}
             my={2}
             px={3}
@@ -161,7 +161,7 @@ export default function EscrowConfirmPaymentModal({
             textAlign={"center"}
               variant="h5"
               fontWeight={700}
-              color={theme.palette.primary.main}
+              // color={theme.palette.primary.main}
             >
               Payment Instructions
             </Typography>
@@ -169,7 +169,7 @@ export default function EscrowConfirmPaymentModal({
               variant="body1"
               fontSize={{ xs: 12, sm: "15px", md: "18px" }}
               fontWeight={600}
-              color={theme.palette.primary.main}
+              // color={theme.palette.primary.main}
             >
               <div
                 dangerouslySetInnerHTML={{
