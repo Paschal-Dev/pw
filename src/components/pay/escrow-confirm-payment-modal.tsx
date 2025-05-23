@@ -7,7 +7,7 @@ import {
   CircularProgress,
   Dialog,
   DialogContent,
-  DialogTitle,
+  // DialogTitle,
   FormControlLabel,
   Typography,
   // useMediaQuery,
@@ -25,6 +25,7 @@ import {
   // setPaidClicked,
 } from "../../redux/reducers/pay";
 import { useState } from "react";
+import { theme } from "../../assets/themes/theme";
 
 interface EscrowConfirmPaymentProps {
   open: boolean;
@@ -35,9 +36,8 @@ interface EscrowConfirmPaymentProps {
 export default function EscrowConfirmPaymentModal({
   open,
   onClose,
-   onPaid,
-}:
-EscrowConfirmPaymentProps) {
+  onPaid,
+}: EscrowConfirmPaymentProps) {
   // const theme = useTheme();
   // const isMobile = useMediaQuery(theme.breakpoints.only("xs"));
   // const isTablet = useMediaQuery(theme.breakpoints.down("md"));
@@ -45,7 +45,7 @@ EscrowConfirmPaymentProps) {
 
   // Simplify device type detection
   // const deviceType = isMobile ? "mobile" : isTablet ? "tablet" : "pc";
-  const { payId, lang } = useSelector((state: RootState) => state.pay);
+  const { payId, lang, p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
   const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const fetchUserIP = async () => {
@@ -88,7 +88,6 @@ EscrowConfirmPaymentProps) {
       onClose();
       onPaid();
       setIsLoading(false);
-
     } catch (error) {
       console.error("Error Confirming:", error);
       setIsLoading(false);
@@ -103,58 +102,97 @@ EscrowConfirmPaymentProps) {
       sx={{
         "& .MuiDialog-paper": {
           borderRadius: 3,
-          width: { xs: "90%", sm: "80%", md: "60vh" },
+          width: { xs: "90%", sm: "80%", md: "70vh" },
           maxWidth: "100%",
           bgcolor: "background.paper",
         },
       }}
     >
       <Box p={{ xs: 2, sm: 3, md: 4 }}>
-        <DialogTitle sx={{ p: 0, mb: { xs: 1, sm: 2 } }}>
-          <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
-            <Box
-              bgcolor={"#FEF3F2"}
-              borderRadius={"50%"}
-              p={3}
-              width={70}
-              height={70}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Box
-                bgcolor={"#FEE4E2"}
-                borderRadius={"50%"}
-                width={60}
-                height={60}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Icon
-                  icon="tabler:alert-triangle-filled"
-                  color="#DD0004"
-                  fontSize={40}
-                />
-              </Box>
-            </Box>
-          </Box>
-        </DialogTitle>
-
         <DialogContent sx={{ p: 0 }}>
           <Box>
             <Typography
               variant="h6"
-          fontWeight={700}
-          fontSize={25}
-          textTransform="capitalize"
-          textAlign={"center"}
+              fontWeight={700}
+              fontSize={25}
+              textTransform="capitalize"
+              textAlign={"center"}
             >
               {t("blc_pw_51")}
             </Typography>
           </Box>
 
-          <Box mt={2} mb={2} bgcolor={"#FEF3F2"} px={3} py={2}>
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            bgcolor={"#fefef2"}
+            gap={2}
+            my={2}
+            px={3}
+            py={2}
+            borderRadius={2}
+          >
+            <Icon
+              icon="material-symbols:info-rounded"
+              color={theme.palette.secondary.main}
+              fontSize={58}
+            />
+            <Typography
+              variant="body2"
+              fontSize={{ xs: 12, sm: "15px" }}
+              fontWeight={700}
+              color={theme.palette.secondary.main}
+            >
+              Please make sure you have read the payment instructions below and
+              you have made the payment.
+            </Typography>
+          </Box>
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            bgcolor={"#f2fbfe"}
+            gap={1}
+            my={2}
+            px={3}
+            py={2}
+            borderRadius={2}
+          >
+            <Typography
+            textAlign={"center"}
+              variant="h5"
+              fontWeight={700}
+              color={theme.palette.primary.main}
+            >
+              Payment Instructions
+            </Typography>
+            <Typography
+              variant="body1"
+              fontSize={{ xs: 12, sm: "15px", md: "18px" }}
+              fontWeight={600}
+              color={theme.palette.primary.main}
+            >
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: p2pEscrowDetails?.vendor?.description,
+                }}
+              />
+            </Typography>
+          </Box>
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            bgcolor={"#FEF3F2"}
+            gap={2}
+            my={2}
+            px={3}
+            py={2}
+            borderRadius={2}
+          >
+            <Icon
+              icon="tabler:alert-triangle-filled"
+              color="#DD0004"
+              fontSize={58}
+            />
             <Typography
               variant="body2"
               fontSize={{ xs: 12, sm: "15px" }}
@@ -195,10 +233,10 @@ EscrowConfirmPaymentProps) {
                 },
               }}
             >
-             {isLoading ? (
+              {isLoading ? (
                 <CircularProgress size={24} sx={{ color: "white" }} />
               ) : (
-                (t("blc_pw_53"))
+                t("blc_pw_53")
               )}
             </Button>
           </Box>
