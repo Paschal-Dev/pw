@@ -4,13 +4,18 @@ import AwaitingVendorConfirmation from "./awaiting_vendor_confirmation";
 import ManualPaymentExpired from "./manual_payment_expired";
 import ManualPaymentSuccessful from "./manual_payment_successful";
 import {
+  clearChatDetails,
+  clearConfirmPaymentDetails,
+  setConfirmButtonBackdrop,
   setConfirmPaymentDetails,
   setCurrentPage,
-  setP2PEscrowDetails,
+  // setP2PEscrowDetails,
+  setP2PVendorsDetails,
 } from "../../redux/reducers/pay";
 import APIService from "../../services/api-service";
 import { RootState } from "../../redux/store";
 import PaymentInDispute from "./manual-payment-in-dispute";
+import { Typography } from "@mui/material";
 
 interface ManualPaymentStatusProps {
   onChatToggle: (isChatOpen: boolean) => void;
@@ -19,9 +24,7 @@ interface ManualPaymentStatusProps {
 export default function ManualPaymentStatus({
   onChatToggle,
 }: ManualPaymentStatusProps): React.JSX.Element {
-  const { payId, confirmPaymentDetails, lang } = useSelector(
-    (state: RootState) => state.pay
-  );
+  const { payId, confirmPaymentDetails, lang } = useSelector((state: RootState) => state.pay);
   const dispatch = useDispatch();
 
   const fetchUserIP = useCallback(async () => {
@@ -52,12 +55,12 @@ export default function ManualPaymentStatus({
 
       try {
         const respo = await APIService.manualPayment(confirmPaymentPayload);
-        dispatch(setConfirmPaymentDetails(respo.data));
         console.log("Confirm Payment Response:", respo.data);
+        dispatch(setConfirmPaymentDetails(respo.data));
         if (respo.data?.pay?.payment_status === 1) {
           clearInterval(intervalId);
-          dispatch(setConfirmPaymentDetails(respo.data));
-          dispatch(setP2PEscrowDetails(respo.data));
+          // dispatch(setConfirmPaymentDetails(respo.data));
+          // dispatch(setP2PEscrowDetails(respo.data));
 
           const url = `https://pay.peerwallet.com/?v=${respo.data.data.unique_id}`;
 
@@ -66,12 +69,24 @@ export default function ManualPaymentStatus({
           if (respo.data?.data.redirect_url === url) {
             dispatch(setCurrentPage("p2p-payment"));
           } else {
-            console.log(
-              "Payment Successful, rendering success page",
-              RedirectUrl
-            );
+            console.log("Payment Successful, rendering success page", RedirectUrl);
             window.location.assign(RedirectUrl);
           }
+        } else if (respo.data?.confirm_manual_payment === 3) {
+          const p2pPayload = {
+            call_type: "p2p_vendors",
+            ip: userIP,
+            pay_id: payId,
+          };
+          const respo2 = await APIService.p2pVendors(p2pPayload);
+          console.log("API RESPONSE FROM P2P VENDORS FETCH =>>> ", respo2.data);
+          dispatch(setP2PVendorsDetails(respo2.data));
+          // clearInterval(intervalId);
+          dispatch(setCurrentPage("p2p"));
+          dispatch(setConfirmButtonBackdrop(false));
+          dispatch(clearConfirmPaymentDetails());
+          dispatch(clearChatDetails());
+          return;
         }
       } catch (error) {
         console.error("Error Confirm Payment:", error);
@@ -79,6 +94,7 @@ export default function ManualPaymentStatus({
     }, 10000);
 
     return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, fetchUserIP, lang, payId]);
 
   return (
@@ -89,6 +105,10 @@ export default function ManualPaymentStatus({
         <ManualPaymentExpired />
       ) : confirmPaymentDetails?.confirm_manual_payment === 5 ? (
         <PaymentInDispute onChatToggle={onChatToggle} />
+      ) : confirmPaymentDetails?.confirm_manual_payment === 3 ? (
+        <Typography variant="h4" fontWeight={600}>
+          Redirecting to Vendor's Page
+        </Typography>
       ) : (
         <AwaitingVendorConfirmation onChatToggle={onChatToggle} />
       )}

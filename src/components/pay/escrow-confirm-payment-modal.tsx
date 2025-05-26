@@ -143,31 +143,33 @@ export default function EscrowConfirmPaymentModal({
               fontWeight={700}
               color={theme.palette.secondary.main}
             >
-              Please make sure you have read the payment instructions below and
-              you have made the payment.
+              Please make sure you have read the payment instructions below and you have made the
+              payment.
             </Typography>
           </Box>
           <Box
             display={"flex"}
             flexDirection={"column"}
-            bgcolor={"transparent"}
+            bgcolor={"#fff"}
+            boxShadow={"5px 5px 10px 0px rgba(23, 136, 196, 0.1)"}
             gap={1}
             my={2}
             px={3}
             py={2}
+            border={`1px solid ${theme.palette.primary.main}`}
             borderRadius={2}
           >
             <Typography
-            textAlign={"center"}
-              variant="h5"
+              textAlign={"center"}
+              variant="h6"
               fontWeight={700}
+              sx={{ textDecoration: "underline" }}
               // color={theme.palette.primary.main}
             >
               Payment Instructions
             </Typography>
             <Typography
-              variant="body1"
-              fontSize={{ xs: 12, sm: "15px", md: "18px" }}
+              variant="body2"
               fontWeight={600}
               // color={theme.palette.primary.main}
             >
@@ -188,11 +190,7 @@ export default function EscrowConfirmPaymentModal({
             py={2}
             borderRadius={2}
           >
-            <Icon
-              icon="tabler:alert-triangle-filled"
-              color="#DD0004"
-              fontSize={58}
-            />
+            <Icon icon="tabler:alert-triangle-filled" color="#DD0004" fontSize={58} />
             <Typography
               variant="body2"
               fontSize={{ xs: 12, sm: "15px" }}
@@ -233,11 +231,7 @@ export default function EscrowConfirmPaymentModal({
                 },
               }}
             >
-              {isLoading ? (
-                <CircularProgress size={24} sx={{ color: "white" }} />
-              ) : (
-                t("blc_pw_53")
-              )}
+              {isLoading ? <CircularProgress size={24} sx={{ color: "white" }} /> : t("blc_pw_53")}
             </Button>
           </Box>
         </DialogContent>

@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardMedia,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Button, Card, CardMedia, IconButton, Typography } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import background from "../../assets/images/background.png";
 import { theme } from "../../assets/themes/theme";
@@ -37,17 +29,14 @@ export default function ManualEscrow({
   const [readMessageIds, setReadMessageIds] = useState<string[]>([]);
   // const dispatch = useDispatch();
 
-  const { p2pEscrowDetails, chatDetails } = useSelector(
-    (state: RootState) => state.pay
-  );
+  const { p2pEscrowDetails, chatDetails } = useSelector((state: RootState) => state.pay);
   const vendor_currency_sign = p2pEscrowDetails?.pay?.total_to_pay_currency;
 
   const unreadCount = useMemo(() => {
     return (
       chatDetails?.data?.filter(
         (msg: { sender_type: string; id: string }) =>
-          msg.sender_type !== "buyer" &&
-          !readMessageIds.includes(msg.id)
+          msg.sender_type !== "buyer" && !readMessageIds.includes(msg.id)
       ).length || 0
     );
   }, [chatDetails, readMessageIds]);
@@ -70,9 +59,7 @@ export default function ManualEscrow({
       const newReadMessageIds = chatDetails.data
         .filter((msg: { sender_type: string; id: string }) => msg.sender_type !== "buyer")
         .map((msg: { id: string }) => msg.id);
-      setReadMessageIds((prev) => [
-        ...new Set([...prev, ...newReadMessageIds]),
-      ]);
+      setReadMessageIds((prev) => [...new Set([...prev, ...newReadMessageIds])]);
     }
   };
 
@@ -100,9 +87,7 @@ export default function ManualEscrow({
     return { fullStarsCount, emptyStarsCount };
   };
 
-  const { fullStarsCount, emptyStarsCount } = getRatingCounts(
-    p2pEscrowDetails?.seller?.rating
-  );
+  const { fullStarsCount, emptyStarsCount } = getRatingCounts(p2pEscrowDetails?.seller?.rating);
 
   const ratingImages = [];
   for (let i = 0; i < fullStarsCount; i++) {
@@ -203,11 +188,7 @@ export default function ManualEscrow({
             "&:hover": { backgroundColor: "primary.main" },
           }}
         >
-          <Icon
-            icon="lets-icons:chat-fill"
-            fontSize={16}
-            color={theme.palette.primary.main}
-          />
+          <Icon icon="lets-icons:chat-fill" fontSize={16} color={theme.palette.primary.main} />
         </IconButton>
         {t("blc_pw_47")}
       </Button>
@@ -236,21 +217,11 @@ export default function ManualEscrow({
           </Avatar>
           <Box position="absolute" top={"5%"} right={0} zIndex={10}>
             <Box bgcolor={"white"} borderRadius={"50%"} px={0.5} pt={0.5}>
-              <img
-                src={p2pEscrowDetails?.seller?.ranking}
-                alt=""
-                style={{ width: 30 }}
-              />
+              <img src={p2pEscrowDetails?.seller?.ranking} alt="" style={{ width: 30 }} />
             </Box>
           </Box>
         </Box>
-        <Box
-          pb={0.5}
-          zIndex={5}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-        >
+        <Box pb={0.5} zIndex={5} display="flex" flexDirection="column" alignItems="center">
           <div style={{ marginBottom: "10px" }}>{ratingImages}</div>
           <Typography variant="caption">
             {`${fullStarsCount}/5`} ({p2pEscrowDetails?.seller?.rating}%)
@@ -270,11 +241,7 @@ export default function ManualEscrow({
           mb={1}
         >
           <Box position="relative" mb={1}>
-            <CardMedia
-              component={"img"}
-              image={Notch}
-              style={{ width: 155, marginTop: -8 }}
-            />
+            <CardMedia component={"img"} image={Notch} style={{ width: 155, marginTop: -8 }} />
             <Typography
               variant="h6"
               fontWeight={700}
@@ -288,12 +255,7 @@ export default function ManualEscrow({
             </Typography>
           </Box>
           <Box display="flex" flexDirection="column" alignItems="center" width="100%">
-            <Typography
-              variant="h6"
-              fontWeight={700}
-              textAlign={"center"}
-              mb={1}
-            >
+            <Typography variant="h6" fontWeight={700} textAlign={"center"} mb={1}>
               {p2pEscrowDetails?.seller?.name}
             </Typography>
             <Box
@@ -323,12 +285,7 @@ export default function ManualEscrow({
                 alignItems={"center"}
                 justifyContent={"space-between"}
               >
-                <Typography
-                  color={"#28304E"}
-                  variant="body2"
-                  fontSize={"10px"}
-                  fontWeight={700}
-                >
+                <Typography color={"#28304E"} variant="body2" fontSize={"10px"} fontWeight={700}>
                   {t("blc_pw_54")}
                 </Typography>
                 <Button
@@ -363,7 +320,9 @@ export default function ManualEscrow({
                     py: 1,
                   }}
                 >
-                  <div dangerouslySetInnerHTML={{ __html: p2pEscrowDetails?.vendor?.description }} />
+                  <div
+                    dangerouslySetInnerHTML={{ __html: p2pEscrowDetails?.vendor?.description }}
+                  />
                 </Typography>
               </Box>
             </Box>
@@ -384,7 +343,7 @@ export default function ManualEscrow({
           onClick={openPaymentClick}
         >
           <Icon icon="ph:hand-deposit-fill" fontSize={20} color={"#fff"} />
-          {t("blc_pw_19")}
+          Confirm Payment
         </Button>
         <EscrowConfirmPaymentModal
           open={manualConfirmOpen}
