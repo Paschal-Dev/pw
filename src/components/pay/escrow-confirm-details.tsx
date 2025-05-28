@@ -81,17 +81,7 @@ export default function EscrowConfirmDetails() {
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
       dispatch(clearConfirmPaymentDetails());
       dispatch(clearChatDetails());
-      // // send-otp request
-      // const sendOtpPayload = {
-      //   call_type: "pay",
-      //   ip: userIP,
-      //   lang: "en",
-      //   pay_id: payId,
-      // };
 
-      // // eslint-disable-next-line prefer-const
-      // let intervalId: number | undefined;
-      // const checkPaymentStatusAndRun = async (sendOtpPayload: unknown) => {
 
       const p2pPayload = {
         call_type: "p2p_vendors",

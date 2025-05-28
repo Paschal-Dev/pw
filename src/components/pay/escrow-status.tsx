@@ -83,6 +83,7 @@ export default function EscrowStatus() {
       console.log("API RESPONSE FROM CANCEL ESCROW=>>> ", respo.data);
       dispatch(clearConfirmPaymentDetails());
       dispatch(clearChatDetails());
+      dispatch(setClickedId(null));
       // // send-otp request
       // const sendOtpPayload = {
       //   call_type: "pay",
@@ -136,10 +137,9 @@ export default function EscrowStatus() {
       dispatch(setP2PVendorsDetails(respo2.data));
       if (respo.data?.escrow_status === 0) {
         // clearInterval(intervalId);
+        dispatch(setConfirmButtonBackdrop(false));
         console.log("Confirm Payment Details", confirmPaymentDetails);
         dispatch(setCurrentPage("p2p"));
-        dispatch(setConfirmButtonBackdrop(false));
-        dispatch(setClickedId(null));
       }
       return;
     } catch (error) {
@@ -190,14 +190,29 @@ export default function EscrowStatus() {
   };
 
   return (
-    <Box bgcolor="#FBFBFB" borderRadius={4} p={1} mb={deviceType === "mobile" ? 2 : 0}>
+    <Box
+      bgcolor="#FBFBFB"
+      borderRadius={4}
+      p={1}
+      mb={deviceType === "mobile" ? 2 : 0}
+    >
       <Box display="flex" justifyContent="center">
-        <Typography variant="h6" fontWeight={700} fontSize={35} textTransform="capitalize">
+        <Typography
+          variant="h6"
+          fontWeight={700}
+          fontSize={35}
+          textTransform="capitalize"
+        >
           {t("escrow-status")}
         </Typography>
       </Box>
 
-      <Box display="flex" flexDirection="column" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         <Box
           bgcolor="#FEF3F2"
           borderRadius={2}
@@ -376,7 +391,12 @@ export default function EscrowStatus() {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Box borderRadius={"50%"} bgcolor={"#FEE4E2"} width={50} p={2}>
+                  <Box
+                    borderRadius={"50%"}
+                    bgcolor={"#FEE4E2"}
+                    width={50}
+                    p={2}
+                  >
                     <Box display={"flex"} justifyContent={"center"}>
                       <img src={danger} alt="" width={40} />
                     </Box>

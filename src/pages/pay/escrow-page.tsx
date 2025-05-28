@@ -20,15 +20,7 @@ import ManualEscrow from "../../components/pay/manual-escrow";
 import { setChatDetails } from "../../redux/reducers/pay";
 import APIService from "../../services/api-service";
 import { Icon } from "@iconify/react/dist/iconify.js";
-// import {
-//   setConfirmButtonBackdrop,
-//   setCurrentPage,
-//   setP2PVendorsDetails,
-//   setPaymentDetails,
-//   setOTPVerified,
-//   setChatDetails,
-// } from "../../redux/reducers/pay";
-// import APIService from "../../services/api-service";
+
 
 export default function EscrowPage(): React.JSX.Element {
   const [deviceType, setDeviceType] = React.useState("mobile");
@@ -53,6 +45,9 @@ export default function EscrowPage(): React.JSX.Element {
   );
   // const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const [countdown, setCountdown] = useState(30); // Start countdown at 15 on mount
+  
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -175,6 +170,20 @@ export default function EscrowPage(): React.JSX.Element {
     return () => clearInterval(intervalId);
   }, [p2pEscrowDetails?.p2p_type, lang, payId, dispatch]);
 
+   // Countdown effect on mount
+    useEffect(() => {
+      let timer: ReturnType<typeof setInterval> | null = null;
+      if (countdown > 0) {
+        timer = setInterval(() => {
+          setCountdown((prev) => prev - 1);
+        }, 1000);
+      }
+      return () => {
+        if (timer) clearInterval(timer);
+      };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (chatDetails?.first_message) {
@@ -290,6 +299,7 @@ export default function EscrowPage(): React.JSX.Element {
                       <EscrowConfirm />
                     ) : p2pEscrowDetails?.p2p_type === "manual" ? (
                       <ManualEscrow
+                      countDown={countdown}
                         onChatToggle={handleChatToggle}
                         checkStatus={checkStatus}
                         setCheckStatus={setManualPaymentStatus}
@@ -337,8 +347,8 @@ export default function EscrowPage(): React.JSX.Element {
                       >
                         <Box display="flex" alignItems={"center"} justifyContent={"center"} gap={1}>
                           <Icon icon="material-symbols:mail-rounded" fontSize={24} />
-                          <Typography variant="h6" fontWeight={700}>
-                            New Message
+                          <Typography variant="body1" fontWeight={700}>
+                           1 New Message from {p2pEscrowDetails?.vendor?.use_name}
                           </Typography>
                         </Box>
                         <hr/>

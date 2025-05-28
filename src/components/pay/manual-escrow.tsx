@@ -9,16 +9,18 @@ interface ManualEscrowProps {
   onChatToggle: (isChatOpen: boolean) => void;
   checkStatus: boolean;
   setCheckStatus: (val: boolean) => void;
+  countDown?: number;
 }
 
 export default function ManualEscrow({
   onChatToggle,
   checkStatus,
   setCheckStatus,
+  countDown,
 }: ManualEscrowProps): React.JSX.Element {
   if (checkStatus) {
     return <ManualPaymentStatus onChatToggle={onChatToggle} />;
   }
 
-  return <EscrowManualConfirm onChatToggle={onChatToggle} onPaid={() => setCheckStatus(true)} />;
+  return <EscrowManualConfirm countDown={countDown} onChatToggle={onChatToggle} onPaid={() => setCheckStatus(true)} />;
 }
