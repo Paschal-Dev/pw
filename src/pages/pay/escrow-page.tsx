@@ -348,7 +348,7 @@ export default function EscrowPage(): React.JSX.Element {
                         <Box display="flex" alignItems={"center"} justifyContent={"center"} gap={1}>
                           <Icon icon="material-symbols:mail-rounded" fontSize={24} />
                           <Typography variant="body1" fontWeight={700}>
-                           1 New Message from {p2pEscrowDetails?.vendor?.use_name}
+                           {t("blc_pw_109")} {p2pEscrowDetails?.vendor?.use_name}
                           </Typography>
                         </Box>
                         <hr/>

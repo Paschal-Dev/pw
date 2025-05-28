@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogContent,
-  Typography,
-} from "@mui/material";
+import { Box, Button, CircularProgress, Dialog, DialogContent, Typography } from "@mui/material";
 // import { RootState } from "../../redux/store";
 // import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -21,15 +14,9 @@ interface ManualVendorModalProps {
   onOkay: () => void; // New prop for handling Okay button click
 }
 
-export default function ManualVendorModal({
-  open,
-  onClose,
-  onOkay,
-  item,
-}: ManualVendorModalProps) {
+export default function ManualVendorModal({ open, onClose, onOkay, item }: ManualVendorModalProps) {
   // const { p2pVendorsDetails, clickedId } = useSelector((state: RootState) => state.pay);
   const [isLoading, setIsLoading] = useState(false);
-  // const { t } = useTranslation();
 
   const handleOkayClick = () => {
     onClose();
@@ -83,11 +70,13 @@ export default function ManualVendorModal({
               fontWeight={500}
               // sx={{ textDecoration: "underline" }}
             >
-              {t("blc_pw_104")}{" "}
-              <strong>{item?.payment_method || "this method"}</strong>{" "}
-              {t("blc_pw_105")}{" "}
-              <strong>{item?.payment_method || "this method"}</strong>{" "}
-              {t("blc_pw_106")}
+              {t("blc_pw_104")} <strong>{item?.payment_method || "this method"}</strong>{t("blc_pw_107")}
+              <br></br>
+              <br></br>{" "}
+              <span style={{ fontSize: 16 }}>
+                {t("blc_pw_108")}{" "}
+                <strong>{item?.payment_method || "this method"}</strong> {t("blc_pw_106")}
+              </span>
             </Typography>
           </Box>
 
@@ -107,11 +96,7 @@ export default function ManualVendorModal({
                 },
               }}
             >
-              {isLoading ? (
-                <CircularProgress size={24} sx={{ color: "white" }} />
-              ) : (
-                t("blc_pw_103")
-              )}
+              {isLoading ? <CircularProgress size={24} sx={{ color: "white" }} /> : t("blc_pw_103")}
             </Button>
           </Box>
         </DialogContent>

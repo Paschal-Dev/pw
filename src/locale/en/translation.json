@@ -216,7 +216,11 @@
     "blc_pw_103": " I understand",
     "blc_pw_104": " You’ll need to manually send the payment from your",
     "blc_pw_105": " account to the Vendor’s account. Confirmation will also be handled manually. Please confirm that you have access to",
-    "blc_pw_106": " and can successfully complete the payment before proceeding."
+    "blc_pw_106": " and can successfully complete the payment before proceeding.",
+
+    "blc_pw_107": " account to the Vendor’s account. Confirmation will also be handled manually.",
+    "blc_pw_108": "Please confirm that you have access to",
+    "blc_pw_109": "1 New Message from"
    
   }
 }

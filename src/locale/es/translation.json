@@ -207,6 +207,9 @@
     "blc_pw_103": "Entiendo.",
     "blc_pw_104": "Deberá enviar manualmente el pago desde su cuenta a la cuenta de",
     "blc_pw_105": "del proveedor. La confirmación también se procesará manualmente. Confirme que tiene acceso a",
-    "blc_pw_106": "y que puede completar el pago correctamente antes de continuar."
+    "blc_pw_106": "y que puede completar el pago correctamente antes de continuar.",
+    "blc_pw_107": "Se ha añadido una cuenta a la cuenta del proveedor. La confirmación también se realizará manualmente.",
+    "blc_pw_108": "Por favor, confirme que tiene acceso a...",
+    "blc_pw_109": "1 nuevo mensaje de..."
   }
 }

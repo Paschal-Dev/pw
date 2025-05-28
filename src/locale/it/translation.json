@@ -207,6 +207,9 @@
     "blc_pw_103": "Ho capito",
     "blc_pw_104": "Dovrai inviare manualmente il pagamento dal tuo account al conto",
     "blc_pw_105": "del Venditore. Anche la conferma verrà gestita manualmente. Prima di procedere, verifica di avere accesso a",
-    "blc_pw_106": "e di poter completare correttamente il pagamento."
+    "blc_pw_106": "e di poter completare correttamente il pagamento.",
+    "blc_pw_107": "account collegato all'account del Venditore. La conferma verrà gestita manualmente.",
+    "blc_pw_108": "Conferma di avere accesso a",
+    "blc_pw_109": "1 Nuovo messaggio da"
   }
 }

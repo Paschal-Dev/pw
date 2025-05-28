@@ -208,6 +208,9 @@
     "blc_pw_103": "Ich verstehe.",
     "blc_pw_104": "Sie müssen die Zahlung manuell von Ihrem Konto an das",
     "blc_pw_105": " -Konto des Verkäufers überweisen. Die Bestätigung erfolgt ebenfalls manuell. Bitte bestätigen Sie, dass Sie Zugriff auf",
-    "blc_pw_106": "haben und die Zahlung erfolgreich abschließen können, bevor Sie fortfahren."
+    "blc_pw_106": "haben und die Zahlung erfolgreich abschließen können, bevor Sie fortfahren.",
+    "blc_pw_107": "Konto zum Konto des Verkäufers. Die Bestätigung erfolgt ebenfalls manuell.",
+    "blc_pw_108": "Bitte bestätigen Sie, dass Sie Zugriff haben auf.",
+    "blc_pw_109": "1 neue Nachricht von."
   }
 }
