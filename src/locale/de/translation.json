@@ -203,6 +203,11 @@
     "blc_pw_98": "Bitte stellen Sie sicher, dass Sie die unten stehenden Zahlungsanweisungen gelesen und die Zahlung getätigt haben.",
     "blc_pw_99": "Zahlungsanweisungen",
     "blc_pw_100": "Zahlung bestätigen",
-    "blc_pw_101": "Geben Sie die folgenden Daten ein:"
+    "blc_pw_101": "Geben Sie die folgenden Daten ein:",
+    "blc_pw_102": "Dies ist ein manueller Zahlungsvorgang.",
+    "blc_pw_103": "Ich verstehe.",
+    "blc_pw_104": "Sie müssen die Zahlung manuell von Ihrem Konto an das",
+    "blc_pw_105": " -Konto des Verkäufers überweisen. Die Bestätigung erfolgt ebenfalls manuell. Bitte bestätigen Sie, dass Sie Zugriff auf",
+    "blc_pw_106": "haben und die Zahlung erfolgreich abschließen können, bevor Sie fortfahren."
   }
 }

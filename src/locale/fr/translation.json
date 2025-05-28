@@ -202,6 +202,11 @@
     "blc_pw_98": "Veuillez vous assurer d'avoir lu les instructions de paiement ci-dessous et d'avoir effectué le paiement.",
     "blc_pw_99": "Instructions de paiement",
     "blc_pw_100": "Confirmer le paiement",
-    "blc_pw_101": "Saisissez les informations suivantes :"
+    "blc_pw_101": "Saisissez les informations suivantes :",
+    "blc_pw_102": "Ceci est un processus de paiement manuel.",
+    "blc_pw_103": "Je comprends",
+    "blc_pw_104": " Vous devrez transférer manuellement le paiement depuis votre compte vers le compte",
+    "blc_pw_105": "du vendeur. La confirmation sera également effectuée manuellement. Veuillez confirmer que vous avez accès à",
+    "blc_pw_106": "et que vous pouvez effectuer le paiement avant de poursuivre."
   }
 }

@@ -1,21 +1,21 @@
 import {
   Box,
   Button,
-  Checkbox,
   CircularProgress,
   Dialog,
   DialogContent,
-  FormControlLabel,
   Typography,
 } from "@mui/material";
-import { Icon } from "@iconify/react";
-import { RootState } from "../../redux/store";
-import { useTranslation } from "react-i18next";
+// import { RootState } from "../../redux/store";
+// import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { theme } from "../../assets/themes/theme";
-import { useSelector } from "react-redux";
+import { Vendor } from "../../data/pay/vendors-data";
+import { useTranslation } from "react-i18next";
+// import { useSelector } from "react-redux";
 
 interface ManualVendorModalProps {
+  item: Vendor;
   open: boolean;
   onClose: () => void;
   onOkay: () => void; // New prop for handling Okay button click
@@ -25,11 +25,11 @@ export default function ManualVendorModal({
   open,
   onClose,
   onOkay,
+  item,
 }: ManualVendorModalProps) {
-  const { p2pEscrowDetails } = useSelector((state: RootState) => state.pay);
-  const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false);
+  // const { p2pVendorsDetails, clickedId } = useSelector((state: RootState) => state.pay);
   const [isLoading, setIsLoading] = useState(false);
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const handleOkayClick = () => {
     onClose();
@@ -37,6 +37,7 @@ export default function ManualVendorModal({
     onOkay();
     setIsLoading(false);
   };
+  const { t } = useTranslation();
 
   return (
     <Dialog
@@ -53,40 +54,15 @@ export default function ManualVendorModal({
     >
       <Box p={{ xs: 2, sm: 3, md: 4 }}>
         <DialogContent sx={{ p: 0 }}>
-          <Box>
+          <Box bgcolor={theme.palette.secondary.main} borderRadius={3}>
             <Typography
               variant="h6"
               fontWeight={700}
-              fontSize={25}
+              fontSize={20}
               textTransform="capitalize"
               textAlign={"center"}
             >
-              {t("blc_pw_51")}
-            </Typography>
-          </Box>
-
-          <Box
-            display={"flex"}
-            alignItems={"center"}
-            bgcolor={"#fefef2"}
-            gap={2}
-            my={2}
-            px={3}
-            py={2}
-            borderRadius={2}
-          >
-            <Icon
-              icon="material-symbols:info-rounded"
-              color={theme.palette.secondary.main}
-              fontSize={58}
-            />
-            <Typography
-              variant="body2"
-              fontSize={{ xs: 12, sm: "15px" }}
-              fontWeight={700}
-              color={theme.palette.secondary.main}
-            >
-              {t("blc_pw_98")}
+              {t("blc_pw_102")}
             </Typography>
           </Box>
           <Box
@@ -104,68 +80,24 @@ export default function ManualVendorModal({
             <Typography
               textAlign={"center"}
               variant="h6"
-              fontWeight={700}
-              sx={{ textDecoration: "underline" }}
+              fontWeight={500}
+              // sx={{ textDecoration: "underline" }}
             >
-              {t("blc_pw_99")}
-            </Typography>
-            <Typography
-              variant="body2"
-              fontWeight={600}
-            >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: p2pEscrowDetails?.vendor?.description || "",
-                }}
-              />
+              {t("blc_pw_104")}{" "}
+              <strong>{item?.payment_method || "this method"}</strong>{" "}
+              {t("blc_pw_105")}{" "}
+              <strong>{item?.payment_method || "this method"}</strong>{" "}
+              {t("blc_pw_106")}
             </Typography>
           </Box>
-          <Box
-            display={"flex"}
-            alignItems={"center"}
-            bgcolor={"#FEF3F2"}
-            gap={2}
-            my={2}
-            px={3}
-            py={2}
-            borderRadius={2}
-          >
-            <Icon
-              icon="tabler:alert-triangle-filled"
-              color="#DD0004"
-              fontSize={58}
-            />
-            <Typography
-              variant="body2"
-              fontSize={{ xs: 12, sm: "15px" }}
-              fontWeight={700}
-              color="#F04438"
-            >
-              {t("blc_pw_52")}
-            </Typography>
-          </Box>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isPaymentConfirmed}
-                onChange={(e) => setIsPaymentConfirmed(e.target.checked)}
-              />
-            }
-            label={
-              <Typography variant="body2" fontSize="14px">
-                {t("blc_pw_87")}
-              </Typography>
-            }
-            sx={{ mb: 2 }}
-          />
 
           <Box display="flex" flexDirection="column">
             <Button
               variant="contained"
-              disabled={!isPaymentConfirmed || isLoading}
+              disabled={isLoading}
               onClick={handleOkayClick} // Call handleOkayClick on Okay button click
               sx={{
-                fontSize: "12px",
+                fontSize: "16px",
                 padding: "4px 12px",
                 fontWeight: 600,
                 borderRadius: "12px",
@@ -178,7 +110,7 @@ export default function ManualVendorModal({
               {isLoading ? (
                 <CircularProgress size={24} sx={{ color: "white" }} />
               ) : (
-                "Okay"
+                t("blc_pw_103")
               )}
             </Button>
           </Box>

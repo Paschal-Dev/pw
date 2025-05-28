@@ -202,6 +202,11 @@
     "blc_pw_98": "Asegúrese de leer las instrucciones de pago a continuación y de haber realizado el pago.",
     "blc_pw_99": "Instrucciones de pago",
     "blc_pw_100": "Confirmar pago",
-    "blc_pw_101": "Ingrese los siguientes datos:"
+    "blc_pw_101": "Ingrese los siguientes datos:",
+    "blc_pw_102": "Este es un proceso de pago manual.",
+    "blc_pw_103": "Entiendo.",
+    "blc_pw_104": "Deberá enviar manualmente el pago desde su cuenta a la cuenta de",
+    "blc_pw_105": "del proveedor. La confirmación también se procesará manualmente. Confirme que tiene acceso a",
+    "blc_pw_106": "y que puede completar el pago correctamente antes de continuar."
   }
 }

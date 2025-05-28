@@ -202,6 +202,11 @@
     "blc_pw_98": " Uistite sa, že ste si prečítali nižšie uvedené platobné pokyny a že ste vykonali platbu.",
     "blc_pw_99": " Platobné pokyny",
     "blc_pw_100": " Potvrdenie platby",
-    "blc_pw_101": " Zadajte nasledujúce údaje:"
+    "blc_pw_101": " Zadajte nasledujúce údaje:",
+    "blc_pw_102": "Toto je manuálny platobný proces.",
+    "blc_pw_103": "Rozumiem",
+    "blc_pw_104": " Platbu budete musieť manuálne odoslať zo svojho účtu na účet",
+    "blc_pw_105": "dodávateľa. Potvrdenie bude tiež spracované manuálne. Pred pokračovaním si overte, či máte prístup k",
+    "blc_pw_106": "a či môžete platbu úspešne dokončiť."
   }
 }

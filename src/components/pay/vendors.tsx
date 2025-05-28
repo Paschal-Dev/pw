@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  useMediaQuery,
-  Alert,
-  AlertTitle,
-  Modal,
-} from "@mui/material";
+import { Box, Typography, useMediaQuery, Alert, AlertTitle, Modal } from "@mui/material";
 import { theme } from "../../assets/themes/theme";
 import APIService from "../../services/api-service";
 import { Vendor } from "../../data/pay/vendors-data";
@@ -80,23 +73,15 @@ const Vendors: React.FC<Props> = ({ item, isManual }) => {
       const respo = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
       dispatch(setP2PEscrowDetails(respo.data));
 
-      const errorMessage = respo.data?.message
-        ?.toLowerCase()
-        ?.includes("Daily");
+      const errorMessage = respo.data?.message?.toLowerCase()?.includes("Daily");
       const limitMessage = respo.data?.message;
       if (errorMessage) {
         setAlertMessage(limitMessage);
         setAlertSeverity("error");
-        console.log(
-          "API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ",
-          limitMessage
-        );
+        console.log("API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ", limitMessage);
       } else if (respo.data?.input?.toLowerCase()?.includes("required")) {
         setOpen(true);
-        console.log(
-          "API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ",
-          respo.data
-        );
+        console.log("API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
       } else {
         dispatch(setCurrentPage("escrow-page"));
         console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
@@ -203,12 +188,7 @@ const Vendors: React.FC<Props> = ({ item, isManual }) => {
               >
                 {item.display_name}
               </Typography>
-              <Box
-                display="flex"
-                flexDirection="row"
-                alignItems="center"
-                gap={0.5}
-              >
+              <Box display="flex" flexDirection="row" alignItems="center" gap={0.5}>
                 {item.exchange_rate !== 0 && (
                   <Typography
                     color="#6CE9A6"
@@ -266,6 +246,7 @@ const Vendors: React.FC<Props> = ({ item, isManual }) => {
         </Box>
       </Modal>
       <ManualVendorModal
+        item={item}
         open={openManualModal}
         onClose={handleClose}
         onOkay={handleOpen}

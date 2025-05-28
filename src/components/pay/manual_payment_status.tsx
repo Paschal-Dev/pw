@@ -6,6 +6,7 @@ import ManualPaymentSuccessful from "./manual_payment_successful";
 import {
   clearChatDetails,
   clearConfirmPaymentDetails,
+  setClickedId,
   setConfirmButtonBackdrop,
   setConfirmPaymentDetails,
   setCurrentPage,
@@ -85,6 +86,7 @@ export default function ManualPaymentStatus({
           dispatch(setCurrentPage("p2p"));
           dispatch(setConfirmButtonBackdrop(false));
           dispatch(clearConfirmPaymentDetails());
+          dispatch(setClickedId(null));
           dispatch(clearChatDetails());
           return;
         }

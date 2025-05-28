@@ -202,6 +202,11 @@
     "blc_pw_98": "Pastikan Anda telah membaca petunjuk pembayaran di bawah ini dan telah melakukan pembayaran.",
     "blc_pw_99": "Petunjuk Pembayaran",
     "blc_pw_100": "Konfirmasi Pembayaran",
-    "blc_pw_101": "Masukkan Rincian Berikut:"
+    "blc_pw_101": "Masukkan Rincian Berikut:",
+    "blc_pw_102": "Ini adalah proses pembayaran manual.",
+    "blc_pw_103": "Saya mengerti",
+    "blc_pw_104": "Anda perlu mengirim pembayaran secara manual dari akun Anda ke akun",
+    "blc_pw_105": "Vendor. Konfirmasi juga akan ditangani secara manual. Harap konfirmasikan bahwa Anda memiliki akses ke",
+    "blc_pw_106": "dan dapat menyelesaikan pembayaran dengan sukses sebelum melanjutkan."
   }
 }
