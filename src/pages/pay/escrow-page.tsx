@@ -19,6 +19,7 @@ import Chat from "../../components/pay/chat";
 import ManualEscrow from "../../components/pay/manual-escrow";
 import { setChatDetails } from "../../redux/reducers/pay";
 import APIService from "../../services/api-service";
+import { Icon } from "@iconify/react/dist/iconify.js";
 // import {
 //   setConfirmButtonBackdrop,
 //   setCurrentPage,
@@ -34,12 +35,22 @@ export default function EscrowPage(): React.JSX.Element {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [manualPaymentStatus, setManualPaymentStatus] = useState(false);
 
+  const [showFirstMessage, setShowFirstMessage] = useState(false);
+  const [firstMessageContent, setFirstMessageContent] = useState("");
+
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { p2pEscrowDetails, paymentDetails, confirmPaymentDetails, lang, payId } = useSelector(
-    (state: RootState) => state.pay
+  const {
+    p2pEscrowDetails,
+    paymentDetails,
+    confirmPaymentDetails,
+    lang,
+    payId,
+    chatDetails,
+  } = useSelector((state: RootState) => state.pay);
+  const { isConfirmButtonBackdrop } = useSelector(
+    (state: RootState) => state.button
   );
-  const { isConfirmButtonBackdrop } = useSelector((state: RootState) => state.button);
   // const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -85,12 +96,12 @@ export default function EscrowPage(): React.JSX.Element {
   };
 
   const checkStatus =
-  (p2pEscrowDetails?.confirm_manual_payment !== 0 &&
-    p2pEscrowDetails?.confirm_manual_payment !== null) ||
-  confirmPaymentDetails ||
-  manualPaymentStatus;
+    (p2pEscrowDetails?.confirm_manual_payment !== 0 &&
+      p2pEscrowDetails?.confirm_manual_payment !== null) ||
+    confirmPaymentDetails ||
+    manualPaymentStatus;
 
-    const fetchUserIP = async () => {
+  const fetchUserIP = async () => {
     try {
       const response = await fetch("https://api.ipify.org?format=json");
       const data = await response.json();
@@ -100,6 +111,20 @@ export default function EscrowPage(): React.JSX.Element {
       return null;
     }
   };
+
+  //   const handleChatToggle = () => {
+  //   const newChatState = !isChatOpen;
+  //   setIsChatOpen(newChatState);
+  //   onChatToggle(newChatState);
+  //   if (newChatState) {
+  //     handleChatOpen();
+  //     onChatOpen?.();
+  //   }
+  // };
+
+  // const Chat = () => {
+  //   handleChatToggle();
+  // };
 
   React.useEffect(() => {
     if (mobile) {
@@ -111,44 +136,58 @@ export default function EscrowPage(): React.JSX.Element {
     }
   }, [mobile, tablet]);
 
-    const dispatch = useDispatch();
-  
+  const dispatch = useDispatch();
 
   useEffect(() => {
-  if (p2pEscrowDetails?.p2p_type !== "manual") return;
+    if (p2pEscrowDetails?.p2p_type !== "manual") return;
 
-  const handleChatCheck = async () => {
-    try {
-      const userIP = await fetchUserIP();
-      if (!userIP) {
-        console.error("Unable to retrieve user IP");
-        return;
+    const handleChatCheck = async () => {
+      try {
+        const userIP = await fetchUserIP();
+        if (!userIP) {
+          console.error("Unable to retrieve user IP");
+          return;
+        }
+
+        const payload = {
+          call_type: "p2p_chat",
+          ip: userIP,
+          lang: lang,
+          pay_id: payId,
+        };
+
+        const response = await APIService.p2pChat(payload);
+        dispatch(setChatDetails(response.data));
+        console.log("Chat details fetched successfully:", response.data);
+        console.log("First Message:", response.data.first_message);
+      } catch (error) {
+        console.error("Failed to send message:", error);
       }
+    };
 
-      const payload = {
-        call_type: "p2p_chat",
-        ip: userIP,
-        lang: lang,
-        pay_id: payId,
-      };
+    // Initial call
+    handleChatCheck();
 
-      const response = await APIService.p2pChat(payload);
-      dispatch(setChatDetails(response.data));
-      console.log("Chat details fetched successfully:", response.data);
-    } catch (error) {
-      console.error("Failed to send message:", error);
-    }
-  };
+    // Set up interval for every 5 seconds
+    const intervalId = setInterval(handleChatCheck, 5000);
 
-  // Initial call
-  handleChatCheck();
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [p2pEscrowDetails?.p2p_type, lang, payId, dispatch]);
 
-  // Set up interval for every 5 seconds
-  const intervalId = setInterval(handleChatCheck, 5000);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (chatDetails?.first_message) {
+        setFirstMessageContent(chatDetails.first_message);
+        setShowFirstMessage(true);
 
-  // Cleanup interval on component unmount
-  return () => clearInterval(intervalId);
-}, [p2pEscrowDetails?.p2p_type, lang, payId, dispatch]);
+        // Auto-hide after 60 seconds
+        setTimeout(() => setShowFirstMessage(false), 60000);
+      }
+    }, 5000); // Wait 5 seconds
+
+    return () => clearTimeout(timeout);
+  }, [chatDetails?.first_message]);
 
   return (
     <>
@@ -166,7 +205,10 @@ export default function EscrowPage(): React.JSX.Element {
               : "Escrow Page"
           }
         />
-        <meta property="og:image" content={paymentDetails?.seller?.image || ""} />
+        <meta
+          property="og:image"
+          content={paymentDetails?.seller?.image || ""}
+        />
       </Helmet>
       <Box pt={1} flex={1}>
         <Grid container height={"100%"}>
@@ -179,8 +221,12 @@ export default function EscrowPage(): React.JSX.Element {
               gap={deviceType === "mobile" ? 2 : 2}
               mr={deviceType === "mobile" ? 0 : 4}
             >
-              {deviceType !== "mobile" && deviceType !== "tablet" && <EscrowStatus />}
-              {deviceType !== "mobile" && deviceType !== "tablet" && <VideoThumb />}
+              {deviceType !== "mobile" && deviceType !== "tablet" && (
+                <EscrowStatus />
+              )}
+              {deviceType !== "mobile" && deviceType !== "tablet" && (
+                <VideoThumb />
+              )}
             </Box>
           </Grid>
           {isChatOpen ? (
@@ -223,13 +269,23 @@ export default function EscrowPage(): React.JSX.Element {
                         style={{ backgroundColor: "#009FDD", padding: "2px" }}
                       />
                     </Box>
-                    <Typography fontSize={deviceType === "mobile" ? 16 : "4vh"} fontWeight={700}>
+                    <Typography
+                      fontSize={deviceType === "mobile" ? 16 : "4vh"}
+                      fontWeight={700}
+                    >
                       {t("blc_pw_3")} #{p2pEscrowDetails?.pay?.unique_id}
                     </Typography>
                   </Box>
                 </Box>
                 <Grid container spacing={2} height={"100%"}>
-                  <Grid item xs={12} sm={5} lg={5} md={5} sx={{ display: "flex" }}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={5}
+                    lg={5}
+                    md={5}
+                    sx={{ display: "flex" }}
+                  >
                     {p2pEscrowDetails?.p2p_type === "auto" ? (
                       <EscrowConfirm />
                     ) : p2pEscrowDetails?.p2p_type === "manual" ? (
@@ -240,7 +296,55 @@ export default function EscrowPage(): React.JSX.Element {
                       />
                     ) : null}
                   </Grid>
-                  <Grid item xs={12} sm={7} lg={7} md={7} display={"flex"}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={7}
+                    lg={7}
+                    md={7}
+                    display={"flex"}
+                    position="relative"
+                  >
+                    {showFirstMessage && (
+                      <Box
+                        position="absolute"
+                        top="5%"
+                        right="2%"
+                        sx={{
+                          bgcolor: "background.paper",
+                          boxShadow: 5,
+                          p: 2,
+                          borderRadius: 3,
+                          width: "100%",
+                          maxWidth: 400,
+                          zIndex: 2000,
+                          position: "absolute",
+                          cursor: "pointer",
+                          "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            top: "50%",
+                            right: "-10px",
+                            transform: "translateY(-50%)",
+                            width: 0,
+                            height: 0,
+                            borderTop: "10px solid transparent",
+                            borderBottom: "10px solid transparent",
+                            borderLeft: "10px solid #fff",
+                          },
+                        }}
+                        onClick={handleChatToggle}
+                      >
+                        <Box display="flex" alignItems={"center"} justifyContent={"center"} gap={1}>
+                          <Icon icon="material-symbols:mail-rounded" fontSize={24} />
+                          <Typography variant="h6" fontWeight={700}>
+                            New Message
+                          </Typography>
+                        </Box>
+                        <hr/>
+                        <Typography variant="body1" fontWeight={500}>{firstMessageContent}</Typography>
+                      </Box>
+                    )}
                     <EscrowConfirmDetails />
                   </Grid>
                 </Grid>

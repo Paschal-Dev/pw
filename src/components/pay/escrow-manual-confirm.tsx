@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Card, CardMedia, IconButton, Typography } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import background from "../../assets/images/background.png";
 import { theme } from "../../assets/themes/theme";
 import { useSelector } from "react-redux";
@@ -27,7 +27,7 @@ export default function ManualEscrow({
   const [manualConfirmOpen, setManualConfirmOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [readMessageIds, setReadMessageIds] = useState<string[]>([]);
-  // const dispatch = useDispatch();
+  const [countdown, setCountdown] = useState(30); // Start countdown at 15 on mount
 
   const { p2pEscrowDetails, chatDetails } = useSelector((state: RootState) => state.pay);
   const vendor_currency_sign = p2pEscrowDetails?.pay?.total_to_pay_currency;
@@ -122,6 +122,19 @@ export default function ManualEscrow({
     setManualConfirmOpen(false);
     onPaid();
   };
+
+  // Countdown effect on mount
+  useEffect(() => {
+    let timer: ReturnType<typeof setInterval> | null = null;
+    if (countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [countdown]);
 
   return (
     <Card
@@ -341,9 +354,16 @@ export default function ManualEscrow({
             gap: 1,
           }}
           onClick={openPaymentClick}
+          disabled={countdown > 0} // Disable button during countdown
         >
-          <Icon icon="ph:hand-deposit-fill" fontSize={20} color={"#fff"} />
-          {t("blc_pw_100")}
+          {countdown > 0 ? (
+            <Typography variant="inherit">{countdown}s</Typography> // Show countdown
+          ) : (
+            <>
+              <Icon icon="ph:hand-deposit-fill" fontSize={20} color={"#fff"} />
+              Confirm Payment
+            </>
+          )}
         </Button>
         <EscrowConfirmPaymentModal
           open={manualConfirmOpen}
