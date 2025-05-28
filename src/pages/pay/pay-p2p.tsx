@@ -228,7 +228,7 @@ export default function PayP2P(): React.JSX.Element {
                       fontSize: deviceType === "mobile" ? 12 : 14,
                     }}
                   >
-                   {t("blc_pw_79")}
+                    {t("blc_pw_79")}
                   </Typography>
                 </Box>
               </Box>
@@ -317,7 +317,7 @@ export default function PayP2P(): React.JSX.Element {
                       fontSize: deviceType === "mobile" ? 12 : 14,
                     }}
                   >
-                   {t("blc_pw_81")}
+                    {t("blc_pw_81")}
                   </Typography>
                 </Box>
               </Box>
@@ -345,7 +345,7 @@ export default function PayP2P(): React.JSX.Element {
                   overflow={"auto"}
                 >
                   {Manualvendors?.map((item: Vendor, index: number) => (
-                    <Vendors item={item} key={index} />
+                    <Vendors item={item} key={index} isManual={true} />
                   ))}
                 </Box>
               </Box>

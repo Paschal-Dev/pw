@@ -427,7 +427,7 @@ const Otp: React.FC<OtpProps> = ({
                   : "auto",
             }}
           >
-            Success
+            {t("blc_pw_88")}
           </AlertTitle>
           {alertMessage}
         </Alert>

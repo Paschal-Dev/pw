@@ -1,6 +1,6 @@
 {
   "languages": {
-   "pt": "Portuguese",
+    "pt": "Portuguese",
     "en": "English",
     "fr": "French",
     "it": "Italian",
@@ -198,6 +198,10 @@
     "blc_pw_94": "Envoyer un message",
     "blc_pw_95": "Envoi en cours...",
     "blc_pw_96": "Saisir quelque chose",
-    "blc_pw_97": "Gauche"
+    "blc_pw_97": "Gauche",
+    "blc_pw_98": "Veuillez vous assurer d'avoir lu les instructions de paiement ci-dessous et d'avoir effectué le paiement.",
+    "blc_pw_99": "Instructions de paiement",
+    "blc_pw_100": "Confirmer le paiement",
+    "blc_pw_101": "Saisissez les informations suivantes :"
   }
 }

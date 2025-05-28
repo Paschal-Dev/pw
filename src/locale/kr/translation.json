@@ -1,6 +1,6 @@
 {
   "languages": {
-   "pt": "Portuguese",
+    "pt": "Portuguese",
     "en": "English",
     "fr": "French",
     "it": "Italian",
@@ -200,6 +200,10 @@
     "blc_pw_94": "메시지 보내기",
     "blc_pw_95": "보내는 중...",
     "blc_pw_96": "입력하세요",
-    "blc_pw_97": "남기다"
+    "blc_pw_97": "남기다",
+    "blc_pw_98": "아래 결제 지침을 읽고 결제를 완료했는지 확인하세요.",
+    "blc_pw_99": "결제 지침",
+    "blc_pw_100": "결제 확인",
+    "blc_pw_101": "다음 정보를 입력하세요."
   }
 }

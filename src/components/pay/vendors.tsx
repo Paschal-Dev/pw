@@ -1,30 +1,45 @@
 import React, { useState } from "react";
-import { Box, Typography, useMediaQuery, Alert, AlertTitle, Modal } from "@mui/material";
+import {
+  Box,
+  Typography,
+  useMediaQuery,
+  Alert,
+  AlertTitle,
+  Modal,
+} from "@mui/material";
 import { theme } from "../../assets/themes/theme";
 import APIService from "../../services/api-service";
 import { Vendor } from "../../data/pay/vendors-data";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { setButtonClicked, setClickedId, setCurrentPage, setP2PEscrowDetails } from "../../redux/reducers/pay";
+import {
+  setButtonClicked,
+  setClickedId,
+  setCurrentPage,
+  setP2PEscrowDetails,
+} from "../../redux/reducers/pay";
 import { t } from "i18next";
 import close from "../../assets/images/close-icon.svg";
 import RequiredFields from "../required_fields";
+import ManualVendorModal from "./manual-vendor-modal";
 
 interface Props {
   item: Vendor;
+  isManual?: boolean;
 }
 
-const Vendors: React.FC<Props> = ({ item }) => {
+const Vendors: React.FC<Props> = ({ item, isManual }) => {
   const [deviceType, setDeviceType] = React.useState("mobile");
   const mobile = useMediaQuery(theme.breakpoints.only("xs"));
   const tablet = useMediaQuery(theme.breakpoints.down("md"));
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<"error" | null>(null);
   const dispatch = useDispatch();
-  const { payId } = useSelector((state: RootState) => state.pay);
-  const { clickedId, lang } = useSelector((state: RootState) => state.pay);
+  const { payId, clickedId, lang } = useSelector((state: RootState) => state.pay);
   const [open, setOpen] = useState(false);
+  const [openManualModal, setOpenManualModal] = useState(false); // State for ManualVendorModal
   const isDisabled = clickedId !== null && clickedId !== item.id;
+
   const fetchUserIP = async () => {
     try {
       const response = await fetch("https://api.ipify.org?format=json");
@@ -38,19 +53,10 @@ const Vendors: React.FC<Props> = ({ item }) => {
 
   const handleClose = () => {
     setOpen(false);
+    setOpenManualModal(false); // Close ManualVendorModal as well
     dispatch(setButtonClicked(false)); // Reset backdrop when modal closes
     dispatch(setClickedId(null));
   };
-
-  React.useEffect(() => {
-    if (mobile) {
-      setDeviceType("mobile");
-    } else if (tablet) {
-      setDeviceType("tablet");
-    } else {
-      setDeviceType("pc");
-    }
-  }, [mobile, tablet]);
 
   const handleOpen = async () => {
     dispatch(setButtonClicked(true)); // Show backdrop
@@ -74,15 +80,23 @@ const Vendors: React.FC<Props> = ({ item }) => {
       const respo = await APIService.p2pVendorsEscrow(p2pEscrowPayload);
       dispatch(setP2PEscrowDetails(respo.data));
 
-      const errorMessage = respo.data?.message?.toLowerCase()?.includes("Daily");
+      const errorMessage = respo.data?.message
+        ?.toLowerCase()
+        ?.includes("Daily");
       const limitMessage = respo.data?.message;
       if (errorMessage) {
         setAlertMessage(limitMessage);
         setAlertSeverity("error");
-        console.log("API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ", limitMessage);
+        console.log(
+          "API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ",
+          limitMessage
+        );
       } else if (respo.data?.input?.toLowerCase()?.includes("required")) {
         setOpen(true);
-        console.log("API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
+        console.log(
+          "API ERROR RESPONSE FROM P2P VENDORS ESCROW =>>> ",
+          respo.data
+        );
       } else {
         dispatch(setCurrentPage("escrow-page"));
         console.log("API RESPONSE FROM P2P VENDORS ESCROW =>>> ", respo.data);
@@ -90,12 +104,31 @@ const Vendors: React.FC<Props> = ({ item }) => {
     } catch (error) {
       console.error("Error Getting Escrow:", error);
     } finally {
-      if (!open) {
-        dispatch(setButtonClicked(false)); // Hide backdrop unless modal is open
-        dispatch(setClickedId(null)); 
+      if (!open && !openManualModal) {
+        dispatch(setButtonClicked(false)); // Hide backdrop unless any modal is open
+        dispatch(setClickedId(null));
       }
     }
   };
+
+  const handleVendorClick = () => {
+    if (isDisabled) return;
+    if (isManual) {
+      setOpenManualModal(true);
+    } else {
+      handleOpen();
+    }
+  };
+
+  React.useEffect(() => {
+    if (mobile) {
+      setDeviceType("mobile");
+    } else if (tablet) {
+      setDeviceType("tablet");
+    } else {
+      setDeviceType("pc");
+    }
+  }, [mobile, tablet]);
 
   const style = {
     position: "absolute" as const,
@@ -111,8 +144,8 @@ const Vendors: React.FC<Props> = ({ item }) => {
 
   return (
     <>
-        <Box
-        onClick={isDisabled ? undefined : handleOpen}
+      <Box
+        onClick={handleVendorClick}
         display="flex"
         flexDirection="column"
         borderRadius={2}
@@ -170,7 +203,12 @@ const Vendors: React.FC<Props> = ({ item }) => {
               >
                 {item.display_name}
               </Typography>
-              <Box display="flex" flexDirection="row" alignItems="center" gap={0.5}>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                gap={0.5}
+              >
                 {item.exchange_rate !== 0 && (
                   <Typography
                     color="#6CE9A6"
@@ -222,11 +260,16 @@ const Vendors: React.FC<Props> = ({ item }) => {
             </Box>
           </Box>
           <Typography variant="h5" fontSize="20px" fontWeight={600}>
-            Input The Following Details:
+            {t("blc_pw_101")}{" "}
           </Typography>
           <RequiredFields item={item} />
         </Box>
       </Modal>
+      <ManualVendorModal
+        open={openManualModal}
+        onClose={handleClose}
+        onOkay={handleOpen}
+      />
       {alertSeverity === "error" && (
         <Alert
           severity="error"

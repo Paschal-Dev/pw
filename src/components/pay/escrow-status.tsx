@@ -14,6 +14,7 @@ import {
   setP2PVendorsDetails,
   clearConfirmPaymentDetails,
   clearChatDetails,
+  setClickedId,
 } from "../../redux/reducers/pay";
 
 export default function EscrowStatus() {
@@ -135,9 +136,10 @@ export default function EscrowStatus() {
       dispatch(setP2PVendorsDetails(respo2.data));
       if (respo.data?.escrow_status === 0) {
         // clearInterval(intervalId);
-        dispatch(setConfirmButtonBackdrop(false));
         console.log("Confirm Payment Details", confirmPaymentDetails);
         dispatch(setCurrentPage("p2p"));
+        dispatch(setConfirmButtonBackdrop(false));
+        dispatch(setClickedId(null));
       }
       return;
     } catch (error) {

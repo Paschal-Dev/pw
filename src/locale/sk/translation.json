@@ -1,6 +1,6 @@
 {
   "languages": {
-   "pt": "Portuguese",
+    "pt": "Portuguese",
     "en": "English",
     "fr": "French",
     "it": "Italian",
@@ -198,6 +198,10 @@
     "blc_pw_94": " Poslať správu",
     "blc_pw_95": " Odosiela sa...",
     "blc_pw_96": " Napíšte niečo",
-    "blc_pw_97": " Odišiel"
+    "blc_pw_97": " Odišiel",
+    "blc_pw_98": " Uistite sa, že ste si prečítali nižšie uvedené platobné pokyny a že ste vykonali platbu.",
+    "blc_pw_99": " Platobné pokyny",
+    "blc_pw_100": " Potvrdenie platby",
+    "blc_pw_101": " Zadajte nasledujúce údaje:"
   }
 }

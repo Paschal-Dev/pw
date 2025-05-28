@@ -343,7 +343,7 @@ export default function ManualEscrow({
           onClick={openPaymentClick}
         >
           <Icon icon="ph:hand-deposit-fill" fontSize={20} color={"#fff"} />
-          Confirm Payment
+          {t("blc_pw_100")}
         </Button>
         <EscrowConfirmPaymentModal
           open={manualConfirmOpen}

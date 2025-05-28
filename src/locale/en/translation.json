@@ -204,8 +204,13 @@
     "blc_pw_94": " Send Message",
     "blc_pw_95": " Sending...",
     "blc_pw_96": " Type something",
-    "blc_pw_97": " Left"
+    "blc_pw_97": " Left",
 
+
+    "blc_pw_98": "  Please make sure you have read the payment instructions below and you have made the payment.",
+    "blc_pw_99": " Payment Instructions",
+    "blc_pw_100": " Confirm Payment",
+    "blc_pw_101": "Input The Following Details:"
 
 
     

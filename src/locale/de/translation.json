@@ -198,6 +198,11 @@
     "blc_pw_94": "Nachricht senden",
     "blc_pw_95": "Senden...",
     "blc_pw_96": "Geben Sie etwas ein",
-    "blc_pw_97": "Links"
+    "blc_pw_97": "Links",
+
+    "blc_pw_98": "Bitte stellen Sie sicher, dass Sie die unten stehenden Zahlungsanweisungen gelesen und die Zahlung getätigt haben.",
+    "blc_pw_99": "Zahlungsanweisungen",
+    "blc_pw_100": "Zahlung bestätigen",
+    "blc_pw_101": "Geben Sie die folgenden Daten ein:"
   }
 }

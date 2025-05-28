@@ -391,14 +391,14 @@ const WalletOtp: React.FC<OtpProps> = ({ deviceType }) => {
             width: "20%",
           }}
         >
-          <AlertTitle>Success</AlertTitle>
+          <AlertTitle>{t("blc_pw_88")}</AlertTitle>
           {alertMessage}
         </Alert>
       )}
 
       {alertSeverity === "error" && !isSuccessAlertShown && (
         <Alert severity="error" style={{ position: "absolute", width: "20%" }}>
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>{t("blc_pw_89")}</AlertTitle>
           {alertMessage}
         </Alert>
       )}
